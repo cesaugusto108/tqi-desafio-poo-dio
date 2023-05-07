@@ -7,8 +7,8 @@ import java.util.Objects;
 @MappedSuperclass
 public abstract sealed class EntidadeBase permits Atividade, Bootcamp, Pessoa {
     @Id
-    @SequenceGenerator(name = "seq_gen", allocationSize = 10, initialValue = 10)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @SequenceGenerator(name = "seq_gen", allocationSize = 1, initialValue = 3)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_gen")
     @Column(name = "id", nullable = false, unique = true)
     private Long id;
 
