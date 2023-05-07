@@ -18,9 +18,21 @@ public class CarregarDev {
         final List<Pessoa> devs = new ArrayList<>();
         final List<Bootcamp> bootcamps = dao.listarBootcamps();
 
-        boolean loop = false;
         Scanner scanner = new Scanner(System.in);
 
+        registrarInfoDevs(dao, devs, bootcamps, scanner);
+
+        scanner.close();
+
+        dao.persistirPessoas(devs);
+
+        for (Pessoa p : devs) {
+            LOGGER.info("Operação de persistência realizada no banco de dados: " + p + " - " + p.getClass().getSimpleName());
+        }
+    }
+
+    private static void registrarInfoDevs(Dao dao, List<Pessoa> devs, List<Bootcamp> bootcamps, Scanner scanner) {
+        boolean loop;
         do {
             System.out.print("\nNome: ");
             final String nome = scanner.next();
@@ -52,13 +64,5 @@ public class CarregarDev {
 
             loop = resposta.equalsIgnoreCase("sim");
         } while (loop);
-
-        scanner.close();
-
-        dao.persistirPessoas(devs);
-
-        for (Pessoa p : devs) {
-            LOGGER.info("Operação de persistência realizada no banco de dados: " + p + " - " + p.getClass().getSimpleName());
-        }
     }
 }
