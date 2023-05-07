@@ -9,8 +9,11 @@ import augusto108.ces.tqidesafiopoodio.dominio.entidades.Pessoa;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.logging.Logger;
 
 public class CarregarDev {
+    private final static Logger LOGGER = Logger.getLogger(CarregarDev.class.getName());
+
     public static void cadastrarDevs(Dao dao) {
         final List<Pessoa> devs = new ArrayList<>();
         final List<Bootcamp> bootcamps = dao.listarBootcamps();
@@ -53,5 +56,9 @@ public class CarregarDev {
         scanner.close();
 
         dao.persistirPessoas(devs);
+
+        for (Pessoa p : devs) {
+            LOGGER.info("Operação de persistência realizada no banco de dados: " + p + " - " + p.getClass().getSimpleName());
+        }
     }
 }
