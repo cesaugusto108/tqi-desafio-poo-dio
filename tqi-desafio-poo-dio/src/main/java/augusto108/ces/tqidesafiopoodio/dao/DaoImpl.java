@@ -18,6 +18,10 @@ public class DaoImpl implements Dao {
 
     private final Session session = sessionFactory.getCurrentSession();
 
+    public Session getSession() {
+        return session;
+    }
+
     @Override
     public void abrirSessao() {
         session.beginTransaction();
