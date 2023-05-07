@@ -9,6 +9,7 @@ import augusto108.ces.tqidesafiopoodio.dominio.entidades.Mentoria;
 import org.hibernate.Session;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class CarregarDados {
     private static final Dao DAO = new DaoImpl();
@@ -63,5 +64,10 @@ public class CarregarDados {
         session.createNativeQuery(mentoria2, Mentoria.class).executeUpdate();
         session.createNativeQuery(maria, Instrutor.class).executeUpdate();
         session.createNativeQuery(camila, Instrutor.class).executeUpdate();
+
+        DAO.buscarBootcamp(1L).getAtividades().addAll(List.of(DAO.buscarAtividade(1L), DAO.buscarAtividade(3L)));
+        DAO.buscarBootcamp(2L).getAtividades().addAll(List.of(DAO.buscarAtividade(2L), DAO.buscarAtividade(4L)));
+
+        CarregarDev.cadastrarDevs(DAO);
     }
 }
