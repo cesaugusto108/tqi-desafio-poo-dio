@@ -8,7 +8,8 @@ import java.time.LocalDate
 @Entity
 @DiscriminatorValue(value = "mentoring")
 class Mentoring(
-    @Column(name = "mentoring_date", nullable = false) var date: LocalDate,
+    @Column(name = "mentoring_date", nullable = true) var date: LocalDate,
+    @Column(name = "course_hours", nullable = true) var hours: Int? = null,
     description: String,
     details: String,
     id: Int

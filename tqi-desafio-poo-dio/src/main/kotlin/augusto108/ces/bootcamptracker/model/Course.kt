@@ -3,11 +3,13 @@ package augusto108.ces.bootcamptracker.model
 import jakarta.persistence.Column
 import jakarta.persistence.DiscriminatorValue
 import jakarta.persistence.Entity
+import java.time.LocalDate
 
 @Entity
 @DiscriminatorValue(value = "course")
 class Course(
-    @Column(name = "course_hours", nullable = false) var hours: Int,
+    @Column(name = "mentoring_date", nullable = true) var date: LocalDate? = null,
+    @Column(name = "course_hours", nullable = true) var hours: Int,
     description: String,
     details: String,
     id: Int

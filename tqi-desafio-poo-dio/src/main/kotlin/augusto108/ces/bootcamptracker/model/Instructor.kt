@@ -1,8 +1,15 @@
 package augusto108.ces.bootcamptracker.model
 
+import jakarta.persistence.Column
 import jakarta.persistence.DiscriminatorValue
 import jakarta.persistence.Entity
 
 @Entity
 @DiscriminatorValue(value = "instructor")
-class Instructor(name: Name, age: Int, email: String, id: Int) : Person(name, age, email, id)
+class Instructor(
+    @Column(name = "developer_level", nullable = true) var level: Int? = null,
+    name: Name,
+    age: Int,
+    email: String,
+    id: Int = 0
+) : Person(name, age, email, id)

@@ -8,10 +8,11 @@ import java.time.LocalDateTime
 class Bootcamp(
     @Column(name = "bootcamp_description", nullable = false, unique = true, length = 30) var description: String,
     @Column(name = "bootcamp_details", nullable = false, length = 80) var details: String,
-    @Column(name = "start_date", nullable = false) var startDate: LocalDateTime,
-    @Column(name = "finish_date", nullable = false) var finishDate: LocalDateTime,
+    @Column(name = "start_date") var startDate: LocalDateTime,
+    @Column(name = "finish_date") var finishDate: LocalDateTime,
     id: Int
 ) : BaseEntity(id) {
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
         name = "bootcamp_activity",

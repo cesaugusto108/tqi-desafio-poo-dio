@@ -5,12 +5,13 @@ import jakarta.persistence.*
 @Entity
 @DiscriminatorValue(value = "developer")
 class Developer(
-    @Column(name = "developer_level", nullable = false) var level: Int,
+    @Column(name = "developer_level", nullable = true) var level: Int,
     name: Name,
     age: Int,
     email: String,
-    id: Int
+    id: Int = 0
 ) : Person(name, age, email, id) {
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
         name = "developer_bootcamp",
