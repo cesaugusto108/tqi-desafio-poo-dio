@@ -1,8 +1,6 @@
 package augusto108.ces.bootcamptracker.model
 
-import jakarta.persistence.Column
-import jakarta.persistence.DiscriminatorValue
-import jakarta.persistence.Entity
+import jakarta.persistence.*
 
 @Entity
 @DiscriminatorValue(value = "developer")
@@ -13,5 +11,13 @@ class Developer(
     email: String,
     id: Int
 ) : Person(name, age, email, id) {
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+        name = "developer_bootcamp",
+        joinColumns = [JoinColumn(name = "developer_id")],
+        inverseJoinColumns = [JoinColumn(name = "bootcamp_id")]
+    )
+    val bootcamps: MutableSet<Bootcamp> = HashSet()
+
     override fun toString(): String = "($level) ${super.toString()}"
 }

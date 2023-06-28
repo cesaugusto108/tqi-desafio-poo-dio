@@ -1,8 +1,6 @@
 package augusto108.ces.bootcamptracker.model
 
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.Table
+import jakarta.persistence.*
 import java.time.LocalDateTime
 
 @Entity
@@ -14,5 +12,13 @@ class Bootcamp(
     @Column(name = "finish_date", nullable = false) var finishDate: LocalDateTime,
     id: Int
 ) : BaseEntity(id) {
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+        name = "bootcamp_activity",
+        joinColumns = [JoinColumn(name = "bootcamp_id")],
+        inverseJoinColumns = [JoinColumn(name = "activity_id")]
+    )
+    val activities: MutableSet<Activity> = HashSet()
+
     override fun toString(): String = description
 }
