@@ -8,8 +8,8 @@ import jakarta.persistence.Entity
 @DiscriminatorValue(value = "instructor")
 class Instructor(
     @Column(name = "developer_level", nullable = true) var level: Int? = null,
-    name: Name,
-    age: Int,
-    email: String,
+    name: Name = Name(),
+    age: Int = 0,
+    email: String = "",
     id: Int = 0
 ) : Person(name, age, email, id)

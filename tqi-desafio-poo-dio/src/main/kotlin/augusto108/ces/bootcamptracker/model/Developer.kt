@@ -5,10 +5,10 @@ import jakarta.persistence.*
 @Entity
 @DiscriminatorValue(value = "developer")
 class Developer(
-    @Column(name = "developer_level", nullable = true) var level: Int,
-    name: Name,
-    age: Int,
-    email: String,
+    @Column(name = "developer_level", nullable = true) var level: Int = 0,
+    name: Name = Name(),
+    age: Int = 0,
+    email: String = "",
     id: Int = 0
 ) : Person(name, age, email, id) {
 
