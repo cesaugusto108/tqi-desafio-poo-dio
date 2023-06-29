@@ -1,8 +1,8 @@
-package augusto108.ces.bootcamptracker.dao
+package augusto108.ces.bootcamptracker.services
 
 import augusto108.ces.bootcamptracker.model.Course
 
-interface CourseDao {
+interface CourseService {
     fun saveCourse(course: Course): Course
 
     fun findAllCourses(): List<Course>

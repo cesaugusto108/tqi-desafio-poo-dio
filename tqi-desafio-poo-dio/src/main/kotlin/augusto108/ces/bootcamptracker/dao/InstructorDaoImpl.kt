@@ -3,10 +3,8 @@ package augusto108.ces.bootcamptracker.dao
 import augusto108.ces.bootcamptracker.model.Instructor
 import jakarta.persistence.EntityManager
 import org.springframework.stereotype.Repository
-import org.springframework.transaction.annotation.Transactional
 
 @Repository
-@Transactional
 class InstructorDaoImpl(private val entityManager: EntityManager) : InstructorDao {
     override fun saveInstructor(instructor: Instructor): Instructor {
         entityManager.persist(instructor)

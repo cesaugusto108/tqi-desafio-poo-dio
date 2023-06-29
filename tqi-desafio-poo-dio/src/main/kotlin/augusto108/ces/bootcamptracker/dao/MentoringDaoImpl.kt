@@ -3,10 +3,8 @@ package augusto108.ces.bootcamptracker.dao
 import augusto108.ces.bootcamptracker.model.Mentoring
 import jakarta.persistence.EntityManager
 import org.springframework.stereotype.Repository
-import org.springframework.transaction.annotation.Transactional
 
 @Repository
-@Transactional
 class MentoringDaoImpl(private val entityManager: EntityManager) : MentoringDao {
     override fun saveMentoring(mentoring: Mentoring): Mentoring {
         entityManager.persist(mentoring)
