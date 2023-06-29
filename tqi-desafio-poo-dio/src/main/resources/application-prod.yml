@@ -1,7 +1,7 @@
 server:
   port: 8080
   servlet:
-    context-path:
+    context-path: /bootcamp-tracker
 
 spring:
   mvc:
@@ -13,9 +13,9 @@ spring:
     banner-mode: off
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://
-    username:
-    password:
+    url: jdbc:mysql://localhost:3306/bootcamp_tracker?useTimezone=true&serverTimezone=UTC&useSSL=false
+    username: root
+    password: ${PASSWORD}
   jpa:
     hibernate:
       ddl-auto: none
