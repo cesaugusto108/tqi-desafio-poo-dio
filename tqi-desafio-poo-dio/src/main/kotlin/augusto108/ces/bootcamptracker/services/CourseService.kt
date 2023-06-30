@@ -5,7 +5,7 @@ import augusto108.ces.bootcamptracker.model.Course
 interface CourseService {
     fun saveCourse(course: Course): Course
 
-    fun findAllCourses(): List<Course>
+    fun findAllCourses(page: Int, max: Int): List<Course>
 
     fun findCourseById(id: Int): Course
 

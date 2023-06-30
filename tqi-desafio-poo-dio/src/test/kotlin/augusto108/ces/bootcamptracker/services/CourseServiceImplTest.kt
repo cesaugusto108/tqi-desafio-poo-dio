@@ -58,7 +58,7 @@ class CourseServiceImplTest(
 
     @Test
     fun findAllCourses() {
-        val courses: List<Course> = courseService.findAllCourses()
+        val courses: List<Course> = courseService.findAllCourses(0, 10)
 
         assertEquals(1, courses.size)
         assertEquals("Sintaxe Java (course)", courses[0].toString())

@@ -58,7 +58,7 @@ class CourseDaoImplTest(
 
     @Test
     fun findAllCourses() {
-        val courses: List<Course> = courseDao.findAllCourses()
+        val courses: List<Course> = courseDao.findAllCourses(0, 10)
 
         assertEquals(1, courses.size)
         assertEquals("Sintaxe Java (course)", courses[0].toString())

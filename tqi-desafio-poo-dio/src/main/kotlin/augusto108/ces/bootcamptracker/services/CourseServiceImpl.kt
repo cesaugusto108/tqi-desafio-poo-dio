@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional
 class CourseServiceImpl(private val courseDao: CourseDao) : CourseService {
     override fun saveCourse(course: Course): Course = courseDao.saveCourse(course)
 
-    override fun findAllCourses(): List<Course> = courseDao.findAllCourses()
+    override fun findAllCourses(page: Int, max: Int): List<Course> = courseDao.findAllCourses(page, max)
 
     override fun findCourseById(id: Int): Course = courseDao.findCourseById(id)
 

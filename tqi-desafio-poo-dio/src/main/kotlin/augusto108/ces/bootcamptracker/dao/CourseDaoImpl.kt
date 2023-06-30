@@ -12,7 +12,7 @@ class CourseDaoImpl(private val entityManager: EntityManager) : CourseDao {
         return course
     }
 
-    override fun findAllCourses(): List<Course> =
+    override fun findAllCourses(page: Int, max: Int): List<Course> =
         entityManager.createQuery("from Course order by id", Course::class.java).resultList
 
     override fun findCourseById(id: Int): Course =
