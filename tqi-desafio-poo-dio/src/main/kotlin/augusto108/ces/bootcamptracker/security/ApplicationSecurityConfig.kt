@@ -55,9 +55,9 @@ class ApplicationSecurityConfig(private val userService: UserService, private va
 
     @Bean
     fun loadUsers() {
-        entityManager?.createNativeQuery("delete from user_roles;")?.executeUpdate()
-        entityManager?.createNativeQuery("delete from user_role;")?.executeUpdate()
-        entityManager?.createNativeQuery("delete from user;")?.executeUpdate()
+        entityManager?.createNativeQuery("delete from user_roles_tb;")?.executeUpdate()
+        entityManager?.createNativeQuery("delete from user_role_tb;")?.executeUpdate()
+        entityManager?.createNativeQuery("delete from user_tb;")?.executeUpdate()
 
         val userRole1 = UserRole(Role.ROLE_NORMAL)
         val userRole2 = UserRole(Role.ROLE_ADMIN)

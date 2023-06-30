@@ -7,7 +7,7 @@ import jakarta.persistence.Enumerated
 import jakarta.persistence.Table
 
 @Entity
-@Table(name = "user_role")
+@Table(name = "user_role_tb")
 class UserRole(
     @Enumerated @Column(name = "role", nullable = false, length = 20, unique = true) val role: Role,
     id: Int = 0
