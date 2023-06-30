@@ -59,7 +59,7 @@ class DeveloperServiceImplTest(
 
     @Test
     fun findAllDevelopers() {
-        val developers: List<Developer> = developerService.findAllDevelopers()
+        val developers: List<Developer> = developerService.findAllDevelopers(0, 10)
 
         assertEquals(1, developers.size)
         assertEquals("(2) José Carlos Costa (josecc@email.com)", developers[0].toString())

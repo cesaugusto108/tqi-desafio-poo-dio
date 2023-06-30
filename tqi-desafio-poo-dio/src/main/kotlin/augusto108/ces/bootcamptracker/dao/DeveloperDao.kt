@@ -5,7 +5,7 @@ import augusto108.ces.bootcamptracker.model.Developer
 interface DeveloperDao {
     fun saveDeveloper(developer: Developer): Developer
 
-    fun findAllDevelopers(): List<Developer>
+    fun findAllDevelopers(page: Int, max: Int): List<Developer>
 
     fun findDeveloperById(id: Int): Developer
 

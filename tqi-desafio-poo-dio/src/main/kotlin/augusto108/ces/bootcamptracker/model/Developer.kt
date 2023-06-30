@@ -18,7 +18,7 @@ class Developer(
         joinColumns = [JoinColumn(name = "developer_id")],
         inverseJoinColumns = [JoinColumn(name = "bootcamp_id")]
     )
-    val bootcamps: MutableSet<Bootcamp> = HashSet()
+    var bootcamps: MutableSet<Bootcamp> = HashSet()
 
     override fun toString(): String = "($level) ${super.toString()}"
 }

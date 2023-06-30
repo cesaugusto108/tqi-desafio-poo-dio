@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional
 class DeveloperServiceImpl(private val developerDao: DeveloperDao) : DeveloperService {
     override fun saveDeveloper(developer: Developer): Developer = developerDao.saveDeveloper(developer)
 
-    override fun findAllDevelopers(): List<Developer> = developerDao.findAllDevelopers()
+    override fun findAllDevelopers(page: Int, max: Int): List<Developer> = developerDao.findAllDevelopers(page, max)
 
     override fun findDeveloperById(id: Int): Developer = developerDao.findDeveloperById(id)
 
