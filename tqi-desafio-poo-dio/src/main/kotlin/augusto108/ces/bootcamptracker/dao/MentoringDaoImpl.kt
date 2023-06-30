@@ -12,8 +12,12 @@ class MentoringDaoImpl(private val entityManager: EntityManager) : MentoringDao 
         return mentoring
     }
 
-    override fun findAllMentoring(): List<Mentoring> =
-        entityManager.createQuery("from Mentoring order by id", Mentoring::class.java).resultList
+    override fun findAllMentoring(page: Int, max: Int): List<Mentoring> =
+        entityManager
+            .createQuery("from Mentoring order by id", Mentoring::class.java)
+            .setFirstResult(page * max)
+            .setMaxResults(max)
+            .resultList
 
     override fun findMentoringById(id: Int): Mentoring =
         entityManager

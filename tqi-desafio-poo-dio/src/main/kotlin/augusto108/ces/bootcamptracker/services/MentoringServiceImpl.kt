@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional
 class MentoringServiceImpl(private val mentoringDao: MentoringDao) : MentoringService {
     override fun saveMentoring(mentoring: Mentoring): Mentoring = mentoringDao.saveMentoring(mentoring)
 
-    override fun findAllMentoring(): List<Mentoring> = mentoringDao.findAllMentoring()
+    override fun findAllMentoring(page: Int, max: Int): List<Mentoring> = mentoringDao.findAllMentoring(page, max)
 
     override fun findMentoringById(id: Int): Mentoring = mentoringDao.findMentoringById(id)
 

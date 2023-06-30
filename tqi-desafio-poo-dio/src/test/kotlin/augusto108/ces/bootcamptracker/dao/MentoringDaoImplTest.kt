@@ -57,7 +57,7 @@ class MentoringDaoImplTest(
 
     @Test
     fun findAllMentoring() {
-        val mentorings: List<Mentoring> = mentoringDao.findAllMentoring()
+        val mentorings: List<Mentoring> = mentoringDao.findAllMentoring(0, 10)
 
         assertEquals(1, mentorings.size)
         assertEquals("Orientação a objetos (mentoring)", mentorings[0].toString())
