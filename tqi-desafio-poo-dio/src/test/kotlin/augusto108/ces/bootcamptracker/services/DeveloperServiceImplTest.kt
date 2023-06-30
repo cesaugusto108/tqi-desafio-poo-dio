@@ -7,18 +7,27 @@ import jakarta.persistence.EntityManager
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.*
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
+import org.springframework.test.context.TestPropertySource
 import org.springframework.transaction.annotation.Transactional
 
 @SpringBootTest
 @ActiveProfiles("test")
 @Transactional
 @DisplayNameGeneration(DisplayNameGenerator.Simple::class)
+@TestPropertySource("classpath:app_params.properties")
 class DeveloperServiceImplTest(
     @Autowired private val entityManager: EntityManager,
     @Autowired private val developerService: DeveloperService
 ) {
+    @Value("\${page.value}")
+    var page: Int = 0
+
+    @Value("\${max.value}")
+    var max: Int = 0
+
     @BeforeEach
     fun setUp() {
         val developerQuery: String =
@@ -59,7 +68,7 @@ class DeveloperServiceImplTest(
 
     @Test
     fun findAllDevelopers() {
-        val developers: List<Developer> = developerService.findAllDevelopers(0, 10)
+        val developers: List<Developer> = developerService.findAllDevelopers(page, max)
 
         assertEquals(1, developers.size)
         assertEquals("(2) José Carlos Costa (josecc@email.com)", developers[0].toString())

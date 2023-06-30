@@ -3,11 +3,12 @@ package augusto108.ces.bootcamptracker.services
 import augusto108.ces.bootcamptracker.model.Bootcamp
 import jakarta.persistence.EntityManager
 import org.junit.jupiter.api.*
-
 import org.junit.jupiter.api.Assertions.*
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
+import org.springframework.test.context.TestPropertySource
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
 
@@ -15,10 +16,17 @@ import java.time.LocalDateTime
 @ActiveProfiles("test")
 @Transactional
 @DisplayNameGeneration(DisplayNameGenerator.Simple::class)
+@TestPropertySource("classpath:app_params.properties")
 class BootcampServiceImplTest(
     @Autowired private val entityManager: EntityManager,
     @Autowired private val bootcampService: BootcampService
 ) {
+    @Value("\${page.value}")
+    var page: Int = 0
+
+    @Value("\${max.value}")
+    var max: Int = 0
+
     @BeforeEach
     fun setUp() {
         val bootcampQuery: String =
@@ -63,7 +71,7 @@ class BootcampServiceImplTest(
 
     @Test
     fun findAllBootcamps() {
-        val bootcamps: List<Bootcamp> = bootcampService.findAllBootcamps(0, 10)
+        val bootcamps: List<Bootcamp> = bootcampService.findAllBootcamps(page, max)
 
         assertEquals(1, bootcamps.size)
         assertEquals("TQI Kotlin Backend", bootcamps[0].toString())

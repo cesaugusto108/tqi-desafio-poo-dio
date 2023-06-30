@@ -8,12 +8,14 @@ import org.hamcrest.Matchers.*
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.*
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
 import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf
 import org.springframework.test.context.ActiveProfiles
+import org.springframework.test.context.TestPropertySource
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
@@ -25,12 +27,19 @@ import org.springframework.transaction.annotation.Transactional
 @WithMockUser
 @Transactional
 @DisplayNameGeneration(DisplayNameGenerator.Simple::class)
+@TestPropertySource("classpath:app_params.properties")
 class MentoringControllerTest(
     @Autowired private val mockMvc: MockMvc,
     @Autowired private val objectMapper: ObjectMapper
 ) {
     @PersistenceContext
     private val entityManager: EntityManager? = null
+
+    @Value("\${page.value}")
+    var page: String = ""
+
+    @Value("\${max.value}")
+    var max: String = ""
 
     @BeforeEach
     fun setUp() {
