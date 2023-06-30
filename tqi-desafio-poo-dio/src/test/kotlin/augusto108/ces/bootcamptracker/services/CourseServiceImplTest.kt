@@ -2,6 +2,7 @@ package augusto108.ces.bootcamptracker.services
 
 import augusto108.ces.bootcamptracker.model.Course
 import jakarta.persistence.EntityManager
+import jakarta.persistence.NoResultException
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.*
 import org.springframework.beans.factory.annotation.Autowired
@@ -78,6 +79,8 @@ class CourseServiceImplTest(
         val course: Course = courseService.findCourseById(-2)
 
         assertEquals("Sintaxe Java (course)", course.toString())
+        assertThrows<NoResultException> { courseService.findCourseById(0) }
+        assertThrows<NumberFormatException> { courseService.findCourseById("aaa".toInt()) }
     }
 
     @Test

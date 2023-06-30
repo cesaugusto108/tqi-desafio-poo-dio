@@ -2,6 +2,7 @@ package augusto108.ces.bootcamptracker.services
 
 import augusto108.ces.bootcamptracker.model.Mentoring
 import jakarta.persistence.EntityManager
+import jakarta.persistence.NoResultException
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.*
 import org.springframework.beans.factory.annotation.Autowired
@@ -77,6 +78,8 @@ class MentoringServiceImplTests(
         val mentoring: Mentoring = mentoringService.findMentoringById(-1)
 
         assertEquals("Orientação a objetos (mentoring)", mentoring.toString())
+        assertThrows<NoResultException> { mentoringService.findMentoringById(0) }
+        assertThrows<NumberFormatException> { mentoringService.findMentoringById("aaa".toInt()) }
     }
 
     @Test

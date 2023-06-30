@@ -4,6 +4,7 @@ import augusto108.ces.bootcamptracker.model.Instructor
 import augusto108.ces.bootcamptracker.model.Name
 import augusto108.ces.bootcamptracker.model.Person
 import jakarta.persistence.EntityManager
+import jakarta.persistence.NoResultException
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.*
 import org.springframework.beans.factory.annotation.Autowired
@@ -79,6 +80,8 @@ class InstructorServiceImplTest(
         val instructor: Instructor = instructorService.findInstructorById(-2)
 
         assertEquals("Maria Souza (maria@email.com)", instructor.toString())
+        assertThrows<NoResultException> { instructorService.findInstructorById(0) }
+        assertThrows<NumberFormatException> { instructorService.findInstructorById("aaa".toInt()) }
     }
 
     @Test

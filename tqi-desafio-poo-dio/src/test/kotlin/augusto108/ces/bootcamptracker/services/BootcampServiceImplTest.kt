@@ -2,6 +2,7 @@ package augusto108.ces.bootcamptracker.services
 
 import augusto108.ces.bootcamptracker.model.Bootcamp
 import jakarta.persistence.EntityManager
+import jakarta.persistence.NoResultException
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.*
 import org.springframework.beans.factory.annotation.Autowired
@@ -83,6 +84,8 @@ class BootcampServiceImplTest(
         val bootcamp: Bootcamp = bootcampService.findBootcampById(-1)
 
         assertEquals("TQI Kotlin Backend", bootcamp.toString())
+        assertThrows<NoResultException> { bootcampService.findBootcampById(0) }
+        assertThrows<NumberFormatException> { bootcampService.findBootcampById("aaa".toInt()) }
     }
 
     @Test
