@@ -2,6 +2,8 @@ package augusto108.ces.bootcamptracker.services
 
 import augusto108.ces.bootcamptracker.dao.DeveloperDao
 import augusto108.ces.bootcamptracker.model.Developer
+import jakarta.persistence.NoResultException
+import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -12,7 +14,13 @@ class DeveloperServiceImpl(private val developerDao: DeveloperDao) : DeveloperSe
 
     override fun findAllDevelopers(page: Int, max: Int): List<Developer> = developerDao.findAllDevelopers(page, max)
 
-    override fun findDeveloperById(id: Int): Developer = developerDao.findDeveloperById(id)
+    override fun findDeveloperById(id: Int): Developer = try {
+        developerDao.findDeveloperById(id)
+    } catch (e: EmptyResultDataAccessException) {
+        throw NoResultException("No result for query. Id: $id")
+    } catch (e: NumberFormatException) {
+        throw NumberFormatException()
+    }
 
     override fun updateDeveloper(developer: Developer): Developer = developerDao.updateDeveloper(developer)
 

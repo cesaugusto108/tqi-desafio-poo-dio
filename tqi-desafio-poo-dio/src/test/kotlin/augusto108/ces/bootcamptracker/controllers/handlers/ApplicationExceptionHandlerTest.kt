@@ -1,0 +1,48 @@
+package augusto108.ces.bootcamptracker.controllers.handlers
+
+import org.hamcrest.Matchers.*
+import org.junit.jupiter.api.*
+import org.junit.jupiter.api.Assertions.*
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
+import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.http.MediaType
+import org.springframework.security.test.context.support.WithMockUser
+import org.springframework.test.context.ActiveProfiles
+import org.springframework.test.web.servlet.MockMvc
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
+
+@SpringBootTest
+@ActiveProfiles("test")
+@AutoConfigureMockMvc
+@WithMockUser
+@DisplayNameGeneration(DisplayNameGenerator.Simple::class)
+class ApplicationExceptionHandlerTest(@Autowired private val mockMvc: MockMvc) {
+    @Test
+    fun handleNotFound() {
+        mockMvc.perform(get("/courses/{id}", 0))
+            .andExpect(status().isNotFound)
+            .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
+            .andExpect(jsonPath("$.message", `is`("No result for query. Id: 0")))
+            .andExpect(jsonPath("$.status", `is`("NOT_FOUND")))
+            .andExpect(jsonPath("$.statusCode", `is`(404)))
+
+        mockMvc.perform(get("/all/courses/"))
+            .andExpect(status().isNotFound)
+            .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
+            .andExpect(jsonPath("$.message", `is`("No endpoint GET /all/courses/.")))
+            .andExpect(jsonPath("$.status", `is`("NOT_FOUND")))
+            .andExpect(jsonPath("$.statusCode", `is`(404)))
+    }
+
+    @Test
+    fun handleBadRequest() {
+        mockMvc.perform(get("/courses/{id}", "aaa"))
+            .andExpect(status().isBadRequest)
+            .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
+            .andExpect(jsonPath("$.message", `is`("For input string: \"aaa\"")))
+            .andExpect(jsonPath("$.status", `is`("BAD_REQUEST")))
+            .andExpect(jsonPath("$.statusCode", `is`(400)))
+    }
+}
