@@ -58,7 +58,7 @@ class InstructorServiceImplTest(
 
     @Test
     fun findAllInstructors() {
-        val instructors: List<Instructor> = instructorService.findAllInstructors()
+        val instructors: List<Instructor> = instructorService.findAllInstructors(0, 10)
 
         assertEquals(1, instructors.size)
         assertEquals("Maria Souza (maria@email.com)", instructors[0].toString())

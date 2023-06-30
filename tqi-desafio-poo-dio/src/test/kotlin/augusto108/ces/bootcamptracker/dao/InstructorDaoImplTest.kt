@@ -58,7 +58,7 @@ class InstructorDaoImplTest(
 
     @Test
     fun findAllInstructors() {
-        val instructors: List<Instructor> = instructorDao.findAllInstructors()
+        val instructors: List<Instructor> = instructorDao.findAllInstructors(0, 10)
 
         assertEquals(1, instructors.size)
         assertEquals("Maria Souza (maria@email.com)", instructors[0].toString())

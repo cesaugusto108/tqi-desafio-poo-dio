@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional
 class InstructorServiceImpl(private val instructorDao: InstructorDao) : InstructorService {
     override fun saveInstructor(instructor: Instructor): Instructor = instructorDao.saveInstructor(instructor)
 
-    override fun findAllInstructors(): List<Instructor> = instructorDao.findAllInstructors()
+    override fun findAllInstructors(page: Int, max: Int): List<Instructor> = instructorDao.findAllInstructors(page, max)
 
     override fun findInstructorById(id: Int): Instructor = instructorDao.findInstructorById(id)
 

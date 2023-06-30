@@ -5,7 +5,7 @@ import augusto108.ces.bootcamptracker.model.Instructor
 interface InstructorService {
     fun saveInstructor(instructor: Instructor): Instructor
 
-    fun findAllInstructors(): List<Instructor>
+    fun findAllInstructors(page: Int, max: Int): List<Instructor>
 
     fun findInstructorById(id: Int): Instructor
 

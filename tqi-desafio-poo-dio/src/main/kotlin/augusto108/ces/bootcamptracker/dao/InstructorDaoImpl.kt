@@ -12,8 +12,11 @@ class InstructorDaoImpl(private val entityManager: EntityManager) : InstructorDa
         return instructor
     }
 
-    override fun findAllInstructors(): List<Instructor> =
-        entityManager.createQuery("from Instructor order by id", Instructor::class.java).resultList
+    override fun findAllInstructors(page: Int, max: Int): List<Instructor> =
+        entityManager
+            .createQuery("from Instructor order by id", Instructor::class.java)
+            .setFirstResult(page * max)
+            .setMaxResults(max).resultList
 
     override fun findInstructorById(id: Int): Instructor =
         entityManager
