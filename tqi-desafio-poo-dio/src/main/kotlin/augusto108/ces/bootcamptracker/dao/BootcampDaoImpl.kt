@@ -12,8 +12,12 @@ class BootcampDaoImpl(private val entityManager: EntityManager) : BootcampDao {
         return bootcamp
     }
 
-    override fun findAllBootcamps(): List<Bootcamp> =
-        entityManager.createQuery("from Bootcamp order by id", Bootcamp::class.java).resultList
+    override fun findAllBootcamps(page: Int, max: Int): List<Bootcamp> =
+        entityManager
+            .createQuery("from Bootcamp order by id", Bootcamp::class.java)
+            .setFirstResult(page * max)
+            .setMaxResults(max)
+            .resultList
 
     override fun findBootcampById(id: Int): Bootcamp =
         entityManager

@@ -63,7 +63,7 @@ class BootcampServiceImplTest(
 
     @Test
     fun findAllBootcamps() {
-        val bootcamps: List<Bootcamp> = bootcampService.findAllBootcamps()
+        val bootcamps: List<Bootcamp> = bootcampService.findAllBootcamps(0, 10)
 
         assertEquals(1, bootcamps.size)
         assertEquals("TQI Kotlin Backend", bootcamps[0].toString())

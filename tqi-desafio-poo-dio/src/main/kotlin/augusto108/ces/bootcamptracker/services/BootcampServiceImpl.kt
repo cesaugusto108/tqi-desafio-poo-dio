@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional
 class BootcampServiceImpl(private val bootcampDao: BootcampDao) : BootcampService {
     override fun saveBootcamp(bootcamp: Bootcamp): Bootcamp = bootcampDao.saveBootcamp(bootcamp)
 
-    override fun findAllBootcamps(): List<Bootcamp> = bootcampDao.findAllBootcamps()
+    override fun findAllBootcamps(page: Int, max: Int): List<Bootcamp> = bootcampDao.findAllBootcamps(page, max)
 
     override fun findBootcampById(id: Int): Bootcamp = bootcampDao.findBootcampById(id)
 
