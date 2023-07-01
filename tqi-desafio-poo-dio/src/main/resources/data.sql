@@ -1,15 +1,12 @@
-delete from developer_bootcamp where developer_id = -1;
+delete from developer_bootcamp;
 
-delete from bootcamp_activity where bootcamp_id = -1;
+delete from bootcamp_activity;
 
-delete from activity where id = -2;
-delete from activity where id = -1;
+delete from activity;
 
-delete from bootcamp where id = -2;
-delete from bootcamp where id = -1;
+delete from bootcamp;
 
-delete from person where id = -2;
-delete from person where id = -1;
+delete from person;
 
 insert into bootcamp values (-2, 'Linux Experience', 'Aperfeiçoamento Linux', NULL, NULL);
 insert into bootcamp values (-1, 'TQI Kotlin Backend', 'Java e Kotlin backend', NULL, NULL);
