@@ -10,41 +10,26 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Profile
 import org.springframework.context.annotation.PropertySource
 import org.springframework.http.HttpMethod
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.transaction.annotation.Transactional
 
 @Configuration
-@Profile("!test & !dev")
+@Profile("!test & dev")
 @PropertySource("classpath:app_users.properties")
 @Transactional
-open class ApplicationSecurityConfig(
+class DevProfileApplicationSecurityConfig(
     private val userService: UserService,
     private val userRoleService: UserRoleService
-) {
+) : ApplicationSecurityConfig(userService, userRoleService) {
     @PersistenceContext
-    val entityManager: EntityManager? = null
+    override val entityManager: EntityManager? = null
 
     @Value("\${users.password}")
-    val userPassword: String = ""
+    override val userPassword: String = ""
 
     @Bean
-    fun passwordEnconder(): BCryptPasswordEncoder = BCryptPasswordEncoder()
-
-    @Bean
-    fun authenticationProvider(userService: UserService): DaoAuthenticationProvider {
-        val daoAuthenticationProvider = DaoAuthenticationProvider()
-
-        daoAuthenticationProvider.setUserDetailsService(userService)
-        daoAuthenticationProvider.setPasswordEncoder(passwordEnconder())
-
-        return daoAuthenticationProvider
-    }
-
-    @Bean
-    fun securityFilterChain(httpSecurity: HttpSecurity): SecurityFilterChain {
+    override fun securityFilterChain(httpSecurity: HttpSecurity): SecurityFilterChain {
         httpSecurity.authorizeHttpRequests {
             it
                 .requestMatchers(HttpMethod.GET).hasAnyRole("NORMAL", "ADMIN")
@@ -53,11 +38,13 @@ open class ApplicationSecurityConfig(
                 .requestMatchers(HttpMethod.PATCH).hasRole("ADMIN")
         }.httpBasic()
 
+        httpSecurity.csrf().disable()
+
         return httpSecurity.build()
     }
 
     @Bean
-    fun loadUsers() {
+    override fun loadUsers() {
         entityManager?.createNativeQuery("delete from user_roles_tb;")?.executeUpdate()
         entityManager?.createNativeQuery("delete from user_role_tb;")?.executeUpdate()
         entityManager?.createNativeQuery("delete from user_tb;")?.executeUpdate()
@@ -68,8 +55,8 @@ open class ApplicationSecurityConfig(
         userRoleService.saveUserRole(userRole1)
         userRoleService.saveUserRole(userRole2)
 
-        val user1 = User(username = "normal", password = userPassword, isActive = true)
-        val user2 = User(username = "admin", password = userPassword, isActive = true)
+        val user1 = User(username = "devnormal", password = userPassword, isActive = true)
+        val user2 = User(username = "devadmin", password = userPassword, isActive = true)
 
         user1.userRoles.add(userRole1)
         user2.userRoles.add(userRole2)
