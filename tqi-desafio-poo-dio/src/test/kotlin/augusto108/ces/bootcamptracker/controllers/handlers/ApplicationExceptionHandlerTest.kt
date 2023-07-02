@@ -24,7 +24,7 @@ class ApplicationExceptionHandlerTest(@Autowired private val mockMvc: MockMvc) {
         mockMvc.perform(get("/courses/{id}", 0))
             .andExpect(status().isNotFound)
             .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
-            .andExpect(jsonPath("$.message", `is`("No result for query. Id: 0")))
+            .andExpect(jsonPath("$.message", `is`("No result found. For query: Id: 0")))
             .andExpect(jsonPath("$.status", `is`("NOT_FOUND")))
             .andExpect(jsonPath("$.statusCode", `is`(404)))
 

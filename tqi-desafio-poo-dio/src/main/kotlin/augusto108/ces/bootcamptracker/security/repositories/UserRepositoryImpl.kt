@@ -1,20 +1,14 @@
-package augusto108.ces.bootcamptracker.services
+package augusto108.ces.bootcamptracker.security.repositories
 
-import augusto108.ces.bootcamptracker.dao.UserDao
-import augusto108.ces.bootcamptracker.security.User
-import augusto108.ces.bootcamptracker.security.UserRole
+import augusto108.ces.bootcamptracker.security.dao.UserDao
+import augusto108.ces.bootcamptracker.security.model.User
+import augusto108.ces.bootcamptracker.security.model.UserRole
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
-import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Transactional
+import org.springframework.stereotype.Repository
 
-@Service
-@Transactional
-class UserServiceImpl(private val userDao: UserDao) : UserService {
-    override fun saveUser(user: User): Any = userDao.save(user)
-
-    override fun findUserByUsername(username: String): User = userDao.findUserByUsername(username)
-
+@Repository
+class UserRepositoryImpl(private val userDao: UserDao) : UserRepository {
     override fun loadUserByUsername(username: String?): UserDetails {
         val user: User = userDao.findUserByUsername(username)
 

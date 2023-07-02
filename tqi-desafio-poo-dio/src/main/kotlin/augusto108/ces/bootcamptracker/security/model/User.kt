@@ -1,6 +1,5 @@
-package augusto108.ces.bootcamptracker.security
+package augusto108.ces.bootcamptracker.security.model
 
-import augusto108.ces.bootcamptracker.model.BaseEntity
 import jakarta.persistence.*
 
 @Entity
@@ -10,7 +9,7 @@ class User(
     @Column(name = "password", nullable = false) val password: String,
     @Column(name = "is_active", nullable = false) val isActive: Boolean,
     id: Int = 0
-) : BaseEntity(id) {
+) : SecBaseEntity(id) {
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
         name = "user_roles_tb",

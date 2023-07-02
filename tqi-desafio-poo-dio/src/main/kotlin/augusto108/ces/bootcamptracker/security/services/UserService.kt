@@ -1,6 +1,6 @@
-package augusto108.ces.bootcamptracker.services
+package augusto108.ces.bootcamptracker.security.services
 
-import augusto108.ces.bootcamptracker.security.User
+import augusto108.ces.bootcamptracker.security.model.User
 import org.springframework.security.core.userdetails.UserDetailsService
 
 interface UserService : UserDetailsService {

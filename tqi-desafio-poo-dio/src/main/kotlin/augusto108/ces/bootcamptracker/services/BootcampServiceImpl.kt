@@ -1,8 +1,8 @@
 package augusto108.ces.bootcamptracker.services
 
 import augusto108.ces.bootcamptracker.dao.BootcampDao
+import augusto108.ces.bootcamptracker.exceptions.NoResultForQueryException
 import augusto108.ces.bootcamptracker.model.Bootcamp
-import jakarta.persistence.NoResultException
 import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -17,7 +17,7 @@ class BootcampServiceImpl(private val bootcampDao: BootcampDao) : BootcampServic
     override fun findBootcampById(id: Int): Bootcamp = try {
         bootcampDao.findBootcampById(id)
     } catch (e: EmptyResultDataAccessException) {
-        throw NoResultException("No result for query. Id: $id")
+        throw NoResultForQueryException("Id: $id")
     } catch (e: NumberFormatException) {
         throw NumberFormatException()
     }

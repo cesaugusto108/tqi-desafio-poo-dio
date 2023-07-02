@@ -1,8 +1,8 @@
 package augusto108.ces.bootcamptracker.services
 
 import augusto108.ces.bootcamptracker.dao.InstructorDao
+import augusto108.ces.bootcamptracker.exceptions.NoResultForQueryException
 import augusto108.ces.bootcamptracker.model.Instructor
-import jakarta.persistence.NoResultException
 import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -17,7 +17,7 @@ class InstructorServiceImpl(private val instructorDao: InstructorDao) : Instruct
     override fun findInstructorById(id: Int): Instructor = try {
         instructorDao.findInstructorById(id)
     } catch (e: EmptyResultDataAccessException) {
-        throw NoResultException("No result for query. Id: $id")
+        throw NoResultForQueryException("Id: $id")
     } catch (e: NumberFormatException) {
         throw NumberFormatException()
     }

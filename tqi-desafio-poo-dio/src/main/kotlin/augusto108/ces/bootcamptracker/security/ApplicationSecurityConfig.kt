@@ -1,7 +1,10 @@
 package augusto108.ces.bootcamptracker.security
 
-import augusto108.ces.bootcamptracker.services.UserRoleService
-import augusto108.ces.bootcamptracker.services.UserService
+import augusto108.ces.bootcamptracker.security.model.Role
+import augusto108.ces.bootcamptracker.security.model.User
+import augusto108.ces.bootcamptracker.security.model.UserRole
+import augusto108.ces.bootcamptracker.security.services.UserRoleService
+import augusto108.ces.bootcamptracker.security.services.UserService
 import jakarta.persistence.EntityManager
 import jakarta.persistence.PersistenceContext
 import org.springframework.beans.factory.annotation.Value
