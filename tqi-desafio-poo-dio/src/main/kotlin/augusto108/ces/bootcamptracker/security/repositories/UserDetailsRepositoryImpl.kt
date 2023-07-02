@@ -8,7 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.stereotype.Repository
 
 @Repository
-class UserRepositoryImpl(private val userDao: UserDao) : UserRepository {
+class UserDetailsRepositoryImpl(private val userDao: UserDao) : UserDetailsRepository {
     override fun loadUserByUsername(username: String?): UserDetails {
         val user: User = userDao.findUserByUsername(username)
 
