@@ -74,5 +74,6 @@ $ curl -v --user "devadmin:1234" localhost:8081/bootcamp-tracker-dev/developers 
    }
 ]
 ```
+![diagram](https://github.com/cesaugusto108/tqi-desafio-poo-dio/assets/93228693/3a5e35bf-4073-4c57-afbd-40127e727700)
 
-![diagram](https://github.com/cesaugusto108/tqi-desafio-poo-dio/assets/93228693/12495049-1fd9-4d81-a7f3-836c7a671066)
+
