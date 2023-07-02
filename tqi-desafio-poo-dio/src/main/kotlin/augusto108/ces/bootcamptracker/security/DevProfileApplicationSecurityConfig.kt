@@ -18,7 +18,7 @@ import org.springframework.security.web.SecurityFilterChain
 import org.springframework.transaction.annotation.Transactional
 
 @Configuration
-@Profile("!test & dev")
+@Profile("!test & !prod & dev")
 @PropertySource("classpath:app_users.properties")
 @Transactional
 class DevProfileApplicationSecurityConfig(
