@@ -1,6 +1,6 @@
 package augusto108.ces.bootcamptracker.controllers
 
-import augusto108.ces.bootcamptracker.model.Bootcamp
+import augusto108.ces.bootcamptracker.entities.Bootcamp
 import augusto108.ces.bootcamptracker.services.BootcampService
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType

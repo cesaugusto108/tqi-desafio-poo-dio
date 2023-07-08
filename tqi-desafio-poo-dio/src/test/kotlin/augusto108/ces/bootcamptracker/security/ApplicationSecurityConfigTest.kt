@@ -1,6 +1,6 @@
 package augusto108.ces.bootcamptracker.security
 
-import augusto108.ces.bootcamptracker.model.Developer
+import augusto108.ces.bootcamptracker.entities.Developer
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
@@ -34,5 +34,10 @@ class ApplicationSecurityConfigTest(
                 .content(objectMapper.writeValueAsString(Developer()))
         )
             .andExpect(status().isCreated)
+
+        mockMvc.perform(
+            delete("/developers/{id}", 1).with(csrf())
+        )
+            .andExpect(status().isNoContent)
     }
 }

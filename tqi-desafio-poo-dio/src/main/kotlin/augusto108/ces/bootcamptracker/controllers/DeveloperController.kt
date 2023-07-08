@@ -1,6 +1,7 @@
 package augusto108.ces.bootcamptracker.controllers
 
-import augusto108.ces.bootcamptracker.model.Developer
+import augusto108.ces.bootcamptracker.dto.DeveloperDTO
+import augusto108.ces.bootcamptracker.entities.Developer
 import augusto108.ces.bootcamptracker.services.DeveloperService
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -11,7 +12,7 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/developers")
 class DeveloperController(private val developerService: DeveloperService) {
     @PostMapping(consumes = ["application/json"], produces = ["application/json"])
-    fun saveDeveloper(@RequestBody developer: Developer): ResponseEntity<Developer> =
+    fun saveDeveloper(@RequestBody developer: Developer): ResponseEntity<DeveloperDTO> =
         ResponseEntity
             .status(HttpStatus.CREATED)
             .contentType(MediaType.APPLICATION_JSON)
@@ -21,24 +22,27 @@ class DeveloperController(private val developerService: DeveloperService) {
     fun findAllDevelopers(
         @RequestParam(defaultValue = "0", required = false) page: Int,
         @RequestParam(defaultValue = "10", required = false) max: Int
-    ): ResponseEntity<List<Developer>> =
+    ): ResponseEntity<List<DeveloperDTO>> =
         ResponseEntity
             .status(HttpStatus.OK)
             .contentType(MediaType.APPLICATION_JSON)
             .body(developerService.findAllDevelopers(page, max))
 
     @GetMapping("/{id}", produces = ["application/json"])
-    fun findDeveloperById(@PathVariable("id") id: Int): ResponseEntity<Developer> =
+    fun findDeveloperById(@PathVariable("id") id: Int): ResponseEntity<DeveloperDTO> =
         ResponseEntity
             .status(HttpStatus.OK)
             .contentType(MediaType.APPLICATION_JSON)
             .body(developerService.findDeveloperById(id))
 
     @PutMapping(consumes = ["application/json"], produces = ["application/json"])
-    fun updateDeveloper(@RequestBody developer: Developer): ResponseEntity<Developer> {
-        val d: Developer = developerService.findDeveloperById(developer.id)
+    fun updateDeveloper(@RequestBody developer: Developer): ResponseEntity<DeveloperDTO> {
+        val d: Developer = developerService.developerById(developer.id)
+
         d.level = developer.level
         d.name = developer.name
+        d.username = developer.username
+        d.password = developer.password
         d.age = developer.age
         d.email = developer.email
         d.bootcamps = developer.bootcamps

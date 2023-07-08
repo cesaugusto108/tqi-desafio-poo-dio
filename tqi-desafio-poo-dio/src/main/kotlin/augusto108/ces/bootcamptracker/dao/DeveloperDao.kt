@@ -1,6 +1,6 @@
 package augusto108.ces.bootcamptracker.dao
 
-import augusto108.ces.bootcamptracker.model.Developer
+import augusto108.ces.bootcamptracker.entities.Developer
 
 interface DeveloperDao {
     fun saveDeveloper(developer: Developer): Developer

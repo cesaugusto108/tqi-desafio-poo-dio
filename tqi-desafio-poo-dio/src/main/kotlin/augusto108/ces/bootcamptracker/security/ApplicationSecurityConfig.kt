@@ -54,6 +54,7 @@ open class ApplicationSecurityConfig(
                 .requestMatchers(HttpMethod.POST).hasRole("ADMIN")
                 .requestMatchers(HttpMethod.PUT).hasRole("ADMIN")
                 .requestMatchers(HttpMethod.PATCH).hasRole("ADMIN")
+                .requestMatchers(HttpMethod.DELETE).hasRole("ADMIN")
         }.httpBasic()
 
         return httpSecurity.build()

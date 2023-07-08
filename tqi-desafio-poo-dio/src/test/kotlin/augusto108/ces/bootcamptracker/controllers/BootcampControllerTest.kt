@@ -1,6 +1,6 @@
 package augusto108.ces.bootcamptracker.controllers
 
-import augusto108.ces.bootcamptracker.model.Bootcamp
+import augusto108.ces.bootcamptracker.entities.Bootcamp
 import com.fasterxml.jackson.databind.ObjectMapper
 import jakarta.persistence.EntityManager
 import jakarta.persistence.PersistenceContext

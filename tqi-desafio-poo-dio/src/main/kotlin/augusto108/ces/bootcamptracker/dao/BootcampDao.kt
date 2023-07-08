@@ -1,6 +1,6 @@
 package augusto108.ces.bootcamptracker.dao
 
-import augusto108.ces.bootcamptracker.model.Bootcamp
+import augusto108.ces.bootcamptracker.entities.Bootcamp
 
 interface BootcampDao {
     fun saveBootcamp(bootcamp: Bootcamp): Bootcamp

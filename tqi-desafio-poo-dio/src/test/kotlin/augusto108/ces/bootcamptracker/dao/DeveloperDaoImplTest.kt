@@ -1,8 +1,8 @@
 package augusto108.ces.bootcamptracker.dao
 
-import augusto108.ces.bootcamptracker.model.Developer
-import augusto108.ces.bootcamptracker.model.Name
-import augusto108.ces.bootcamptracker.model.Person
+import augusto108.ces.bootcamptracker.entities.Developer
+import augusto108.ces.bootcamptracker.entities.Name
+import augusto108.ces.bootcamptracker.entities.Person
 import jakarta.persistence.EntityManager
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.*
@@ -32,8 +32,8 @@ class DeveloperDaoImplTest(
     fun setUp() {
         val developerQuery: String =
             "insert into " +
-                    "`person` (`person_type`, `id`, `person_age`, `email`, `first_name`, `last_name`, `middle_name`, `developer_level`)" +
-                    " values ('developer', -1, 29, 'josecc@email.com', 'José', 'Costa', 'Carlos', 2);"
+                    "`person` (`person_type`, `id`, `person_age`, `email`, `first_name`, `last_name`, `middle_name`, `password`, `username`, `developer_level`)" +
+                    " values ('developer', -1, 29, 'josecc@email.com', 'José', 'Costa', 'Carlos', 'josecc', '1234', 2);"
 
         entityManager.createNativeQuery(developerQuery, Person::class.java).executeUpdate()
     }

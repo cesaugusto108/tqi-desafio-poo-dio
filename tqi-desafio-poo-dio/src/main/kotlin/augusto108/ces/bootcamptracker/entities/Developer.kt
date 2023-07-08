@@ -1,4 +1,4 @@
-package augusto108.ces.bootcamptracker.model
+package augusto108.ces.bootcamptracker.entities
 
 import jakarta.persistence.*
 
@@ -9,8 +9,10 @@ class Developer(
     name: Name = Name(),
     age: Int = 0,
     email: String = "",
+    username: String = "",
+    password: String = "",
     id: Int = 0
-) : Person(name, age, email, id) {
+) : Person(name, age, email, username, password, id) {
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(

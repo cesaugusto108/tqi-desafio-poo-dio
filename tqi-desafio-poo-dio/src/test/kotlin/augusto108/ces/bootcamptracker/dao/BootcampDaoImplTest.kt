@@ -1,6 +1,6 @@
 package augusto108.ces.bootcamptracker.dao
 
-import augusto108.ces.bootcamptracker.model.Bootcamp
+import augusto108.ces.bootcamptracker.entities.Bootcamp
 import jakarta.persistence.EntityManager
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.*

@@ -1,8 +1,8 @@
 package augusto108.ces.bootcamptracker.controllers
 
-import augusto108.ces.bootcamptracker.model.Developer
-import augusto108.ces.bootcamptracker.model.Name
-import augusto108.ces.bootcamptracker.model.Person
+import augusto108.ces.bootcamptracker.entities.Developer
+import augusto108.ces.bootcamptracker.entities.Name
+import augusto108.ces.bootcamptracker.entities.Person
 import com.fasterxml.jackson.databind.ObjectMapper
 import jakarta.persistence.EntityManager
 import jakarta.persistence.PersistenceContext
@@ -47,8 +47,8 @@ class DeveloperControllerTest(
     fun setUp() {
         val developerQuery: String =
             "insert into " +
-                    "`person` (`person_type`, `id`, `person_age`, `email`, `first_name`, `last_name`, `middle_name`, `developer_level`)" +
-                    " values ('developer', -1, 29, 'josecc@email.com', 'José', 'Costa', 'Carlos', 2);"
+                    "`person` (`person_type`, `id`, `person_age`, `email`, `first_name`, `last_name`, `middle_name`, `password`, `username`, `developer_level`)" +
+                    " values ('developer', -1, 29, 'josecc@email.com', 'José', 'Costa', 'Carlos', 'josecc', '1234', 2);"
 
         entityManager?.createNativeQuery(developerQuery, Person::class.java)?.executeUpdate()
     }
@@ -112,6 +112,7 @@ class DeveloperControllerTest(
                 level = 7,
                 name = Name(firstName = "Pedro", lastName = "Santos"),
                 email = "pedro@email.com",
+                username = "pedrosantos",
                 age = 31,
                 id = -1
             )
@@ -127,6 +128,7 @@ class DeveloperControllerTest(
             .andExpect(jsonPath("$.age", `is`(31)))
             .andExpect(jsonPath("$.name.lastName", `is`("Santos")))
             .andExpect(jsonPath("$.email", `is`("pedro@email.com")))
+            .andExpect(jsonPath("$.username", `is`("pedrosantos")))
             .andExpect(jsonPath("$.level", `is`(7)))
     }
 

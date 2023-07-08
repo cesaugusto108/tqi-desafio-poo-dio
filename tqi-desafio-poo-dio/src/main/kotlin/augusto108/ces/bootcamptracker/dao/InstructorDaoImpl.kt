@@ -1,6 +1,6 @@
 package augusto108.ces.bootcamptracker.dao
 
-import augusto108.ces.bootcamptracker.model.Instructor
+import augusto108.ces.bootcamptracker.entities.Instructor
 import jakarta.persistence.EntityManager
 import org.springframework.stereotype.Repository
 
@@ -26,9 +26,12 @@ class InstructorDaoImpl(private val entityManager: EntityManager) : InstructorDa
 
     override fun updateInstructor(instructor: Instructor): Instructor {
         val i: Instructor = findInstructorById(instructor.id)
+
         i.name = instructor.name
         i.age = instructor.age
         i.email = instructor.email
+        i.username = instructor.username
+        i.password = instructor.password
 
         entityManager.persist(i)
 

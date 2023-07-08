@@ -1,4 +1,4 @@
-package augusto108.ces.bootcamptracker.model
+package augusto108.ces.bootcamptracker.entities
 
 import jakarta.persistence.Column
 import jakarta.persistence.DiscriminatorValue
@@ -11,5 +11,7 @@ class Instructor(
     name: Name = Name(),
     age: Int = 0,
     email: String = "",
+    username: String = "",
+    password: String = "",
     id: Int = 0
-) : Person(name, age, email, id)
+) : Person(name, age, email, username, password, id)

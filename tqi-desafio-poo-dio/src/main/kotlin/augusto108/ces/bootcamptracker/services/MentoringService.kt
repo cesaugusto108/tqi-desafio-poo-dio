@@ -1,6 +1,6 @@
 package augusto108.ces.bootcamptracker.services
 
-import augusto108.ces.bootcamptracker.model.Mentoring
+import augusto108.ces.bootcamptracker.entities.Mentoring
 
 interface MentoringService {
     fun saveMentoring(mentoring: Mentoring): Mentoring

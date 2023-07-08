@@ -1,15 +1,18 @@
 package augusto108.ces.bootcamptracker.services
 
-import augusto108.ces.bootcamptracker.model.Developer
+import augusto108.ces.bootcamptracker.dto.DeveloperDTO
+import augusto108.ces.bootcamptracker.entities.Developer
 
 interface DeveloperService {
-    fun saveDeveloper(developer: Developer): Developer
+    fun saveDeveloper(developer: Developer): DeveloperDTO
 
-    fun findAllDevelopers(page: Int, max: Int): List<Developer>
+    fun findAllDevelopers(page: Int, max: Int): List<DeveloperDTO>
 
-    fun findDeveloperById(id: Int): Developer
+    fun findDeveloperById(id: Int): DeveloperDTO
 
-    fun updateDeveloper(developer: Developer): Developer
+    fun developerById(id: Int): Developer
+
+    fun updateDeveloper(developer: Developer): DeveloperDTO
 
     fun deleteDeveloper(id: Int): Any
 }

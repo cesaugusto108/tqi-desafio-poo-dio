@@ -1,6 +1,6 @@
 package augusto108.ces.bootcamptracker.dao
 
-import augusto108.ces.bootcamptracker.model.Mentoring
+import augusto108.ces.bootcamptracker.entities.Mentoring
 import jakarta.persistence.EntityManager
 import org.springframework.stereotype.Repository
 

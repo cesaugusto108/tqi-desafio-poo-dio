@@ -1,6 +1,6 @@
 package augusto108.ces.bootcamptracker.services
 
-import augusto108.ces.bootcamptracker.model.Course
+import augusto108.ces.bootcamptracker.entities.Course
 
 interface CourseService {
     fun saveCourse(course: Course): Course

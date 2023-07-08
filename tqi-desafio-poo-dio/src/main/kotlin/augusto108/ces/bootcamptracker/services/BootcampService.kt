@@ -1,6 +1,6 @@
 package augusto108.ces.bootcamptracker.services
 
-import augusto108.ces.bootcamptracker.model.Bootcamp
+import augusto108.ces.bootcamptracker.entities.Bootcamp
 
 interface BootcampService {
     fun saveBootcamp(bootcamp: Bootcamp): Bootcamp

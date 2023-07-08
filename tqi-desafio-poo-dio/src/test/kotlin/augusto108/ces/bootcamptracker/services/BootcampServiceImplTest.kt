@@ -1,6 +1,6 @@
 package augusto108.ces.bootcamptracker.services
 
-import augusto108.ces.bootcamptracker.model.Bootcamp
+import augusto108.ces.bootcamptracker.entities.Bootcamp
 import jakarta.persistence.EntityManager
 import jakarta.persistence.NoResultException
 import org.junit.jupiter.api.*

@@ -1,6 +1,6 @@
 package augusto108.ces.bootcamptracker.dao
 
-import augusto108.ces.bootcamptracker.model.Developer
+import augusto108.ces.bootcamptracker.entities.Developer
 import jakarta.persistence.EntityManager
 import org.springframework.stereotype.Repository
 
@@ -27,10 +27,14 @@ class DeveloperDaoImpl(private val entityManager: EntityManager) : DeveloperDao 
 
     override fun updateDeveloper(developer: Developer): Developer {
         val d: Developer = findDeveloperById(developer.id)
+
         d.level = developer.level
         d.name = developer.name
         d.age = developer.age
         d.email = developer.email
+        d.username = developer.username
+        d.password = developer.password
+        d.bootcamps = developer.bootcamps
 
         entityManager.persist(d)
 

@@ -1,6 +1,6 @@
 package augusto108.ces.bootcamptracker.dao
 
-import augusto108.ces.bootcamptracker.model.Mentoring
+import augusto108.ces.bootcamptracker.entities.Mentoring
 
 interface MentoringDao {
     fun saveMentoring(mentoring: Mentoring): Mentoring

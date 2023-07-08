@@ -1,8 +1,9 @@
 package augusto108.ces.bootcamptracker.services
 
-import augusto108.ces.bootcamptracker.model.Developer
-import augusto108.ces.bootcamptracker.model.Name
-import augusto108.ces.bootcamptracker.model.Person
+import augusto108.ces.bootcamptracker.dto.DeveloperDTO
+import augusto108.ces.bootcamptracker.entities.Developer
+import augusto108.ces.bootcamptracker.entities.Name
+import augusto108.ces.bootcamptracker.entities.Person
 import jakarta.persistence.EntityManager
 import jakarta.persistence.NoResultException
 import org.junit.jupiter.api.*
@@ -33,8 +34,8 @@ class DeveloperServiceImplTest(
     fun setUp() {
         val developerQuery: String =
             "insert into " +
-                    "`person` (`person_type`, `id`, `person_age`, `email`, `first_name`, `last_name`, `middle_name`, `developer_level`)" +
-                    " values ('developer', -1, 29, 'josecc@email.com', 'José', 'Costa', 'Carlos', 2);"
+                    "`person` (`person_type`, `id`, `person_age`, `email`, `first_name`, `last_name`, `middle_name`, `password`, `username`, `developer_level`)" +
+                    " values ('developer', -1, 29, 'josecc@email.com', 'José', 'Costa', 'Carlos', 'josecc', '1234', 2);"
 
         entityManager.createNativeQuery(developerQuery, Person::class.java).executeUpdate()
     }
@@ -69,7 +70,7 @@ class DeveloperServiceImplTest(
 
     @Test
     fun findAllDevelopers() {
-        val developers: List<Developer> = developerService.findAllDevelopers(page, max)
+        val developers: List<DeveloperDTO> = developerService.findAllDevelopers(page, max)
 
         assertEquals(1, developers.size)
         assertEquals("(2) José Carlos Costa (josecc@email.com)", developers[0].toString())
@@ -78,7 +79,7 @@ class DeveloperServiceImplTest(
 
     @Test
     fun findDeveloperById() {
-        val developer: Developer = developerService.findDeveloperById(-1)
+        val developer: DeveloperDTO = developerService.findDeveloperById(-1)
 
         assertEquals("(2) José Carlos Costa (josecc@email.com)", developer.toString())
         assertThrows<NoResultException> { developerService.findDeveloperById(0) }
@@ -90,6 +91,8 @@ class DeveloperServiceImplTest(
         val developer = Developer(
             name = Name(firstName = "Paula", middleName = "Campos", lastName = "Resende"),
             email = "paula@email.com",
+            username = "pcresende",
+            password = "1234",
             age = 40,
             id = -1,
             level = 6
@@ -103,6 +106,7 @@ class DeveloperServiceImplTest(
 
         assertEquals(1, developers.size)
         assertEquals("(6) Paula Campos Resende (paula@email.com)", developers[0].toString())
+        assertEquals("pcresende", developers[0].username)
         assertEquals(-1, developers[0].id)
     }
 

@@ -1,8 +1,8 @@
 package augusto108.ces.bootcamptracker.dao
 
-import augusto108.ces.bootcamptracker.model.Instructor
-import augusto108.ces.bootcamptracker.model.Name
-import augusto108.ces.bootcamptracker.model.Person
+import augusto108.ces.bootcamptracker.entities.Instructor
+import augusto108.ces.bootcamptracker.entities.Name
+import augusto108.ces.bootcamptracker.entities.Person
 import jakarta.persistence.EntityManager
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.*
@@ -32,8 +32,8 @@ class InstructorDaoImplTest(
     fun setUp() {
         val instructorQuery: String =
             "insert into " +
-                    "`person` (`person_type`, `id`, `person_age`, `email`, `first_name`, `last_name`, `middle_name`, `developer_level`)" +
-                    " values ('instructor', -2, 32, 'maria@email.com', 'Maria', 'Souza', '', NULL);"
+                    "`person` (`person_type`, `id`, `person_age`, `email`, `first_name`, `last_name`, `middle_name`, `password`, `username`, `developer_level`)" +
+                    " values ('instructor', -2, 32, 'maria@email.com', 'Maria', 'Souza', '', '1234', 'marias', NULL);"
 
         entityManager.createNativeQuery(instructorQuery, Person::class.java).executeUpdate()
     }

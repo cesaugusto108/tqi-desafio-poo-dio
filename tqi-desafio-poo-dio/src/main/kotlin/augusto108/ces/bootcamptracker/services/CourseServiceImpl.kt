@@ -1,8 +1,8 @@
 package augusto108.ces.bootcamptracker.services
 
 import augusto108.ces.bootcamptracker.dao.CourseDao
+import augusto108.ces.bootcamptracker.entities.Course
 import augusto108.ces.bootcamptracker.exceptions.NoResultForQueryException
-import augusto108.ces.bootcamptracker.model.Course
 import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional

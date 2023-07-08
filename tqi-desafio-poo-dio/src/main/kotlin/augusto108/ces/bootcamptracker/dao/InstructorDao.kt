@@ -1,6 +1,6 @@
 package augusto108.ces.bootcamptracker.dao
 
-import augusto108.ces.bootcamptracker.model.Instructor
+import augusto108.ces.bootcamptracker.entities.Instructor
 
 interface InstructorDao {
     fun saveInstructor(instructor: Instructor): Instructor

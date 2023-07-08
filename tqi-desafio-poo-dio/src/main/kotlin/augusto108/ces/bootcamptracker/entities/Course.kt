@@ -1,4 +1,4 @@
-package augusto108.ces.bootcamptracker.model
+package augusto108.ces.bootcamptracker.entities
 
 import jakarta.persistence.Column
 import jakarta.persistence.DiscriminatorValue

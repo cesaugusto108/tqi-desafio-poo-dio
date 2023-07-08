@@ -3,6 +3,8 @@ CREATE TABLE IF NOT EXISTS `person` (
   `person_id` int NOT NULL AUTO_INCREMENT,
   `person_age` int DEFAULT NULL,
   `email` varchar(30) NOT NULL,
+  `username` varchar(30) NOT NULL,
+  `password` varchar(255) NOT NULL,
   `first_name` varchar(20) NOT NULL,
   `last_name` varchar(20) NOT NULL,
   `middle_name` varchar(20) NOT NULL,

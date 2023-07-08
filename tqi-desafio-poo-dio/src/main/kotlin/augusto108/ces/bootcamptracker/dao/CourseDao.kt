@@ -1,6 +1,6 @@
 package augusto108.ces.bootcamptracker.dao
 
-import augusto108.ces.bootcamptracker.model.Course
+import augusto108.ces.bootcamptracker.entities.Course
 
 interface CourseDao {
     fun saveCourse(course: Course): Course
