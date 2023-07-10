@@ -10,6 +10,7 @@ Desafio de código do Bootcamp DIO TQI Kotlin Backend Developer (https://web.dio
 - MySQL
 - H2 embedded database
 - Spring Security (basic authentication/authorization)
+- Flyway
 
 ```
 $ curl -v --user "devadmin:1234" localhost:8081/bootcamp-tracker-dev/developers | json_pp
