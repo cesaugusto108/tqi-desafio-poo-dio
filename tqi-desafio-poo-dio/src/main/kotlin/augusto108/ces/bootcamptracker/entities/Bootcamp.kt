@@ -1,10 +1,12 @@
 package augusto108.ces.bootcamptracker.entities
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder
 import jakarta.persistence.*
 import java.time.LocalDateTime
 
 @Entity
 @Table(name = "bootcamp")
+@JsonPropertyOrder("id", "description", "startDate", "finishDate", "details")
 class Bootcamp(
     @Column(name = "bootcamp_description", nullable = false, unique = true, length = 30) var description: String = "",
     @Column(name = "bootcamp_details", nullable = false, length = 80) var details: String = "",
