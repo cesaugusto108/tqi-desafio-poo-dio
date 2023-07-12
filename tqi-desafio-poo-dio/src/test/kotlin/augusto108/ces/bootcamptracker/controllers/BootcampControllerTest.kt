@@ -17,9 +17,11 @@ import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequ
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.TestPropertySource
 import org.springframework.test.web.servlet.MockMvc
+import org.springframework.test.web.servlet.MvcResult
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 import org.springframework.transaction.annotation.Transactional
+import augusto108.ces.bootcamptracker.util.MediaType as UtilMediaType
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -78,11 +80,32 @@ class BootcampControllerTest(
 
     @Test
     fun findAllBootcamps() {
-        mockMvc.perform(get("/bootcamps").param("page", page).param("max", max))
+        mockMvc.perform(
+            get("/bootcamps")
+                .param("page", page)
+                .param("max", max)
+                .accept(MediaType.APPLICATION_JSON)
+        )
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$[0].description", `is`("TQI Kotlin Backend")))
             .andExpect(jsonPath("$[0].details", `is`("Java e Kotlin backend")))
+
+        val result: MvcResult = mockMvc.perform(
+            get("/bootcamps")
+                .param("page", page)
+                .param("max", max)
+                .accept(UtilMediaType.APPLICATION_YAML)
+        )
+            .andExpect(status().isOk)
+            .andExpect(content().contentType(UtilMediaType.APPLICATION_YAML))
+            .andReturn()
+
+        val yamlResponse: String = "- id: -1\n" +
+                "  description: \"TQI Kotlin Backend\"\n" +
+                "  details: \"Java e Kotlin backend\""
+
+        assertTrue(result.response.contentAsString.contains(yamlResponse))
     }
 
     @Test
@@ -92,6 +115,21 @@ class BootcampControllerTest(
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.description", `is`("TQI Kotlin Backend")))
             .andExpect(jsonPath("$.details", `is`("Java e Kotlin backend")))
+
+        val result: MvcResult = mockMvc.perform(
+            get("/bootcamps/{id}", -1)
+                .accept(MediaType.valueOf(UtilMediaType.APPLICATION_YAML))
+        )
+            .andExpect(status().isOk)
+            .andExpect(content().contentType(UtilMediaType.APPLICATION_YAML))
+            .andReturn()
+
+        val yamlResponse: String = "---\n" +
+                "id: -1\n" +
+                "description: \"TQI Kotlin Backend\"\n" +
+                "details: \"Java e Kotlin backend\""
+
+        assertTrue(result.response.contentAsString.contains(yamlResponse))
     }
 
     @Test

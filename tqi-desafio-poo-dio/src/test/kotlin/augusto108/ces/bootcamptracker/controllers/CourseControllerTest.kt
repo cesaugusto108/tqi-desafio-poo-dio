@@ -17,9 +17,11 @@ import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequ
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.TestPropertySource
 import org.springframework.test.web.servlet.MockMvc
+import org.springframework.test.web.servlet.MvcResult
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 import org.springframework.transaction.annotation.Transactional
+import augusto108.ces.bootcamptracker.util.MediaType as UtilMediaType
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -81,6 +83,24 @@ class CourseControllerTest(
             .andExpect(jsonPath("$[0].description", `is`("Sintaxe Java")))
             .andExpect(jsonPath("$[0].details", `is`("Aprendendo a sintaxe Java")))
             .andExpect(jsonPath("$[0].hours", `is`(300)))
+
+        val result: MvcResult = mockMvc.perform(
+            get("/courses")
+                .param("page", "0")
+                .param("max", "10")
+                .accept(UtilMediaType.APPLICATION_YAML)
+        )
+            .andExpect(status().isOk)
+            .andExpect(content().contentType(UtilMediaType.APPLICATION_YAML))
+            .andReturn()
+
+        val yamlResponse: String = "---\n" +
+                "- id: -2\n" +
+                "  description: \"Sintaxe Java\"\n" +
+                "  details: \"Aprendendo a sintaxe Java\"\n" +
+                "  hours: 300"
+
+        assertTrue(result.response.contentAsString.contains(yamlResponse))
     }
 
     @Test
@@ -91,6 +111,21 @@ class CourseControllerTest(
             .andExpect(jsonPath("$.description", `is`("Sintaxe Java")))
             .andExpect(jsonPath("$.details", `is`("Aprendendo a sintaxe Java")))
             .andExpect(jsonPath("$.hours", `is`(300)))
+
+        val result: MvcResult = mockMvc.perform(
+            get("/courses/{id}", -2)
+                .accept(UtilMediaType.APPLICATION_YAML)
+        )
+            .andExpect(status().isOk)
+            .andExpect(content().contentType(UtilMediaType.APPLICATION_YAML))
+            .andReturn()
+
+        val yamlResponse: String = "id: -2\n" +
+                "description: \"Sintaxe Java\"\n" +
+                "details: \"Aprendendo a sintaxe Java\"\n" +
+                "hours: 300"
+
+        assertTrue(result.response.contentAsString.contains(yamlResponse))
     }
 
     @Test

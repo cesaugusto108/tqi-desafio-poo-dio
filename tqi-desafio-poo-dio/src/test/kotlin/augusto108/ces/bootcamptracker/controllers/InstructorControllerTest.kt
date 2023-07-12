@@ -19,9 +19,11 @@ import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequ
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.TestPropertySource
 import org.springframework.test.web.servlet.MockMvc
+import org.springframework.test.web.servlet.MvcResult
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 import org.springframework.transaction.annotation.Transactional
+import augusto108.ces.bootcamptracker.util.MediaType as UtilMediaType
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -84,6 +86,20 @@ class InstructorControllerTest(
             .andExpect(jsonPath("$[0].age", `is`(32)))
             .andExpect(jsonPath("$[0].name.lastName", `is`("Souza")))
             .andExpect(jsonPath("$[0].email", `is`("maria@email.com")))
+
+        val result: MvcResult = mockMvc.perform(
+            get("/instructors")
+                .param("page", "0")
+                .param("max", "10")
+                .accept(UtilMediaType.APPLICATION_YAML)
+        )
+            .andExpect(status().isOk)
+            .andExpect(content().contentType(UtilMediaType.APPLICATION_YAML))
+            .andReturn()
+
+        val yamlResponse: String = "email: \"maria@email.com\""
+
+        assertTrue(result.response.contentAsString.contains(yamlResponse))
     }
 
     @Test
@@ -95,6 +111,18 @@ class InstructorControllerTest(
             .andExpect(jsonPath("$.age", `is`(32)))
             .andExpect(jsonPath("$.name.lastName", `is`("Souza")))
             .andExpect(jsonPath("$.email", `is`("maria@email.com")))
+
+        val result: MvcResult = mockMvc.perform(
+            get("/instructors/{id}", -2)
+                .accept(UtilMediaType.APPLICATION_YAML)
+        )
+            .andExpect(status().isOk)
+            .andExpect(content().contentType(UtilMediaType.APPLICATION_YAML))
+            .andReturn()
+
+        val yamlResponse: String = "email: \"maria@email.com\""
+
+        assertTrue(result.response.contentAsString.contains(yamlResponse))
     }
 
     @Test
