@@ -20,6 +20,16 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 @DisplayNameGeneration(DisplayNameGenerator.Simple::class)
 class ApplicationExceptionHandlerTest(@Autowired private val mockMvc: MockMvc) {
     @Test
+    fun handleNotAcceptable() {
+        mockMvc.perform(get("/courses").accept(MediaType.APPLICATION_XML))
+            .andExpect(status().isNotAcceptable)
+            .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
+            .andExpect(jsonPath("$.message", `is`("No acceptable representation")))
+            .andExpect(jsonPath("$.status", `is`("NOT_ACCEPTABLE")))
+            .andExpect(jsonPath("$.statusCode", `is`(406)))
+    }
+
+    @Test
     fun handleNotFound() {
         mockMvc.perform(get("/courses/{id}", 0))
             .andExpect(status().isNotFound)

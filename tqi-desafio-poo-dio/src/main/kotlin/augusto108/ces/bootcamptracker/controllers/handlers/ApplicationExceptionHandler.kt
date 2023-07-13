@@ -5,6 +5,7 @@ import jakarta.persistence.NoResultException
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
+import org.springframework.web.HttpMediaTypeNotAcceptableException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.servlet.NoHandlerFoundException
@@ -14,6 +15,16 @@ import java.util.logging.Logger
 @ControllerAdvice
 class ApplicationExceptionHandler {
     private val logger: Logger = Logger.getLogger(ApplicationExceptionHandler::class.java.simpleName)
+
+    @ExceptionHandler(HttpMediaTypeNotAcceptableException::class)
+    fun handleNotAcceptable(e: HttpMediaTypeNotAcceptableException): ResponseEntity<ErrorResponse> {
+        logger.info("Exception thrown: ${e.javaClass.name}")
+
+        return ResponseEntity
+            .status(HttpStatus.NOT_ACCEPTABLE)
+            .contentType(MediaType.APPLICATION_PROBLEM_JSON)
+            .body(ErrorResponse(e.message, HttpStatus.NOT_ACCEPTABLE))
+    }
 
     @ExceptionHandler(NoHandlerFoundException::class, NoResultException::class)
     fun handleNotFound(e: Exception): ResponseEntity<ErrorResponse> {
