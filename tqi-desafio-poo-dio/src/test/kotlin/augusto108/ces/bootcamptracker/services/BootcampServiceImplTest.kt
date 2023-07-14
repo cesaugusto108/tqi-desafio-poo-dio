@@ -1,5 +1,6 @@
 package augusto108.ces.bootcamptracker.services
 
+import augusto108.ces.bootcamptracker.dto.BootcampDTO
 import augusto108.ces.bootcamptracker.entities.Bootcamp
 import jakarta.persistence.EntityManager
 import jakarta.persistence.NoResultException
@@ -72,7 +73,7 @@ class BootcampServiceImplTest(
 
     @Test
     fun findAllBootcamps() {
-        val bootcamps: List<Bootcamp> = bootcampService.findAllBootcamps(page, max)
+        val bootcamps: List<BootcampDTO> = bootcampService.findAllBootcamps(page, max)
 
         assertEquals(1, bootcamps.size)
         assertEquals("TQI Kotlin Backend", bootcamps[0].toString())
@@ -81,7 +82,7 @@ class BootcampServiceImplTest(
 
     @Test
     fun findBootcampById() {
-        val bootcamp: Bootcamp = bootcampService.findBootcampById(-1)
+        val bootcamp: BootcampDTO = bootcampService.findBootcampById(-1)
 
         assertEquals("TQI Kotlin Backend", bootcamp.toString())
         assertThrows<NoResultException> { bootcampService.findBootcampById(0) }

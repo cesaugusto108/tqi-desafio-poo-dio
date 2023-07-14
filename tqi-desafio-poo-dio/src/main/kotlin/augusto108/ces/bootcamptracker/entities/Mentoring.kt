@@ -14,5 +14,5 @@ class Mentoring(
     details: String = "",
     id: Int = 0
 ) : Activity(description, details, id) {
-    override fun toString(): String = "$description (mentoring)"
+    override fun toString(): String = "${super.toString()} (mentoring)"
 }

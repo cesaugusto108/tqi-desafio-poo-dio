@@ -14,5 +14,5 @@ class Course(
     details: String = "",
     id: Int = 0
 ) : Activity(description, details, id) {
-    override fun toString(): String = "$description (course)"
+    override fun toString(): String = "${super.toString()} (course)"
 }

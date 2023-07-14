@@ -1,5 +1,6 @@
 package augusto108.ces.bootcamptracker.controllers
 
+import augusto108.ces.bootcamptracker.dto.BootcampDTO
 import augusto108.ces.bootcamptracker.entities.Bootcamp
 import augusto108.ces.bootcamptracker.services.BootcampService
 import augusto108.ces.bootcamptracker.util.MediaType
@@ -14,7 +15,7 @@ class BootcampController(private val bootcampService: BootcampService) {
         consumes = [MediaType.APPLICATION_JSON, MediaType.APPLICATION_YAML],
         produces = [MediaType.APPLICATION_JSON, MediaType.APPLICATION_YAML]
     )
-    fun saveBootcamp(@RequestBody bootcamp: Bootcamp) =
+    fun saveBootcamp(@RequestBody bootcamp: Bootcamp): ResponseEntity<BootcampDTO> =
         ResponseEntity
             .status(HttpStatus.CREATED)
             .body(bootcampService.saveBootcamp(bootcamp))
@@ -23,13 +24,13 @@ class BootcampController(private val bootcampService: BootcampService) {
     fun findAllBootcamps(
         @RequestParam(defaultValue = "0", required = false) page: Int,
         @RequestParam(defaultValue = "10", required = false) max: Int
-    ): ResponseEntity<List<Bootcamp>> =
+    ): ResponseEntity<List<BootcampDTO>> =
         ResponseEntity
             .status(HttpStatus.OK)
             .body(bootcampService.findAllBootcamps(page, max))
 
     @GetMapping("/{id}", produces = [MediaType.APPLICATION_JSON, MediaType.APPLICATION_YAML])
-    fun findBootcampById(@PathVariable("id") id: Int): ResponseEntity<Bootcamp> =
+    fun findBootcampById(@PathVariable("id") id: Int): ResponseEntity<BootcampDTO> =
         ResponseEntity
             .status(HttpStatus.OK)
             .body(bootcampService.findBootcampById(id))
@@ -38,7 +39,7 @@ class BootcampController(private val bootcampService: BootcampService) {
         consumes = [MediaType.APPLICATION_JSON, MediaType.APPLICATION_YAML],
         produces = [MediaType.APPLICATION_JSON, MediaType.APPLICATION_YAML]
     )
-    fun updateBootcamp(@RequestBody bootcamp: Bootcamp): ResponseEntity<Bootcamp> =
+    fun updateBootcamp(@RequestBody bootcamp: Bootcamp): ResponseEntity<BootcampDTO> =
         ResponseEntity
             .status(HttpStatus.OK)
             .body(bootcampService.updateBootcamp(bootcamp))

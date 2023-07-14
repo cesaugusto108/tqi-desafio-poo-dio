@@ -1,5 +1,6 @@
 package augusto108.ces.bootcamptracker.controllers
 
+import augusto108.ces.bootcamptracker.dto.CourseDTO
 import augusto108.ces.bootcamptracker.entities.Course
 import augusto108.ces.bootcamptracker.services.CourseService
 import augusto108.ces.bootcamptracker.util.MediaType
@@ -14,7 +15,7 @@ class CourseController(private val courseService: CourseService) {
         consumes = [MediaType.APPLICATION_JSON, MediaType.APPLICATION_YAML],
         produces = [MediaType.APPLICATION_JSON, MediaType.APPLICATION_YAML]
     )
-    fun saveCourse(@RequestBody course: Course): ResponseEntity<Course> =
+    fun saveCourse(@RequestBody course: Course): ResponseEntity<CourseDTO> =
         ResponseEntity
             .status(HttpStatus.CREATED)
             .body(courseService.saveCourse(course))
@@ -23,13 +24,13 @@ class CourseController(private val courseService: CourseService) {
     fun findAllCourses(
         @RequestParam(defaultValue = "0", required = false) page: Int,
         @RequestParam(defaultValue = "10", required = false) max: Int
-    ): ResponseEntity<List<Course>> =
+    ): ResponseEntity<List<CourseDTO>> =
         ResponseEntity
             .status(HttpStatus.OK)
             .body(courseService.findAllCourses(page, max))
 
     @GetMapping("/{id}", produces = [MediaType.APPLICATION_JSON, MediaType.APPLICATION_YAML])
-    fun findCourseById(@PathVariable("id") id: Int): ResponseEntity<Course> =
+    fun findCourseById(@PathVariable("id") id: Int): ResponseEntity<CourseDTO> =
         ResponseEntity
             .status(HttpStatus.OK)
             .body(courseService.findCourseById(id))
@@ -38,7 +39,7 @@ class CourseController(private val courseService: CourseService) {
         consumes = [MediaType.APPLICATION_JSON, MediaType.APPLICATION_YAML],
         produces = [MediaType.APPLICATION_JSON, MediaType.APPLICATION_YAML]
     )
-    fun updateCourse(@RequestBody course: Course): ResponseEntity<Course> =
+    fun updateCourse(@RequestBody course: Course): ResponseEntity<CourseDTO> =
         ResponseEntity
             .status(HttpStatus.OK)
             .body(courseService.updateCourse(course))

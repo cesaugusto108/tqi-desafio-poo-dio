@@ -1,5 +1,6 @@
 package augusto108.ces.bootcamptracker.services
 
+import augusto108.ces.bootcamptracker.dto.CourseDTO
 import augusto108.ces.bootcamptracker.entities.Course
 import jakarta.persistence.EntityManager
 import jakarta.persistence.NoResultException
@@ -67,7 +68,7 @@ class CourseServiceImplTest(
 
     @Test
     fun findAllCourses() {
-        val courses: List<Course> = courseService.findAllCourses(page, max)
+        val courses: List<CourseDTO> = courseService.findAllCourses(page, max)
 
         assertEquals(1, courses.size)
         assertEquals("Sintaxe Java (course)", courses[0].toString())
@@ -76,7 +77,7 @@ class CourseServiceImplTest(
 
     @Test
     fun findCourseById() {
-        val course: Course = courseService.findCourseById(-2)
+        val course: CourseDTO = courseService.findCourseById(-2)
 
         assertEquals("Sintaxe Java (course)", course.toString())
         assertThrows<NoResultException> { courseService.findCourseById(0) }

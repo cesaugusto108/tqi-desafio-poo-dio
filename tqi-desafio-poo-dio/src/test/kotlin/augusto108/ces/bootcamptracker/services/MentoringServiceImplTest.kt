@@ -1,5 +1,6 @@
 package augusto108.ces.bootcamptracker.services
 
+import augusto108.ces.bootcamptracker.dto.MentoringDTO
 import augusto108.ces.bootcamptracker.entities.Mentoring
 import jakarta.persistence.EntityManager
 import jakarta.persistence.NoResultException
@@ -66,7 +67,7 @@ class MentoringServiceImplTests(
 
     @Test
     fun findAllMentoring() {
-        val mentorings: List<Mentoring> = mentoringService.findAllMentoring(page, max)
+        val mentorings: List<MentoringDTO> = mentoringService.findAllMentoring(page, max)
 
         assertEquals(1, mentorings.size)
         assertEquals("Orientação a objetos (mentoring)", mentorings[0].toString())
@@ -75,7 +76,7 @@ class MentoringServiceImplTests(
 
     @Test
     fun findMentoringById() {
-        val mentoring: Mentoring = mentoringService.findMentoringById(-1)
+        val mentoring: MentoringDTO = mentoringService.findMentoringById(-1)
 
         assertEquals("Orientação a objetos (mentoring)", mentoring.toString())
         assertThrows<NoResultException> { mentoringService.findMentoringById(0) }

@@ -1,15 +1,16 @@
 package augusto108.ces.bootcamptracker.services
 
+import augusto108.ces.bootcamptracker.dto.MentoringDTO
 import augusto108.ces.bootcamptracker.entities.Mentoring
 
 interface MentoringService {
-    fun saveMentoring(mentoring: Mentoring): Mentoring
+    fun saveMentoring(mentoring: Mentoring): MentoringDTO
 
-    fun findAllMentoring(page: Int, max: Int): List<Mentoring>
+    fun findAllMentoring(page: Int, max: Int): List<MentoringDTO>
 
-    fun findMentoringById(id: Int): Mentoring
+    fun findMentoringById(id: Int): MentoringDTO
 
-    fun updateMentoring(mentoring: Mentoring): Mentoring
+    fun updateMentoring(mentoring: Mentoring): MentoringDTO
 
     fun deleteMentoring(id: Int): Any
 }
