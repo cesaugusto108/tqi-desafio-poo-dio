@@ -8,12 +8,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "person_type", discriminatorType = DiscriminatorType.STRING)
 abstract class Person(
-    @Embedded open var name: Name,
-    @Column(name = "person_age") open var age: Int,
-    @Column(name = "email", nullable = false, length = 30) open var email: String,
-    @Column(name = "username", nullable = false, length = 30) open var username: String,
-    @Column(name = "password", nullable = false) open var password: String,
-    id: Int
+    @Embedded open var name: Name = Name(),
+    @Column(name = "person_age") open var age: Int = 0,
+    @Column(name = "email", nullable = false, length = 30) open var email: String = "",
+    @Column(name = "username", nullable = false, length = 30) open var username: String = "",
+    @Column(name = "password", nullable = false) open var password: String = "",
+    id: Int = 0
 ) : BaseEntity(id) {
     init {
         this.password = BCryptPasswordEncoder().encode(password)

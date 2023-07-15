@@ -25,8 +25,11 @@ class CourseServiceImpl(private val courseDao: CourseDao) : CourseService {
         return courseDTOList
     }
 
-    override fun findCourseById(id: Int): CourseDTO = try {
-        DTOMapper.mapper().map(courseDao.findCourseById(id), CourseDTO::class.java)
+    override fun findCourseById(id: Int): CourseDTO =
+        DTOMapper.mapper().map(courseById(id), CourseDTO::class.java)
+
+    override fun courseById(id: Int): Course = try {
+        courseDao.findCourseById(id)
     } catch (e: EmptyResultDataAccessException) {
         throw NoResultForQueryException("Id: $id")
     } catch (e: NumberFormatException) {

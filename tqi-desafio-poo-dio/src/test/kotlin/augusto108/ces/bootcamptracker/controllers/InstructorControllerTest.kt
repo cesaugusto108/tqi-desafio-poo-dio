@@ -75,6 +75,7 @@ class InstructorControllerTest(
             .andExpect(jsonPath("$.age", `is`(38)))
             .andExpect(jsonPath("$.name.lastName", `is`("Campos")))
             .andExpect(jsonPath("$.email", `is`("fabiana@email.com")))
+            .andExpect(jsonPath("$._links.all.href", `is`("http://localhost/instructors")))
     }
 
     @Test
@@ -86,6 +87,8 @@ class InstructorControllerTest(
             .andExpect(jsonPath("$[0].age", `is`(32)))
             .andExpect(jsonPath("$[0].name.lastName", `is`("Souza")))
             .andExpect(jsonPath("$[0].email", `is`("maria@email.com")))
+            .andExpect(jsonPath("$[0].links[0].href", `is`("http://localhost/instructors")))
+            .andExpect(jsonPath("$[0].links[1].href", `is`("http://localhost/instructors/-2")))
 
         val result: MvcResult = mockMvc.perform(
             get("/instructors")
@@ -111,6 +114,8 @@ class InstructorControllerTest(
             .andExpect(jsonPath("$.age", `is`(32)))
             .andExpect(jsonPath("$.name.lastName", `is`("Souza")))
             .andExpect(jsonPath("$.email", `is`("maria@email.com")))
+            .andExpect(jsonPath("$._links.self.href", `is`("http://localhost/instructors/-2")))
+            .andExpect(jsonPath("$._links.all.href", `is`("http://localhost/instructors")))
 
         val result: MvcResult = mockMvc.perform(
             get("/instructors/{id}", -2)
@@ -148,6 +153,8 @@ class InstructorControllerTest(
             .andExpect(jsonPath("$.name.lastName", `is`("Castro")))
             .andExpect(jsonPath("$.email", `is`("madalena@email.com")))
             .andExpect(jsonPath("$.username", `is`("madalenac")))
+            .andExpect(jsonPath("$._links.self.href", `is`("http://localhost/instructors/-2")))
+            .andExpect(jsonPath("$._links.all.href", `is`("http://localhost/instructors")))
     }
 
     @Test

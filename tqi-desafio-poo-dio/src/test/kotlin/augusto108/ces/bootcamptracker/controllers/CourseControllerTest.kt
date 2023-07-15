@@ -73,6 +73,7 @@ class CourseControllerTest(
             .andExpect(jsonPath("$.description", `is`("POO")))
             .andExpect(jsonPath("$.details", `is`("Programação orientada a objetos com Java")))
             .andExpect(jsonPath("$.hours", `is`(250)))
+            .andExpect(jsonPath("$._links.all.href", `is`("http://localhost/courses")))
     }
 
     @Test
@@ -83,6 +84,8 @@ class CourseControllerTest(
             .andExpect(jsonPath("$[0].description", `is`("Sintaxe Java")))
             .andExpect(jsonPath("$[0].details", `is`("Aprendendo a sintaxe Java")))
             .andExpect(jsonPath("$[0].hours", `is`(300)))
+            .andExpect(jsonPath("$[0].links[0].href", `is`("http://localhost/courses")))
+            .andExpect(jsonPath("$[0].links[1].href", `is`("http://localhost/courses/-2")))
 
         val result: MvcResult = mockMvc.perform(
             get("/courses")
@@ -111,6 +114,8 @@ class CourseControllerTest(
             .andExpect(jsonPath("$.description", `is`("Sintaxe Java")))
             .andExpect(jsonPath("$.details", `is`("Aprendendo a sintaxe Java")))
             .andExpect(jsonPath("$.hours", `is`(300)))
+            .andExpect(jsonPath("$._links.self.href", `is`("http://localhost/courses/-2")))
+            .andExpect(jsonPath("$._links.all.href", `is`("http://localhost/courses")))
 
         val result: MvcResult = mockMvc.perform(
             get("/courses/{id}", -2)
@@ -147,6 +152,8 @@ class CourseControllerTest(
             .andExpect(jsonPath("$.description", `is`("MySQL")))
             .andExpect(jsonPath("$.details", `is`("Banco de dados relacional com MySQL")))
             .andExpect(jsonPath("$.id", `is`(-2)))
+            .andExpect(jsonPath("$._links.self.href", `is`("http://localhost/courses/-2")))
+            .andExpect(jsonPath("$._links.all.href", `is`("http://localhost/courses")))
     }
 
     @Test

@@ -25,8 +25,11 @@ class MentoringServiceImpl(private val mentoringDao: MentoringDao) : MentoringSe
         return mentoringDTOList
     }
 
-    override fun findMentoringById(id: Int): MentoringDTO = try {
-        DTOMapper.mapper().map(mentoringDao.findMentoringById(id), MentoringDTO::class.java)
+    override fun findMentoringById(id: Int): MentoringDTO =
+        DTOMapper.mapper().map(mentoringById(id), MentoringDTO::class.java)
+
+    override fun mentoringById(id: Int): Mentoring = try {
+        mentoringDao.findMentoringById(id)
     } catch (e: EmptyResultDataAccessException) {
         throw NoResultForQueryException("Id: $id")
     } catch (e: NumberFormatException) {

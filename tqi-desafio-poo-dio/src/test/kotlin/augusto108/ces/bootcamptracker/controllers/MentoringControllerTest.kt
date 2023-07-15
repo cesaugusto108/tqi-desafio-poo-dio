@@ -72,6 +72,7 @@ class MentoringControllerTest(
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.description", `is`("REST APIs")))
             .andExpect(jsonPath("$.details", `is`("REST APIs com Spring e Kotlin")))
+            .andExpect(jsonPath("$._links.all.href", `is`("http://localhost/mentoring")))
     }
 
     @Test
@@ -81,6 +82,8 @@ class MentoringControllerTest(
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$[0].description", `is`("Orientação a objetos")))
             .andExpect(jsonPath("$[0].details", `is`("Orientação a objetos com Kotlin")))
+            .andExpect(jsonPath("$[0].links[0].href", `is`("http://localhost/mentoring")))
+            .andExpect(jsonPath("$[0].links[1].href", `is`("http://localhost/mentoring/-1")))
 
         val result: MvcResult = mockMvc.perform(
             get("/mentoring")
@@ -104,6 +107,8 @@ class MentoringControllerTest(
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.description", `is`("Orientação a objetos")))
             .andExpect(jsonPath("$.details", `is`("Orientação a objetos com Kotlin")))
+            .andExpect(jsonPath("$._links.self.href", `is`("http://localhost/mentoring/-1")))
+            .andExpect(jsonPath("$._links.all.href", `is`("http://localhost/mentoring")))
 
         val result: MvcResult = mockMvc.perform(
             get("/mentoring/{id}", -1)
@@ -136,6 +141,8 @@ class MentoringControllerTest(
         )
             .andExpect(jsonPath("$.description", `is`("Android apps")))
             .andExpect(jsonPath("$.details", `is`("Kotlin e apps para Android")))
+            .andExpect(jsonPath("$._links.self.href", `is`("http://localhost/mentoring/-1")))
+            .andExpect(jsonPath("$._links.all.href", `is`("http://localhost/mentoring")))
     }
 
     @Test

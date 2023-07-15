@@ -10,6 +10,8 @@ interface CourseService {
 
     fun findCourseById(id: Int): CourseDTO
 
+    fun courseById(id: Int): Course
+
     fun updateCourse(course: Course): CourseDTO
 
     fun deleteCourse(id: Int): Any

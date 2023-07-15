@@ -76,6 +76,7 @@ class BootcampControllerTest(
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.description", `is`("Java backend")))
             .andExpect(jsonPath("$.details", `is`("Java and Spring backend")))
+            .andExpect(jsonPath("$._links.all.href", `is`("http://localhost/bootcamps")))
     }
 
     @Test
@@ -90,6 +91,8 @@ class BootcampControllerTest(
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$[0].description", `is`("TQI Kotlin Backend")))
             .andExpect(jsonPath("$[0].details", `is`("Java e Kotlin backend")))
+            .andExpect(jsonPath("$[0].links[0].href", `is`("http://localhost/bootcamps")))
+            .andExpect(jsonPath("$[0].links[1].href", `is`("http://localhost/bootcamps/-1")))
 
         val result: MvcResult = mockMvc.perform(
             get("/bootcamps")
@@ -115,6 +118,8 @@ class BootcampControllerTest(
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.description", `is`("TQI Kotlin Backend")))
             .andExpect(jsonPath("$.details", `is`("Java e Kotlin backend")))
+            .andExpect(jsonPath("$._links.self.href", `is`("http://localhost/bootcamps/-1")))
+            .andExpect(jsonPath("$._links.all.href", `is`("http://localhost/bootcamps")))
 
         val result: MvcResult = mockMvc.perform(
             get("/bootcamps/{id}", -1)
@@ -150,6 +155,8 @@ class BootcampControllerTest(
             .andExpect(jsonPath("$.description", `is`("Go backend")))
             .andExpect(jsonPath("$.details", `is`("Go backend development")))
             .andExpect(jsonPath("$.id", `is`(-1)))
+            .andExpect(jsonPath("$._links.self.href", `is`("http://localhost/bootcamps/-1")))
+            .andExpect(jsonPath("$._links.all.href", `is`("http://localhost/bootcamps")))
     }
 
     @Test

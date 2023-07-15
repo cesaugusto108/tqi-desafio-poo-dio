@@ -10,6 +10,8 @@ interface BootcampService {
 
     fun findBootcampById(id: Int): BootcampDTO
 
+    fun bootcampById(id: Int): Bootcamp
+
     fun updateBootcamp(bootcamp: Bootcamp): BootcampDTO
 
     fun deleteBootcamp(id: Int): Any

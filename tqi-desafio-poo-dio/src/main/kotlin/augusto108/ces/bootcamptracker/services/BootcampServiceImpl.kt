@@ -27,13 +27,17 @@ class BootcampServiceImpl(private val bootcampDao: BootcampDao) : BootcampServic
         return bootcampDTOList
     }
 
-    override fun findBootcampById(id: Int): BootcampDTO = try {
-        DTOMapper.mapper().map(bootcampDao.findBootcampById(id), BootcampDTO::class.java)
-    } catch (e: EmptyResultDataAccessException) {
-        throw NoResultForQueryException("Id: $id")
-    } catch (e: NumberFormatException) {
-        throw NumberFormatException()
-    }
+    override fun findBootcampById(id: Int): BootcampDTO =
+        DTOMapper.mapper().map(bootcampById(id), BootcampDTO::class.java)
+
+    override fun bootcampById(id: Int): Bootcamp =
+        try {
+            bootcampDao.findBootcampById(id)
+        } catch (e: EmptyResultDataAccessException) {
+            throw NoResultForQueryException("Id: $id")
+        } catch (e: NumberFormatException) {
+            throw NumberFormatException()
+        }
 
     override fun updateBootcamp(bootcamp: Bootcamp): BootcampDTO =
         DTOMapper.mapper().map(bootcampDao.updateBootcamp(bootcamp), BootcampDTO::class.java)

@@ -10,6 +10,8 @@ interface MentoringService {
 
     fun findMentoringById(id: Int): MentoringDTO
 
+    fun mentoringById(id: Int): Mentoring
+
     fun updateMentoring(mentoring: Mentoring): MentoringDTO
 
     fun deleteMentoring(id: Int): Any

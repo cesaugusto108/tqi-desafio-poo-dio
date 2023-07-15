@@ -81,6 +81,8 @@ class DeveloperControllerTest(
             .andExpect(jsonPath("$.name.lastName", `is`("Pires")))
             .andExpect(jsonPath("$.email", `is`("rosana@email.com")))
             .andExpect(jsonPath("$.level", `is`(3)))
+            .andExpect(jsonPath("$._links.self.href", `is`("http://localhost/developers/1")))
+            .andExpect(jsonPath("$._links.all.href", `is`("http://localhost/developers")))
     }
 
     @Test
@@ -93,6 +95,8 @@ class DeveloperControllerTest(
             .andExpect(jsonPath("$[0].name.lastName", `is`("Costa")))
             .andExpect(jsonPath("$[0].email", `is`("josecc@email.com")))
             .andExpect(jsonPath("$[0].level", `is`(2)))
+            .andExpect(jsonPath("$[0].links[0].href", `is`("http://localhost/developers")))
+            .andExpect(jsonPath("$[0].links[1].href", `is`("http://localhost/developers/-1")))
 
         val result: MvcResult = mockMvc.perform(
             get("/developers")
@@ -119,6 +123,8 @@ class DeveloperControllerTest(
             .andExpect(jsonPath("$.name.lastName", `is`("Costa")))
             .andExpect(jsonPath("$.email", `is`("josecc@email.com")))
             .andExpect(jsonPath("$.level", `is`(2)))
+            .andExpect(jsonPath("$._links.self.href", `is`("http://localhost/developers/-1")))
+            .andExpect(jsonPath("$._links.all.href", `is`("http://localhost/developers")))
 
         val result: MvcResult = mockMvc.perform(
             get("/developers/{id}", -1)
@@ -158,6 +164,8 @@ class DeveloperControllerTest(
             .andExpect(jsonPath("$.email", `is`("pedro@email.com")))
             .andExpect(jsonPath("$.username", `is`("pedrosantos")))
             .andExpect(jsonPath("$.level", `is`(7)))
+            .andExpect(jsonPath("$._links.self.href", `is`("http://localhost/developers/-1")))
+            .andExpect(jsonPath("$._links.all.href", `is`("http://localhost/developers")))
     }
 
     @Test
