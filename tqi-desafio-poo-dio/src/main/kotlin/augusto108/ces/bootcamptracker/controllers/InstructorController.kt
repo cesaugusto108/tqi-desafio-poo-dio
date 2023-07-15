@@ -4,7 +4,6 @@ import augusto108.ces.bootcamptracker.dto.InstructorDTO
 import augusto108.ces.bootcamptracker.entities.Instructor
 import augusto108.ces.bootcamptracker.services.InstructorService
 import augusto108.ces.bootcamptracker.util.MediaType
-import org.springframework.beans.BeanUtils
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -12,7 +11,7 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/instructors")
-class InstructorController(private val instructorService: InstructorService) : BeanUtils() {
+class InstructorController(private val instructorService: InstructorService) {
     @PostMapping(
         consumes = [MediaType.APPLICATION_JSON, MediaType.APPLICATION_YAML],
         produces = [MediaType.APPLICATION_JSON, MediaType.APPLICATION_YAML]
@@ -57,9 +56,7 @@ class InstructorController(private val instructorService: InstructorService) : B
         produces = [MediaType.APPLICATION_JSON, MediaType.APPLICATION_YAML]
     )
     fun updateInstructor(@RequestBody instructor: Instructor): ResponseEntity<InstructorDTO> {
-        val i: Instructor = instructorService.instructorById(instructor.id)
-
-        copyProperties(instructor, i)
+        val i: Instructor = instructor.copyProperties(instructorService.instructorById(instructor.id))
 
         val updatedInstructor: InstructorDTO = instructorService.updateInstructor(i)
         updatedInstructor.add(linkTo(InstructorController::class.java).slash("/${updatedInstructor.id}").withSelfRel())

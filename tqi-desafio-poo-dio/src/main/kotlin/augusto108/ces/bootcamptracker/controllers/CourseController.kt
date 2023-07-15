@@ -4,7 +4,6 @@ import augusto108.ces.bootcamptracker.dto.CourseDTO
 import augusto108.ces.bootcamptracker.entities.Course
 import augusto108.ces.bootcamptracker.services.CourseService
 import augusto108.ces.bootcamptracker.util.MediaType
-import org.springframework.beans.BeanUtils
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -12,7 +11,7 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/courses")
-class CourseController(private val courseService: CourseService) : BeanUtils() {
+class CourseController(private val courseService: CourseService) {
     @PostMapping(
         consumes = [MediaType.APPLICATION_JSON, MediaType.APPLICATION_YAML],
         produces = [MediaType.APPLICATION_JSON, MediaType.APPLICATION_YAML]
@@ -54,9 +53,7 @@ class CourseController(private val courseService: CourseService) : BeanUtils() {
         produces = [MediaType.APPLICATION_JSON, MediaType.APPLICATION_YAML]
     )
     fun updateCourse(@RequestBody course: Course): ResponseEntity<CourseDTO> {
-        val c: Course = courseService.courseById(course.id)
-
-        copyProperties(course, c)
+        val c: Course = course.copyProperties(courseService.courseById(course.id))
 
         val updatedCourse: CourseDTO = courseService.updateCourse(c)
 

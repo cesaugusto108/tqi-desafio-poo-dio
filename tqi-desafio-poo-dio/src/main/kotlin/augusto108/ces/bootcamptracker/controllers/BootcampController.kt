@@ -4,7 +4,6 @@ import augusto108.ces.bootcamptracker.dto.BootcampDTO
 import augusto108.ces.bootcamptracker.entities.Bootcamp
 import augusto108.ces.bootcamptracker.services.BootcampService
 import augusto108.ces.bootcamptracker.util.MediaType
-import org.springframework.beans.BeanUtils
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -12,7 +11,7 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/bootcamps")
-class BootcampController(private val bootcampService: BootcampService) : BeanUtils() {
+class BootcampController(private val bootcampService: BootcampService) {
     @PostMapping(
         consumes = [MediaType.APPLICATION_JSON, MediaType.APPLICATION_YAML],
         produces = [MediaType.APPLICATION_JSON, MediaType.APPLICATION_YAML]
@@ -56,9 +55,7 @@ class BootcampController(private val bootcampService: BootcampService) : BeanUti
         produces = [MediaType.APPLICATION_JSON, MediaType.APPLICATION_YAML]
     )
     fun updateBootcamp(@RequestBody bootcamp: Bootcamp): ResponseEntity<BootcampDTO> {
-        val b: Bootcamp = bootcampService.bootcampById(bootcamp.id)
-
-        copyProperties(bootcamp, b)
+        val b: Bootcamp = bootcamp.copyProperties(bootcampService.bootcampById(bootcamp.id))
 
         val updatedBootcamp: BootcampDTO = bootcampService.updateBootcamp(b)
 

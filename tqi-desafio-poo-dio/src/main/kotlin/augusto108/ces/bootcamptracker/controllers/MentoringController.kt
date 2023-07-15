@@ -4,7 +4,6 @@ import augusto108.ces.bootcamptracker.dto.MentoringDTO
 import augusto108.ces.bootcamptracker.entities.Mentoring
 import augusto108.ces.bootcamptracker.services.MentoringService
 import augusto108.ces.bootcamptracker.util.MediaType
-import org.springframework.beans.BeanUtils
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -12,7 +11,7 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/mentoring")
-class MentoringController(private val mentoringService: MentoringService) : BeanUtils() {
+class MentoringController(private val mentoringService: MentoringService) {
     @PostMapping(
         consumes = [MediaType.APPLICATION_JSON, MediaType.APPLICATION_YAML],
         produces = [MediaType.APPLICATION_JSON, MediaType.APPLICATION_YAML]
@@ -56,9 +55,7 @@ class MentoringController(private val mentoringService: MentoringService) : Bean
         produces = [MediaType.APPLICATION_JSON, MediaType.APPLICATION_YAML]
     )
     fun updateMentoring(@RequestBody mentoring: Mentoring): ResponseEntity<MentoringDTO> {
-        val m: Mentoring = mentoringService.mentoringById(mentoring.id)
-
-        copyProperties(mentoring, m)
+        val m: Mentoring = mentoring.copyProperties(mentoringService.mentoringById(mentoring.id))
 
         val updatedMentoring: MentoringDTO = mentoringService.updateMentoring(m)
         updatedMentoring.add(linkTo(MentoringController::class.java).slash("/${updatedMentoring.id}").withSelfRel())

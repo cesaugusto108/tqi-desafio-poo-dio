@@ -4,7 +4,6 @@ import augusto108.ces.bootcamptracker.dto.DeveloperDTO
 import augusto108.ces.bootcamptracker.entities.Developer
 import augusto108.ces.bootcamptracker.services.DeveloperService
 import augusto108.ces.bootcamptracker.util.MediaType
-import org.springframework.beans.BeanUtils
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -12,7 +11,7 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/developers")
-class DeveloperController(private val developerService: DeveloperService) : BeanUtils() {
+class DeveloperController(private val developerService: DeveloperService) {
     @PostMapping(
         consumes = [MediaType.APPLICATION_JSON, MediaType.APPLICATION_YAML],
         produces = [MediaType.APPLICATION_JSON, MediaType.APPLICATION_YAML]
@@ -56,9 +55,7 @@ class DeveloperController(private val developerService: DeveloperService) : Bean
         produces = [MediaType.APPLICATION_JSON, MediaType.APPLICATION_YAML]
     )
     fun updateDeveloper(@RequestBody developer: Developer): ResponseEntity<DeveloperDTO> {
-        val d: Developer = developerService.developerById(developer.id)
-
-        copyProperties(developer, d)
+        val d: Developer = developer.copyProperties(developerService.developerById(developer.id))
 
         val updatedDeveloper: DeveloperDTO = developerService.updateDeveloper(d)
         updatedDeveloper.add(linkTo(DeveloperController::class.java).slash("/${updatedDeveloper.id}").withSelfRel())
