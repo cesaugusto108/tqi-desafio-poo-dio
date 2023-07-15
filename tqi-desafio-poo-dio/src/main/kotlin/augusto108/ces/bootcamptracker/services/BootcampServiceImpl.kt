@@ -12,23 +12,17 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 @Transactional
 class BootcampServiceImpl(private val bootcampDao: BootcampDao) : BootcampService {
-    override fun saveBootcamp(bootcamp: Bootcamp): BootcampDTO =
-        DTOMapper.mapper().map(bootcampDao.saveBootcamp(bootcamp), BootcampDTO::class.java)
+    override fun saveBootcamp(bootcamp: Bootcamp): BootcampDTO = bootcampDao.saveBootcamp(bootcamp).map()
 
     override fun findAllBootcamps(page: Int, max: Int): List<BootcampDTO> {
         val bootcampDTOList: MutableList<BootcampDTO> = ArrayList()
 
-        for (bootcamp in bootcampDao.findAllBootcamps(page, max)) {
-            bootcampDTOList.add(
-                DTOMapper.mapper().map(bootcamp, BootcampDTO::class.java)
-            )
-        }
+        bootcampDao.findAllBootcamps(page, max).forEach { bootcampDTOList.add(it.map()) }
 
         return bootcampDTOList
     }
 
-    override fun findBootcampById(id: Int): BootcampDTO =
-        DTOMapper.mapper().map(bootcampById(id), BootcampDTO::class.java)
+    override fun findBootcampById(id: Int): BootcampDTO = bootcampById(id).map()
 
     override fun bootcampById(id: Int): Bootcamp =
         try {
@@ -39,8 +33,9 @@ class BootcampServiceImpl(private val bootcampDao: BootcampDao) : BootcampServic
             throw NumberFormatException()
         }
 
-    override fun updateBootcamp(bootcamp: Bootcamp): BootcampDTO =
-        DTOMapper.mapper().map(bootcampDao.updateBootcamp(bootcamp), BootcampDTO::class.java)
+    override fun updateBootcamp(bootcamp: Bootcamp): BootcampDTO = bootcampDao.updateBootcamp(bootcamp).map()
 
     override fun deleteBootcamp(id: Int): Any = bootcampDao.deleteBootcamp(id)
+
+    private fun Bootcamp.map(): BootcampDTO = DTOMapper.mapper().map(this, BootcampDTO::class.java)
 }

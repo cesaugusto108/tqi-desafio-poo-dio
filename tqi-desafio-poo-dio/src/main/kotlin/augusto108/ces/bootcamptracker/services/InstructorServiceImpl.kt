@@ -12,32 +12,31 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 @Transactional
 class InstructorServiceImpl(private val instructorDao: InstructorDao) : InstructorService {
-    override fun saveInstructor(instructor: Instructor): InstructorDTO =
-        DTOMapper.mapper().map(instructorDao.saveInstructor(instructor), InstructorDTO::class.java)
+    override fun saveInstructor(instructor: Instructor): InstructorDTO = instructorDao.saveInstructor(instructor).map()
 
     override fun findAllInstructors(page: Int, max: Int): List<InstructorDTO> {
         val instructorDTOList: MutableList<InstructorDTO> = ArrayList()
 
-        for (instructor in instructorDao.findAllInstructors(page, max)) {
-            instructorDTOList.add(DTOMapper.mapper().map(instructor, InstructorDTO::class.java))
-        }
+        instructorDao.findAllInstructors(page, max).forEach { instructorDTOList.add(it.map()) }
 
         return instructorDTOList
     }
 
-    override fun findInstructorById(id: Int): InstructorDTO =
-        DTOMapper.mapper().map(instructorById(id), InstructorDTO::class.java)
+    override fun findInstructorById(id: Int): InstructorDTO = instructorById(id).map()
 
-    override fun instructorById(id: Int): Instructor = try {
-        instructorDao.findInstructorById(id)
-    } catch (e: EmptyResultDataAccessException) {
-        throw NoResultForQueryException("Id: $id")
-    } catch (e: NumberFormatException) {
-        throw NumberFormatException()
-    }
+    override fun instructorById(id: Int): Instructor =
+        try {
+            instructorDao.findInstructorById(id)
+        } catch (e: EmptyResultDataAccessException) {
+            throw NoResultForQueryException("Id: $id")
+        } catch (e: NumberFormatException) {
+            throw NumberFormatException()
+        }
 
     override fun updateInstructor(instructor: Instructor): InstructorDTO =
-        DTOMapper.mapper().map(instructorDao.updateInstructor(instructor), InstructorDTO::class.java)
+        instructorDao.updateInstructor(instructor).map()
 
     override fun deleteInstructor(id: Int): Any = instructorDao.deleteInstructor(id)
+
+    private fun Instructor.map() = DTOMapper.mapper().map(this, InstructorDTO::class.java)
 }
