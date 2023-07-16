@@ -33,7 +33,8 @@ class MentoringServiceImpl(private val mentoringDao: MentoringDao) : MentoringSe
             throw NumberFormatException()
         }
 
-    override fun updateMentoring(mentoring: Mentoring): MentoringDTO = mentoringDao.updateMentoring(mentoring).map()
+    override fun updateMentoring(mentoring: Mentoring): MentoringDTO =
+        mentoringDao.updateMentoring(mentoring.copyProperties(mentoring)).map()
 
     override fun deleteMentoring(id: Int): Any = mentoringDao.deleteMentoring(id)
 

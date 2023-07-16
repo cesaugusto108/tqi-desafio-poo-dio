@@ -33,7 +33,8 @@ class BootcampServiceImpl(private val bootcampDao: BootcampDao) : BootcampServic
             throw NumberFormatException()
         }
 
-    override fun updateBootcamp(bootcamp: Bootcamp): BootcampDTO = bootcampDao.updateBootcamp(bootcamp).map()
+    override fun updateBootcamp(bootcamp: Bootcamp): BootcampDTO =
+        bootcampDao.updateBootcamp(bootcamp.copyProperties(bootcamp)).map()
 
     override fun deleteBootcamp(id: Int): Any = bootcampDao.deleteBootcamp(id)
 

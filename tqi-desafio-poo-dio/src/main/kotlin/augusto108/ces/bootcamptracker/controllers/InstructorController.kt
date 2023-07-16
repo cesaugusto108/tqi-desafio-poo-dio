@@ -56,9 +56,7 @@ class InstructorController(private val instructorService: InstructorService) {
         produces = [MediaType.APPLICATION_JSON, MediaType.APPLICATION_YAML]
     )
     fun updateInstructor(@RequestBody instructor: Instructor): ResponseEntity<InstructorDTO> {
-        val i: Instructor = instructor.copyProperties(instructorService.instructorById(instructor.id))
-
-        val updatedInstructor: InstructorDTO = instructorService.updateInstructor(i)
+        val updatedInstructor: InstructorDTO = instructorService.updateInstructor(instructor)
         updatedInstructor.add(linkTo(InstructorController::class.java).slash("/${updatedInstructor.id}").withSelfRel())
         updatedInstructor.add(linkTo(InstructorController::class.java).withRel("all"))
 

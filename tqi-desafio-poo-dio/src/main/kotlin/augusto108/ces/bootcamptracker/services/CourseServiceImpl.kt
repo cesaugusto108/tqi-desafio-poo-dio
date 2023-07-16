@@ -33,7 +33,7 @@ class CourseServiceImpl(private val courseDao: CourseDao) : CourseService {
             throw NumberFormatException()
         }
 
-    override fun updateCourse(course: Course): CourseDTO = courseDao.updateCourse(course).map()
+    override fun updateCourse(course: Course): CourseDTO = courseDao.updateCourse(course.copyProperties(course)).map()
 
     override fun deleteCourse(id: Int): Any = courseDao.deleteCourse(id)
 

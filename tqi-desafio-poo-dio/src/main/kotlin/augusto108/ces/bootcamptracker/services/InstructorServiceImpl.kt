@@ -34,7 +34,7 @@ class InstructorServiceImpl(private val instructorDao: InstructorDao) : Instruct
         }
 
     override fun updateInstructor(instructor: Instructor): InstructorDTO =
-        instructorDao.updateInstructor(instructor).map()
+        instructorDao.updateInstructor(instructor.copyProperties(instructor)).map()
 
     override fun deleteInstructor(id: Int): Any = instructorDao.deleteInstructor(id)
 

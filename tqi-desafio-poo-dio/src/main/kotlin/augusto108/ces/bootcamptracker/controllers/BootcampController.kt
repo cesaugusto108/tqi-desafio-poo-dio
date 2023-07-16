@@ -55,10 +55,7 @@ class BootcampController(private val bootcampService: BootcampService) {
         produces = [MediaType.APPLICATION_JSON, MediaType.APPLICATION_YAML]
     )
     fun updateBootcamp(@RequestBody bootcamp: Bootcamp): ResponseEntity<BootcampDTO> {
-        val b: Bootcamp = bootcamp.copyProperties(bootcampService.bootcampById(bootcamp.id))
-
-        val updatedBootcamp: BootcampDTO = bootcampService.updateBootcamp(b)
-
+        val updatedBootcamp: BootcampDTO = bootcampService.updateBootcamp(bootcamp)
         updatedBootcamp.add(linkTo(BootcampController::class.java).slash("/${updatedBootcamp.id}").withSelfRel())
         updatedBootcamp.add(linkTo(BootcampController::class.java).withRel("all"))
 

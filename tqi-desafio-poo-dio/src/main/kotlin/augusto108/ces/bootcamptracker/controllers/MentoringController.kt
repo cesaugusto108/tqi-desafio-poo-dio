@@ -55,9 +55,7 @@ class MentoringController(private val mentoringService: MentoringService) {
         produces = [MediaType.APPLICATION_JSON, MediaType.APPLICATION_YAML]
     )
     fun updateMentoring(@RequestBody mentoring: Mentoring): ResponseEntity<MentoringDTO> {
-        val m: Mentoring = mentoring.copyProperties(mentoringService.mentoringById(mentoring.id))
-
-        val updatedMentoring: MentoringDTO = mentoringService.updateMentoring(m)
+        val updatedMentoring: MentoringDTO = mentoringService.updateMentoring(mentoring)
         updatedMentoring.add(linkTo(MentoringController::class.java).slash("/${updatedMentoring.id}").withSelfRel())
         updatedMentoring.add(linkTo(MentoringController::class.java).withRel("all"))
 

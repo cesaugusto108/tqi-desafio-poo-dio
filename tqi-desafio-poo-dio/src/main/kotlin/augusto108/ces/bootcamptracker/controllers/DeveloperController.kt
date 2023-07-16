@@ -55,9 +55,7 @@ class DeveloperController(private val developerService: DeveloperService) {
         produces = [MediaType.APPLICATION_JSON, MediaType.APPLICATION_YAML]
     )
     fun updateDeveloper(@RequestBody developer: Developer): ResponseEntity<DeveloperDTO> {
-        val d: Developer = developer.copyProperties(developerService.developerById(developer.id))
-
-        val updatedDeveloper: DeveloperDTO = developerService.updateDeveloper(d)
+        val updatedDeveloper: DeveloperDTO = developerService.updateDeveloper(developer)
         updatedDeveloper.add(linkTo(DeveloperController::class.java).slash("/${updatedDeveloper.id}").withSelfRel())
         updatedDeveloper.add(linkTo(DeveloperController::class.java).withRel("all"))
 

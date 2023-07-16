@@ -53,10 +53,7 @@ class CourseController(private val courseService: CourseService) {
         produces = [MediaType.APPLICATION_JSON, MediaType.APPLICATION_YAML]
     )
     fun updateCourse(@RequestBody course: Course): ResponseEntity<CourseDTO> {
-        val c: Course = course.copyProperties(courseService.courseById(course.id))
-
-        val updatedCourse: CourseDTO = courseService.updateCourse(c)
-
+        val updatedCourse: CourseDTO = courseService.updateCourse(course)
         updatedCourse.add(linkTo(CourseController::class.java).slash("/${updatedCourse.id}").withSelfRel())
         updatedCourse.add(linkTo(CourseController::class.java).withRel("all"))
 

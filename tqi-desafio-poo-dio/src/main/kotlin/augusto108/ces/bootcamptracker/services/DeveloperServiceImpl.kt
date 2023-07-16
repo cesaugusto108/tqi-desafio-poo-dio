@@ -33,7 +33,8 @@ class DeveloperServiceImpl(private val developerDao: DeveloperDao) : DeveloperSe
             throw NumberFormatException()
         }
 
-    override fun updateDeveloper(developer: Developer): DeveloperDTO = developerDao.updateDeveloper(developer).map()
+    override fun updateDeveloper(developer: Developer): DeveloperDTO =
+        developerDao.updateDeveloper(developer.copyProperties(developer)).map()
 
     override fun deleteDeveloper(id: Int): Any = developerDao.deleteDeveloper(id)
 
