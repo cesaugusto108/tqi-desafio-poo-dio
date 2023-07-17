@@ -26,15 +26,8 @@ class DeveloperDaoImpl(private val entityManager: EntityManager) : DeveloperDao 
             .singleResult
 
     override fun updateDeveloper(developer: Developer): Developer {
-        val d: Developer = findDeveloperById(developer.id)
-
-        d.level = developer.level
-        d.name = developer.name
-        d.age = developer.age
-        d.email = developer.email
-        d.username = developer.username
-        d.password = developer.password
-        d.bootcamps = developer.bootcamps
+        var d: Developer = findDeveloperById(developer.id)
+        d = developer.copyProperties(d)
 
         entityManager.persist(d)
 

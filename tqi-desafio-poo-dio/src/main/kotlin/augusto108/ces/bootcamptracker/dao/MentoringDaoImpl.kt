@@ -26,11 +26,8 @@ class MentoringDaoImpl(private val entityManager: EntityManager) : MentoringDao 
             .singleResult
 
     override fun updateMentoring(mentoring: Mentoring): Mentoring {
-        val m = findMentoringById(mentoring.id)
-        m.date = mentoring.date
-        m.hours = mentoring.hours
-        m.details = mentoring.details
-        m.description = mentoring.description
+        var m = findMentoringById(mentoring.id)
+        m = mentoring.copyProperties(m)
 
         entityManager.persist(m)
 

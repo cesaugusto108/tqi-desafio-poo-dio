@@ -22,11 +22,8 @@ class CourseDaoImpl(private val entityManager: EntityManager) : CourseDao {
             .singleResult
 
     override fun updateCourse(course: Course): Course {
-        val c: Course = findCourseById(course.id)
-        c.description = course.description
-        c.details = course.details
-        c.date = course.date
-        c.hours = course.hours
+        var c: Course = findCourseById(course.id)
+        c = course.copyProperties(c)
 
         entityManager.persist(c)
 

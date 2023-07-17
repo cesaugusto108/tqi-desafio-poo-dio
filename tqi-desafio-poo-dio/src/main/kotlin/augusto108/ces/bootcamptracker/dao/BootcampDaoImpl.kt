@@ -26,12 +26,8 @@ class BootcampDaoImpl(private val entityManager: EntityManager) : BootcampDao {
             .singleResult
 
     override fun updateBootcamp(bootcamp: Bootcamp): Bootcamp {
-        val b: Bootcamp = findBootcampById(bootcamp.id)
-        b.description = bootcamp.description
-        b.details = bootcamp.details
-        b.activities = bootcamp.activities
-        b.startDate = bootcamp.startDate
-        b.finishDate = bootcamp.finishDate
+        var b: Bootcamp = findBootcampById(bootcamp.id)
+        b = bootcamp.copyProperties(b)
 
         entityManager.persist(b)
 

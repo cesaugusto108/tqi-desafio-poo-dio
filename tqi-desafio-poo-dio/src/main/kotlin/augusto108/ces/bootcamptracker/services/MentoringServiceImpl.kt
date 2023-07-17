@@ -35,7 +35,7 @@ class MentoringServiceImpl(private val mentoringDao: MentoringDao) : MentoringSe
         }
 
     override fun updateMentoring(mentoring: Mentoring): MentoringDTO =
-        mentoringDao.updateMentoring(mentoring.copyProperties(mentoring)).map(MentoringDTO::class.java)
+        mentoringDao.updateMentoring(mentoring).map(MentoringDTO::class.java)
 
     override fun deleteMentoring(id: Int): Any = mentoringDao.deleteMentoring(id)
 }
