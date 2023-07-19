@@ -4,14 +4,32 @@ import augusto108.ces.bootcamptracker.dto.BootcampDTO
 import augusto108.ces.bootcamptracker.entities.Bootcamp
 import augusto108.ces.bootcamptracker.services.BootcampService
 import augusto108.ces.bootcamptracker.util.MediaType
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.media.ArraySchema
+import io.swagger.v3.oas.annotations.media.Content
+import io.swagger.v3.oas.annotations.media.Schema
+import io.swagger.v3.oas.annotations.responses.ApiResponse
+import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
+@Tag(name = "Bootcamps", description = "endpoints to manage bootcamps information")
 @RestController
-@RequestMapping("/bootcamps")
+@RequestMapping("/v1/bootcamps")
 class BootcampController(private val bootcampService: BootcampService) {
+
+    @Operation(
+        summary = "persists a bootcamp",
+        responses = [
+            ApiResponse(
+                description = "Created",
+                responseCode = "201",
+                content = [Content(schema = Schema(implementation = BootcampDTO::class))]
+            )
+        ]
+    )
     @PostMapping(
         consumes = [MediaType.APPLICATION_JSON, MediaType.APPLICATION_YAML],
         produces = [MediaType.APPLICATION_JSON, MediaType.APPLICATION_YAML]
@@ -24,6 +42,16 @@ class BootcampController(private val bootcampService: BootcampService) {
         return ResponseEntity.status(HttpStatus.CREATED).body(savedBootcamp)
     }
 
+    @Operation(
+        summary = "gets all bootcamps",
+        responses = [
+            ApiResponse(
+                description = "Success",
+                responseCode = "200",
+                content = [Content(array = ArraySchema(schema = Schema(implementation = BootcampDTO::class)))]
+            )
+        ]
+    )
     @GetMapping(produces = [MediaType.APPLICATION_JSON, MediaType.APPLICATION_YAML])
     fun findAllBootcamps(
         @RequestParam(defaultValue = "0", required = false) page: Int,
@@ -41,6 +69,16 @@ class BootcampController(private val bootcampService: BootcampService) {
         return ResponseEntity.status(HttpStatus.OK).body(bootcampDTOList)
     }
 
+    @Operation(
+        summary = "get a bootcamp by id",
+        responses = [
+            ApiResponse(
+                description = "Success",
+                responseCode = "200",
+                content = [Content(schema = Schema(implementation = BootcampDTO::class))]
+            )
+        ]
+    )
     @GetMapping("/{id}", produces = [MediaType.APPLICATION_JSON, MediaType.APPLICATION_YAML])
     fun findBootcampById(@PathVariable("id") id: Int): ResponseEntity<BootcampDTO> {
         val bootcamp: BootcampDTO = bootcampService.findBootcampById(id)
@@ -50,6 +88,16 @@ class BootcampController(private val bootcampService: BootcampService) {
         return ResponseEntity.status(HttpStatus.OK).body(bootcamp)
     }
 
+    @Operation(
+        summary = "updates bootcamp information",
+        responses = [
+            ApiResponse(
+                description = "Success",
+                responseCode = "200",
+                content = [Content(schema = Schema(implementation = BootcampDTO::class))]
+            )
+        ]
+    )
     @PutMapping(
         consumes = [MediaType.APPLICATION_JSON, MediaType.APPLICATION_YAML],
         produces = [MediaType.APPLICATION_JSON, MediaType.APPLICATION_YAML]
@@ -62,6 +110,16 @@ class BootcampController(private val bootcampService: BootcampService) {
         return ResponseEntity.status(HttpStatus.OK).body(updatedBootcamp)
     }
 
+    @Operation(
+        summary = "deletes a bootcamp by id",
+        responses = [
+            ApiResponse(
+                description = "No content",
+                responseCode = "204",
+                content = [Content(schema = Schema(implementation = BootcampDTO::class))]
+            )
+        ]
+    )
     @DeleteMapping("/{id}")
     fun deleteBootcamp(@PathVariable("id") id: Int): ResponseEntity<Any> =
         ResponseEntity.status(HttpStatus.NO_CONTENT).body(bootcampService.deleteBootcamp(id))

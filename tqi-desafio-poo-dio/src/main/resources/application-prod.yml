@@ -22,3 +22,9 @@ spring:
     show-sql: true
   flyway:
     enabled: false
+
+spring-doc:
+  paths-to-match: /v1/**
+  swagger-ui:
+    use-root-path: true
+    defaultModelsExpandDepth: -1
