@@ -1,6 +1,7 @@
 package augusto108.ces.bootcamptracker.controllers
 
 import augusto108.ces.bootcamptracker.entities.Bootcamp
+import augusto108.ces.bootcamptracker.util.API_VERSION
 import com.fasterxml.jackson.databind.ObjectMapper
 import jakarta.persistence.EntityManager
 import jakarta.persistence.PersistenceContext
@@ -68,7 +69,7 @@ class BootcampControllerTest(
         )
 
         mockMvc.perform(
-            post("/bootcamps").with(csrf())
+            post("${API_VERSION}bootcamps").with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(bootcamp))
         )
@@ -76,13 +77,13 @@ class BootcampControllerTest(
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.description", `is`("Java backend")))
             .andExpect(jsonPath("$.details", `is`("Java and Spring backend")))
-            .andExpect(jsonPath("$._links.all.href", `is`("http://localhost/bootcamps")))
+            .andExpect(jsonPath("$._links.all.href", `is`("http://localhost${API_VERSION}bootcamps")))
     }
 
     @Test
     fun findAllBootcamps() {
         mockMvc.perform(
-            get("/bootcamps")
+            get("${API_VERSION}bootcamps")
                 .param("page", page)
                 .param("max", max)
                 .accept(MediaType.APPLICATION_JSON)
@@ -91,11 +92,11 @@ class BootcampControllerTest(
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$[0].description", `is`("TQI Kotlin Backend")))
             .andExpect(jsonPath("$[0].details", `is`("Java e Kotlin backend")))
-            .andExpect(jsonPath("$[0].links[0].href", `is`("http://localhost/bootcamps")))
-            .andExpect(jsonPath("$[0].links[1].href", `is`("http://localhost/bootcamps/-1")))
+            .andExpect(jsonPath("$[0].links[0].href", `is`("http://localhost${API_VERSION}bootcamps")))
+            .andExpect(jsonPath("$[0].links[1].href", `is`("http://localhost${API_VERSION}bootcamps/-1")))
 
         val result: MvcResult = mockMvc.perform(
-            get("/bootcamps")
+            get("${API_VERSION}bootcamps")
                 .param("page", page)
                 .param("max", max)
                 .accept(UtilMediaType.APPLICATION_YAML)
@@ -113,16 +114,16 @@ class BootcampControllerTest(
 
     @Test
     fun findBootcampById() {
-        mockMvc.perform(get("/bootcamps/{id}", -1))
+        mockMvc.perform(get("${API_VERSION}bootcamps/{id}", -1))
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.description", `is`("TQI Kotlin Backend")))
             .andExpect(jsonPath("$.details", `is`("Java e Kotlin backend")))
-            .andExpect(jsonPath("$._links.self.href", `is`("http://localhost/bootcamps/-1")))
-            .andExpect(jsonPath("$._links.all.href", `is`("http://localhost/bootcamps")))
+            .andExpect(jsonPath("$._links.self.href", `is`("http://localhost${API_VERSION}bootcamps/-1")))
+            .andExpect(jsonPath("$._links.all.href", `is`("http://localhost${API_VERSION}bootcamps")))
 
         val result: MvcResult = mockMvc.perform(
-            get("/bootcamps/{id}", -1)
+            get("${API_VERSION}bootcamps/{id}", -1)
                 .accept(MediaType.valueOf(UtilMediaType.APPLICATION_YAML))
         )
             .andExpect(status().isOk)
@@ -148,20 +149,20 @@ class BootcampControllerTest(
         )
 
         mockMvc.perform(
-            put("/bootcamps").with(csrf())
+            put("${API_VERSION}bootcamps").with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(bootcamp))
         )
             .andExpect(jsonPath("$.description", `is`("Go backend")))
             .andExpect(jsonPath("$.details", `is`("Go backend development")))
             .andExpect(jsonPath("$.id", `is`(-1)))
-            .andExpect(jsonPath("$._links.self.href", `is`("http://localhost/bootcamps/-1")))
-            .andExpect(jsonPath("$._links.all.href", `is`("http://localhost/bootcamps")))
+            .andExpect(jsonPath("$._links.self.href", `is`("http://localhost${API_VERSION}bootcamps/-1")))
+            .andExpect(jsonPath("$._links.all.href", `is`("http://localhost${API_VERSION}bootcamps")))
     }
 
     @Test
     fun deleteBootcamp() {
-        mockMvc.perform(delete("/bootcamps/{id}", -1).with(csrf()))
+        mockMvc.perform(delete("${API_VERSION}bootcamps/{id}", -1).with(csrf()))
             .andExpect(status().isNoContent)
 
         val bootcamps: MutableList<Bootcamp>? = entityManager

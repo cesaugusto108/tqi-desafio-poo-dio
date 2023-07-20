@@ -3,6 +3,7 @@ package augusto108.ces.bootcamptracker.controllers
 import augusto108.ces.bootcamptracker.entities.Developer
 import augusto108.ces.bootcamptracker.entities.Name
 import augusto108.ces.bootcamptracker.entities.Person
+import augusto108.ces.bootcamptracker.util.API_VERSION
 import com.fasterxml.jackson.databind.ObjectMapper
 import jakarta.persistence.EntityManager
 import jakarta.persistence.PersistenceContext
@@ -71,7 +72,7 @@ class DeveloperControllerTest(
             )
 
         mockMvc.perform(
-            post("/developers").with(csrf())
+            post("${API_VERSION}developers").with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(developer))
         )
@@ -81,13 +82,13 @@ class DeveloperControllerTest(
             .andExpect(jsonPath("$.name.lastName", `is`("Pires")))
             .andExpect(jsonPath("$.email", `is`("rosana@email.com")))
             .andExpect(jsonPath("$.level", `is`(3)))
-            .andExpect(jsonPath("$._links.self.href", `is`("http://localhost/developers/1")))
-            .andExpect(jsonPath("$._links.all.href", `is`("http://localhost/developers")))
+            .andExpect(jsonPath("$._links.self.href", `is`("http://localhost${API_VERSION}developers/1")))
+            .andExpect(jsonPath("$._links.all.href", `is`("http://localhost${API_VERSION}developers")))
     }
 
     @Test
     fun findAllDevelopers() {
-        mockMvc.perform(get("/developers").param("page", "0").param("max", "10"))
+        mockMvc.perform(get("${API_VERSION}developers").param("page", "0").param("max", "10"))
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$[0].id", `is`(-1)))
@@ -95,11 +96,11 @@ class DeveloperControllerTest(
             .andExpect(jsonPath("$[0].name.lastName", `is`("Costa")))
             .andExpect(jsonPath("$[0].email", `is`("josecc@email.com")))
             .andExpect(jsonPath("$[0].level", `is`(2)))
-            .andExpect(jsonPath("$[0].links[0].href", `is`("http://localhost/developers")))
-            .andExpect(jsonPath("$[0].links[1].href", `is`("http://localhost/developers/-1")))
+            .andExpect(jsonPath("$[0].links[0].href", `is`("http://localhost${API_VERSION}developers")))
+            .andExpect(jsonPath("$[0].links[1].href", `is`("http://localhost${API_VERSION}developers/-1")))
 
         val result: MvcResult = mockMvc.perform(
-            get("/developers")
+            get("${API_VERSION}developers")
                 .param("page", "0")
                 .param("max", "10")
                 .accept(UtilMediaType.APPLICATION_YAML)
@@ -115,7 +116,7 @@ class DeveloperControllerTest(
 
     @Test
     fun findDeveloperById() {
-        mockMvc.perform(get("/developers/{id}", -1))
+        mockMvc.perform(get("${API_VERSION}developers/{id}", -1))
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.id", `is`(-1)))
@@ -123,11 +124,11 @@ class DeveloperControllerTest(
             .andExpect(jsonPath("$.name.lastName", `is`("Costa")))
             .andExpect(jsonPath("$.email", `is`("josecc@email.com")))
             .andExpect(jsonPath("$.level", `is`(2)))
-            .andExpect(jsonPath("$._links.self.href", `is`("http://localhost/developers/-1")))
-            .andExpect(jsonPath("$._links.all.href", `is`("http://localhost/developers")))
+            .andExpect(jsonPath("$._links.self.href", `is`("http://localhost${API_VERSION}developers/-1")))
+            .andExpect(jsonPath("$._links.all.href", `is`("http://localhost${API_VERSION}developers")))
 
         val result: MvcResult = mockMvc.perform(
-            get("/developers/{id}", -1)
+            get("${API_VERSION}developers/{id}", -1)
                 .accept(UtilMediaType.APPLICATION_YAML)
         )
             .andExpect(status().isOk)
@@ -152,7 +153,7 @@ class DeveloperControllerTest(
             )
 
         mockMvc.perform(
-            put("/developers").with(csrf())
+            put("${API_VERSION}developers").with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(developer))
         )
@@ -164,13 +165,13 @@ class DeveloperControllerTest(
             .andExpect(jsonPath("$.email", `is`("pedro@email.com")))
             .andExpect(jsonPath("$.username", `is`("pedrosantos")))
             .andExpect(jsonPath("$.level", `is`(7)))
-            .andExpect(jsonPath("$._links.self.href", `is`("http://localhost/developers/-1")))
-            .andExpect(jsonPath("$._links.all.href", `is`("http://localhost/developers")))
+            .andExpect(jsonPath("$._links.self.href", `is`("http://localhost${API_VERSION}developers/-1")))
+            .andExpect(jsonPath("$._links.all.href", `is`("http://localhost${API_VERSION}developers")))
     }
 
     @Test
     fun deleteDeveloper() {
-        mockMvc.perform(delete("/developers/{id}", -1).with(csrf()))
+        mockMvc.perform(delete("${API_VERSION}developers/{id}", -1).with(csrf()))
             .andExpect(status().isNoContent)
 
         val developers: MutableList<Developer>? = entityManager

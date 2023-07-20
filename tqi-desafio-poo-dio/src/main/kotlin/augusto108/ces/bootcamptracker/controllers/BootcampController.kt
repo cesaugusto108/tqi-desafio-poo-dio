@@ -4,6 +4,7 @@ import augusto108.ces.bootcamptracker.controllers.annotations.bootcamp.*
 import augusto108.ces.bootcamptracker.dto.BootcampDTO
 import augusto108.ces.bootcamptracker.entities.Bootcamp
 import augusto108.ces.bootcamptracker.services.BootcampService
+import augusto108.ces.bootcamptracker.util.API_VERSION
 import augusto108.ces.bootcamptracker.util.MediaType
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.*
 
 @Tag(name = "Bootcamps", description = "endpoints to manage bootcamps information")
 @RestController
-@RequestMapping("/v1/bootcamps")
+@RequestMapping("${API_VERSION}bootcamps")
 class BootcampController(private val bootcampService: BootcampService) {
     @PostMapping(
         consumes = [MediaType.APPLICATION_JSON, MediaType.APPLICATION_YAML],

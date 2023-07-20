@@ -1,6 +1,7 @@
 package augusto108.ces.bootcamptracker.controllers
 
 import augusto108.ces.bootcamptracker.entities.Mentoring
+import augusto108.ces.bootcamptracker.util.API_VERSION
 import com.fasterxml.jackson.databind.ObjectMapper
 import jakarta.persistence.EntityManager
 import jakarta.persistence.PersistenceContext
@@ -64,7 +65,7 @@ class MentoringControllerTest(
             Mentoring(date = null, hours = null, description = "REST APIs", details = "REST APIs com Spring e Kotlin")
 
         mockMvc.perform(
-            post("/mentoring").with(csrf())
+            post("${API_VERSION}mentoring").with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(mentoring))
         )
@@ -72,21 +73,21 @@ class MentoringControllerTest(
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.description", `is`("REST APIs")))
             .andExpect(jsonPath("$.details", `is`("REST APIs com Spring e Kotlin")))
-            .andExpect(jsonPath("$._links.all.href", `is`("http://localhost/mentoring")))
+            .andExpect(jsonPath("$._links.all.href", `is`("http://localhost${API_VERSION}mentoring")))
     }
 
     @Test
     fun findAllMentoring() {
-        mockMvc.perform(get("/mentoring").param("page", "0").param("max", "10"))
+        mockMvc.perform(get("${API_VERSION}mentoring").param("page", "0").param("max", "10"))
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$[0].description", `is`("Orientação a objetos")))
             .andExpect(jsonPath("$[0].details", `is`("Orientação a objetos com Kotlin")))
-            .andExpect(jsonPath("$[0].links[0].href", `is`("http://localhost/mentoring")))
-            .andExpect(jsonPath("$[0].links[1].href", `is`("http://localhost/mentoring/-1")))
+            .andExpect(jsonPath("$[0].links[0].href", `is`("http://localhost${API_VERSION}mentoring")))
+            .andExpect(jsonPath("$[0].links[1].href", `is`("http://localhost${API_VERSION}mentoring/-1")))
 
         val result: MvcResult = mockMvc.perform(
-            get("/mentoring")
+            get("${API_VERSION}mentoring")
                 .param("page", "0")
                 .param("max", "10")
                 .accept(UtilMediaType.APPLICATION_YAML)
@@ -102,16 +103,16 @@ class MentoringControllerTest(
 
     @Test
     fun findMentoringById() {
-        mockMvc.perform(get("/mentoring/{id}", -1))
+        mockMvc.perform(get("${API_VERSION}mentoring/{id}", -1))
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.description", `is`("Orientação a objetos")))
             .andExpect(jsonPath("$.details", `is`("Orientação a objetos com Kotlin")))
-            .andExpect(jsonPath("$._links.self.href", `is`("http://localhost/mentoring/-1")))
-            .andExpect(jsonPath("$._links.all.href", `is`("http://localhost/mentoring")))
+            .andExpect(jsonPath("$._links.self.href", `is`("http://localhost${API_VERSION}mentoring/-1")))
+            .andExpect(jsonPath("$._links.all.href", `is`("http://localhost${API_VERSION}mentoring")))
 
         val result: MvcResult = mockMvc.perform(
-            get("/mentoring/{id}", -1)
+            get("${API_VERSION}mentoring/{id}", -1)
                 .accept(UtilMediaType.APPLICATION_YAML)
         )
             .andExpect(status().isOk)
@@ -135,19 +136,19 @@ class MentoringControllerTest(
             )
 
         mockMvc.perform(
-            put("/mentoring").with(csrf())
+            put("${API_VERSION}mentoring").with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(mentoring))
         )
             .andExpect(jsonPath("$.description", `is`("Android apps")))
             .andExpect(jsonPath("$.details", `is`("Kotlin e apps para Android")))
-            .andExpect(jsonPath("$._links.self.href", `is`("http://localhost/mentoring/-1")))
-            .andExpect(jsonPath("$._links.all.href", `is`("http://localhost/mentoring")))
+            .andExpect(jsonPath("$._links.self.href", `is`("http://localhost${API_VERSION}mentoring/-1")))
+            .andExpect(jsonPath("$._links.all.href", `is`("http://localhost${API_VERSION}mentoring")))
     }
 
     @Test
     fun deleteMentoring() {
-        mockMvc.perform(delete("/mentoring/{id}", -1).with(csrf()))
+        mockMvc.perform(delete("${API_VERSION}mentoring/{id}", -1).with(csrf()))
             .andExpect(status().isNoContent)
 
         val mentoringList: MutableList<Mentoring>? = entityManager

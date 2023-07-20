@@ -4,6 +4,7 @@ import augusto108.ces.bootcamptracker.controllers.annotations.developer.*
 import augusto108.ces.bootcamptracker.dto.DeveloperDTO
 import augusto108.ces.bootcamptracker.entities.Developer
 import augusto108.ces.bootcamptracker.services.DeveloperService
+import augusto108.ces.bootcamptracker.util.API_VERSION
 import augusto108.ces.bootcamptracker.util.MediaType
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.*
 
 @Tag(name = "Developers", description = "endpoints to manage developers information")
 @RestController
-@RequestMapping("/v1/developers")
+@RequestMapping("${API_VERSION}developers")
 class DeveloperController(private val developerService: DeveloperService) {
     @PostMapping(
         consumes = [MediaType.APPLICATION_JSON, MediaType.APPLICATION_YAML],

@@ -3,6 +3,7 @@ package augusto108.ces.bootcamptracker.controllers
 import augusto108.ces.bootcamptracker.entities.Instructor
 import augusto108.ces.bootcamptracker.entities.Name
 import augusto108.ces.bootcamptracker.entities.Person
+import augusto108.ces.bootcamptracker.util.API_VERSION
 import com.fasterxml.jackson.databind.ObjectMapper
 import jakarta.persistence.EntityManager
 import jakarta.persistence.PersistenceContext
@@ -66,7 +67,7 @@ class InstructorControllerTest(
             Instructor(name = Name(firstName = "Fabiana", lastName = "Campos"), email = "fabiana@email.com", age = 38)
 
         mockMvc.perform(
-            post("/instructors").with(csrf())
+            post("${API_VERSION}instructors").with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(instructor))
         )
@@ -75,23 +76,23 @@ class InstructorControllerTest(
             .andExpect(jsonPath("$.age", `is`(38)))
             .andExpect(jsonPath("$.name.lastName", `is`("Campos")))
             .andExpect(jsonPath("$.email", `is`("fabiana@email.com")))
-            .andExpect(jsonPath("$._links.all.href", `is`("http://localhost/instructors")))
+            .andExpect(jsonPath("$._links.all.href", `is`("http://localhost${API_VERSION}instructors")))
     }
 
     @Test
     fun findAllInstructors() {
-        mockMvc.perform(get("/instructors").param("page", "0").param("max", "10"))
+        mockMvc.perform(get("${API_VERSION}instructors").param("page", "0").param("max", "10"))
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$[0].id", `is`(-2)))
             .andExpect(jsonPath("$[0].age", `is`(32)))
             .andExpect(jsonPath("$[0].name.lastName", `is`("Souza")))
             .andExpect(jsonPath("$[0].email", `is`("maria@email.com")))
-            .andExpect(jsonPath("$[0].links[0].href", `is`("http://localhost/instructors")))
-            .andExpect(jsonPath("$[0].links[1].href", `is`("http://localhost/instructors/-2")))
+            .andExpect(jsonPath("$[0].links[0].href", `is`("http://localhost${API_VERSION}instructors")))
+            .andExpect(jsonPath("$[0].links[1].href", `is`("http://localhost${API_VERSION}instructors/-2")))
 
         val result: MvcResult = mockMvc.perform(
-            get("/instructors")
+            get("${API_VERSION}instructors")
                 .param("page", "0")
                 .param("max", "10")
                 .accept(UtilMediaType.APPLICATION_YAML)
@@ -107,18 +108,18 @@ class InstructorControllerTest(
 
     @Test
     fun findInstructorById() {
-        mockMvc.perform(get("/instructors/{id}", -2))
+        mockMvc.perform(get("${API_VERSION}instructors/{id}", -2))
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.id", `is`(-2)))
             .andExpect(jsonPath("$.age", `is`(32)))
             .andExpect(jsonPath("$.name.lastName", `is`("Souza")))
             .andExpect(jsonPath("$.email", `is`("maria@email.com")))
-            .andExpect(jsonPath("$._links.self.href", `is`("http://localhost/instructors/-2")))
-            .andExpect(jsonPath("$._links.all.href", `is`("http://localhost/instructors")))
+            .andExpect(jsonPath("$._links.self.href", `is`("http://localhost${API_VERSION}instructors/-2")))
+            .andExpect(jsonPath("$._links.all.href", `is`("http://localhost${API_VERSION}instructors")))
 
         val result: MvcResult = mockMvc.perform(
-            get("/instructors/{id}", -2)
+            get("${API_VERSION}instructors/{id}", -2)
                 .accept(UtilMediaType.APPLICATION_YAML)
         )
             .andExpect(status().isOk)
@@ -142,7 +143,7 @@ class InstructorControllerTest(
             )
 
         mockMvc.perform(
-            put("/instructors").with(csrf())
+            put("${API_VERSION}instructors").with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(instructor))
         )
@@ -153,13 +154,13 @@ class InstructorControllerTest(
             .andExpect(jsonPath("$.name.lastName", `is`("Castro")))
             .andExpect(jsonPath("$.email", `is`("madalena@email.com")))
             .andExpect(jsonPath("$.username", `is`("madalenac")))
-            .andExpect(jsonPath("$._links.self.href", `is`("http://localhost/instructors/-2")))
-            .andExpect(jsonPath("$._links.all.href", `is`("http://localhost/instructors")))
+            .andExpect(jsonPath("$._links.self.href", `is`("http://localhost${API_VERSION}instructors/-2")))
+            .andExpect(jsonPath("$._links.all.href", `is`("http://localhost${API_VERSION}instructors")))
     }
 
     @Test
     fun deleteInstructor() {
-        mockMvc.perform(delete("/instructors/{id}", -2).with(csrf()))
+        mockMvc.perform(delete("${API_VERSION}instructors/{id}", -2).with(csrf()))
             .andExpect(status().isNoContent)
 
         val instructors: MutableList<Instructor>? = entityManager

@@ -1,5 +1,6 @@
 package augusto108.ces.bootcamptracker.controllers.handlers
 
+import augusto108.ces.bootcamptracker.util.API_VERSION
 import org.hamcrest.Matchers.*
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.*
@@ -21,7 +22,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 class ApplicationExceptionHandlerTest(@Autowired private val mockMvc: MockMvc) {
     @Test
     fun handleNotAcceptable() {
-        mockMvc.perform(get("/courses").accept(MediaType.APPLICATION_XML))
+        mockMvc.perform(get("${API_VERSION}courses").accept(MediaType.APPLICATION_XML))
             .andExpect(status().isNotAcceptable)
             .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
             .andExpect(jsonPath("$.message", `is`("No acceptable representation")))
@@ -31,24 +32,24 @@ class ApplicationExceptionHandlerTest(@Autowired private val mockMvc: MockMvc) {
 
     @Test
     fun handleNotFound() {
-        mockMvc.perform(get("/courses/{id}", 0))
+        mockMvc.perform(get("${API_VERSION}courses/{id}", 0))
             .andExpect(status().isNotFound)
             .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
             .andExpect(jsonPath("$.message", `is`("No result found. For query: Id: 0")))
             .andExpect(jsonPath("$.status", `is`("NOT_FOUND")))
             .andExpect(jsonPath("$.statusCode", `is`(404)))
 
-        mockMvc.perform(get("/all/courses/"))
+        mockMvc.perform(get("/all${API_VERSION}courses/"))
             .andExpect(status().isNotFound)
             .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
-            .andExpect(jsonPath("$.message", `is`("No endpoint GET /all/courses/.")))
+            .andExpect(jsonPath("$.message", `is`("No endpoint GET /all${API_VERSION}courses/.")))
             .andExpect(jsonPath("$.status", `is`("NOT_FOUND")))
             .andExpect(jsonPath("$.statusCode", `is`(404)))
     }
 
     @Test
     fun handleBadRequest() {
-        mockMvc.perform(get("/courses/{id}", "aaa"))
+        mockMvc.perform(get("${API_VERSION}courses/{id}", "aaa"))
             .andExpect(status().isBadRequest)
             .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
             .andExpect(jsonPath("$.message", `is`("For input string: \"aaa\"")))
