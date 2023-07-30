@@ -1,84 +1,64 @@
 package augusto108.ces.bootcamptracker.services
 
+import augusto108.ces.bootcamptracker.TestContainersConfig
 import augusto108.ces.bootcamptracker.dto.MentoringDTO
 import augusto108.ces.bootcamptracker.entities.Mentoring
-import jakarta.persistence.EntityManager
 import jakarta.persistence.NoResultException
 import org.junit.jupiter.api.*
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.TestPropertySource
-import org.springframework.transaction.annotation.Transactional
 
 @SpringBootTest
 @ActiveProfiles("test")
-@Transactional
 @DisplayNameGeneration(DisplayNameGenerator.Simple::class)
 @TestPropertySource("classpath:app_params.properties")
-class MentoringServiceImplTests(
-    @Autowired private val entityManager: EntityManager,
-    @Autowired private val mentoringService: MentoringService
-) {
+@TestMethodOrder(MethodOrderer.OrderAnnotation::class)
+class MentoringServiceImplTests(@Autowired private val mentoringService: MentoringService) : TestContainersConfig() {
     @Value("\${page.value}")
     var page: Int = 0
 
     @Value("\${max.value}")
     var max: Int = 0
 
-    @BeforeEach
-    fun setUp() {
-        val mentoringQuery: String =
-            "insert into " +
-                    "`activity` (`activity_type`, `id`, `activity_description`, `activity_details`, `mentoring_date`, `course_hours`)" +
-                    " values ('mentoring', -1, 'Orientação a objetos', 'Orientação a objetos com Kotlin', NULL, NULL);"
-
-        entityManager.createNativeQuery(mentoringQuery, Mentoring::class.java).executeUpdate()
-    }
-
-    @AfterEach
-    fun tearDown() {
-        entityManager.createNativeQuery("delete from `activity`;")
-    }
-
     @Test
     fun saveMentoring() {
-        var mentorings: List<Mentoring> = entityManager
-            .createQuery("from Mentoring order by id", Mentoring::class.java)
-            .resultList
+        var mentorings: List<MentoringDTO> = mentoringService.findAllMentoring(page, max)
 
-        assertEquals(1, mentorings.size)
-        assertEquals("Orientação a objetos (mentoring)", mentorings[0].toString())
-        assertEquals(-1, mentorings[0].id)
+        assertEquals(2, mentorings.size)
+        assertEquals("Java - POO (mentoring)", mentorings[0].toString())
+        assertEquals(-2, mentorings[0].id)
 
-        val mentoring = Mentoring(date = null, hours = null, description = "Agile", details = "Gestão de times ágeis")
+        val mentoring =
+            Mentoring(date = null, hours = null, description = "Extreme Programming", details = "Gestão de times ágeis")
 
         mentoringService.saveMentoring(mentoring)
 
-        mentorings = entityManager
-            .createQuery("from Mentoring order by id", Mentoring::class.java)
-            .resultList
+        mentorings = mentoringService.findAllMentoring(page, max)
 
-        assertEquals(2, mentorings.size)
-        assertEquals("Agile (mentoring)", mentorings[1].toString())
+        assertEquals(3, mentorings.size)
+        assertEquals("Extreme Programming (mentoring)", mentorings[2].toString())
+
+        mentoringService.deleteMentoring(mentorings[2].id)
     }
 
     @Test
     fun findAllMentoring() {
         val mentorings: List<MentoringDTO> = mentoringService.findAllMentoring(page, max)
 
-        assertEquals(1, mentorings.size)
-        assertEquals("Orientação a objetos (mentoring)", mentorings[0].toString())
-        assertEquals(-1, mentorings[0].id)
+        assertEquals(2, mentorings.size)
+        assertEquals("Kotlin - POO (mentoring)", mentorings[1].toString())
+        assertEquals(-1, mentorings[1].id)
     }
 
     @Test
     fun findMentoringById() {
-        val mentoring: MentoringDTO = mentoringService.findMentoringById(-1)
+        val mentoring: MentoringDTO = mentoringService.findMentoringById(-2)
 
-        assertEquals("Orientação a objetos (mentoring)", mentoring.toString())
+        assertEquals("Java - POO (mentoring)", mentoring.toString())
         assertThrows<NoResultException> { mentoringService.findMentoringById(0) }
         assertThrows<NumberFormatException> { mentoringService.findMentoringById("aaa".toInt()) }
     }
@@ -90,23 +70,26 @@ class MentoringServiceImplTests(
 
         mentoringService.updateMentoring(mentoring)
 
-        val mentorings: List<Mentoring> = entityManager
-            .createQuery("from Mentoring order by id", Mentoring::class.java)
-            .resultList
+        val mentorings: List<MentoringDTO> = mentoringService.findAllMentoring(page, max)
 
-        assertEquals(1, mentorings.size)
-        assertEquals("Agile (mentoring)", mentorings[0].toString())
-        assertEquals(-1, mentorings[0].id)
+        assertEquals(2, mentorings.size)
+        assertEquals("Agile (mentoring)", mentorings[1].toString())
+        assertEquals(-1, mentorings[1].id)
     }
 
     @Test
     fun deleteMentoring() {
-        mentoringService.deleteMentoring(-1)
+        val mentoring =
+            Mentoring(date = null, hours = null, description = "Spring Security", details = "Security with Spring")
 
-        val mentorings: List<Mentoring> = entityManager
-            .createQuery("from Mentoring order by id", Mentoring::class.java)
-            .resultList
+        mentoringService.saveMentoring(mentoring)
 
-        assertEquals(0, mentorings.size)
+        var mentoringList: List<MentoringDTO> = mentoringService.findAllMentoring(page, max)
+
+        mentoringService.deleteMentoring(mentoringList[2].id)
+
+        mentoringList = mentoringService.findAllMentoring(page, max)
+
+        assertEquals(2, mentoringList.size)
     }
 }

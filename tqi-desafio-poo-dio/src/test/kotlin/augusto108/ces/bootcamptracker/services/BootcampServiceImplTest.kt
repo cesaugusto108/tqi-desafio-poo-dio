@@ -1,123 +1,114 @@
 package augusto108.ces.bootcamptracker.services
 
+import augusto108.ces.bootcamptracker.TestContainersConfig
 import augusto108.ces.bootcamptracker.dto.BootcampDTO
 import augusto108.ces.bootcamptracker.entities.Bootcamp
-import jakarta.persistence.EntityManager
 import jakarta.persistence.NoResultException
 import org.junit.jupiter.api.*
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.TestPropertySource
-import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
 
 @SpringBootTest
 @ActiveProfiles("test")
-@Transactional
 @DisplayNameGeneration(DisplayNameGenerator.Simple::class)
 @TestPropertySource("classpath:app_params.properties")
-class BootcampServiceImplTest(
-    @Autowired private val entityManager: EntityManager,
-    @Autowired private val bootcampService: BootcampService
-) {
+@TestMethodOrder(MethodOrderer.OrderAnnotation::class)
+class BootcampServiceImplTest(@Autowired private val bootcampService: BootcampService) : TestContainersConfig() {
     @Value("\${page.value}")
     var page: Int = 0
 
     @Value("\${max.value}")
     var max: Int = 0
 
-    @BeforeEach
-    fun setUp() {
-        val bootcampQuery: String =
-            "insert into " +
-                    "`bootcamp` (`id`, `bootcamp_description`, `bootcamp_details`, `finish_date`, `start_date`)" +
-                    " values (-1, 'TQI Kotlin Backend', 'Java e Kotlin backend', NULL, NULL);"
-
-        entityManager.createNativeQuery(bootcampQuery, Bootcamp::class.java).executeUpdate()
-    }
-
-    @AfterEach
-    fun tearDown() {
-        entityManager.createNativeQuery("delete from `bootcamp`;")
-    }
-
     @Test
+    @Order(3)
     fun saveBootcamp() {
-        var bootcamps: List<Bootcamp> = entityManager
-            .createQuery("from Bootcamp order by id", Bootcamp::class.java)
-            .resultList
+        var bootcamps: List<BootcampDTO> = bootcampService.findAllBootcamps(page, max)
 
-        assertEquals(1, bootcamps.size)
-        assertEquals("TQI Kotlin Backend", bootcamps[0].toString())
-        assertEquals(-1, bootcamps[0].id)
+        assertEquals(3, bootcamps.size)
+        assertEquals("AWS Experience", bootcamps[0].toString())
+        assertEquals(-3, bootcamps[0].id)
 
         val bootcamp = Bootcamp(
-            description = "Linux Experience",
-            details = "Aperfeiçoamento Linux",
-            startDate = LocalDateTime.of(2023, 8, 20, 0, 0),
-            finishDate = LocalDateTime.of(2023, 10, 5, 0, 0)
+            description = "AWS Cloud Computing",
+            details = "Treinamento Computação em nuvem",
+            startDate = LocalDateTime.of(2023, 8, 25, 0, 0),
+            finishDate = LocalDateTime.of(2023, 10, 10, 0, 0)
         )
 
         bootcampService.saveBootcamp(bootcamp)
 
-        bootcamps = entityManager
-            .createQuery("from Bootcamp order by id", Bootcamp::class.java)
-            .resultList
+        bootcamps = bootcampService.findAllBootcamps(page, max)
 
-        assertEquals(2, bootcamps.size)
-        assertEquals("Linux Experience", bootcamps[1].toString())
+        assertEquals(4, bootcamps.size)
+        assertEquals("AWS Cloud Computing", bootcamps[3].toString())
+
+        bootcampService.deleteBootcamp(bootcamps[3].id)
     }
 
     @Test
+    @Order(1)
     fun findAllBootcamps() {
         val bootcamps: List<BootcampDTO> = bootcampService.findAllBootcamps(page, max)
 
-        assertEquals(1, bootcamps.size)
-        assertEquals("TQI Kotlin Backend", bootcamps[0].toString())
-        assertEquals(-1, bootcamps[0].id)
+        assertEquals(3, bootcamps.size)
+        assertEquals("AWS Experience", bootcamps[0].toString())
+        assertEquals(-3, bootcamps[0].id)
     }
 
     @Test
+    @Order(2)
     fun findBootcampById() {
-        val bootcamp: BootcampDTO = bootcampService.findBootcampById(-1)
+        val bootcamp: BootcampDTO = bootcampService.findBootcampById(-3)
 
-        assertEquals("TQI Kotlin Backend", bootcamp.toString())
+        assertEquals("AWS Experience", bootcamp.toString())
         assertThrows<NoResultException> { bootcampService.findBootcampById(0) }
         assertThrows<NumberFormatException> { bootcampService.findBootcampById("aaa".toInt()) }
     }
 
     @Test
+    @Order(4)
     fun updateBootcamp() {
         val bootcamp = Bootcamp(
             description = "TQI Go Backend",
             details = "Go backend",
             startDate = LocalDateTime.of(2023, 8, 20, 0, 0),
             finishDate = LocalDateTime.of(2023, 10, 5, 0, 0),
-            id = -1
+            id = -3
         )
 
         bootcampService.updateBootcamp(bootcamp)
 
-        val bootcamps: List<Bootcamp> = entityManager
-            .createQuery("from Bootcamp order by id", Bootcamp::class.java)
-            .resultList
+        val bootcamps: List<BootcampDTO> = bootcampService.findAllBootcamps(page, max)
 
-        assertEquals(1, bootcamps.size)
+        assertEquals(3, bootcamps.size)
         assertEquals("TQI Go Backend", bootcamps[0].toString())
-        assertEquals(-1, bootcamps[0].id)
+        assertEquals(-3, bootcamps[0].id)
     }
 
     @Test
+    @Order(5)
     fun deleteBootcamp() {
-        bootcampService.deleteBootcamp(-1)
+        val bootcamp = Bootcamp(
+            description = "MySQL Training",
+            details = "Banco de dados relacional",
+            startDate = LocalDateTime.of(2023, 8, 15, 0, 0),
+            finishDate = LocalDateTime.of(2023, 10, 1, 0, 0)
+        )
 
-        val bootcamps: List<Bootcamp> = entityManager
-            .createQuery("from Bootcamp order by id", Bootcamp::class.java)
-            .resultList
+        bootcampService.saveBootcamp(bootcamp)
 
-        assertEquals(0, bootcamps.size)
+        var bootcamps: List<BootcampDTO> = bootcampService.findAllBootcamps(page, max)
+
+        bootcampService.deleteBootcamp(bootcamps[3].id)
+
+        bootcamps = bootcampService.findAllBootcamps(page, max)
+
+        assertEquals(3, bootcamps.size)
     }
 }

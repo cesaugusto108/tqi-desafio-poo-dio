@@ -1,9 +1,11 @@
 package augusto108.ces.bootcamptracker.controllers.handlers
 
+import augusto108.ces.bootcamptracker.TestContainersConfig
 import augusto108.ces.bootcamptracker.util.API_VERSION
-import org.hamcrest.Matchers.*
-import org.junit.jupiter.api.*
-import org.junit.jupiter.api.Assertions.*
+import org.hamcrest.Matchers.`is`
+import org.junit.jupiter.api.DisplayNameGeneration
+import org.junit.jupiter.api.DisplayNameGenerator
+import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
@@ -11,7 +13,7 @@ import org.springframework.http.MediaType
 import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 
 @SpringBootTest
@@ -19,7 +21,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 @AutoConfigureMockMvc
 @WithMockUser
 @DisplayNameGeneration(DisplayNameGenerator.Simple::class)
-class ApplicationExceptionHandlerTest(@Autowired private val mockMvc: MockMvc) {
+class ApplicationExceptionHandlerTest(@Autowired private val mockMvc: MockMvc) : TestContainersConfig() {
     @Test
     fun handleNotAcceptable() {
         mockMvc.perform(get("${API_VERSION}courses").accept(MediaType.APPLICATION_XML))

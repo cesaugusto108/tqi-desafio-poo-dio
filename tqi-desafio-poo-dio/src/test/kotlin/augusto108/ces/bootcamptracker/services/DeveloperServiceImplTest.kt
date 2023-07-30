@@ -1,92 +1,78 @@
 package augusto108.ces.bootcamptracker.services
 
+import augusto108.ces.bootcamptracker.TestContainersConfig
 import augusto108.ces.bootcamptracker.dto.DeveloperDTO
 import augusto108.ces.bootcamptracker.entities.Developer
 import augusto108.ces.bootcamptracker.entities.Name
-import augusto108.ces.bootcamptracker.entities.Person
-import jakarta.persistence.EntityManager
 import jakarta.persistence.NoResultException
 import org.junit.jupiter.api.*
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.TestPropertySource
-import org.springframework.transaction.annotation.Transactional
 
 @SpringBootTest
 @ActiveProfiles("test")
-@Transactional
 @DisplayNameGeneration(DisplayNameGenerator.Simple::class)
 @TestPropertySource("classpath:app_params.properties")
-class DeveloperServiceImplTest(
-    @Autowired private val entityManager: EntityManager,
-    @Autowired private val developerService: DeveloperService
-) {
+@TestMethodOrder(MethodOrderer.OrderAnnotation::class)
+class DeveloperServiceImplTest(@Autowired private val developerService: DeveloperService) : TestContainersConfig() {
     @Value("\${page.value}")
     var page: Int = 0
 
     @Value("\${max.value}")
     var max: Int = 0
 
-    @BeforeEach
-    fun setUp() {
-        val developerQuery: String =
-            "insert into " +
-                    "`person` (`person_type`, `id`, `person_age`, `email`, `first_name`, `last_name`, `middle_name`, `password`, `username`, `developer_level`)" +
-                    " values ('developer', -1, 29, 'josecc@email.com', 'José', 'Costa', 'Carlos', 'josecc', '1234', 2);"
-
-        entityManager.createNativeQuery(developerQuery, Person::class.java).executeUpdate()
-    }
-
-    @AfterEach
-    fun tearDown() {
-        entityManager.createNativeQuery("delete from `person`;")
-    }
-
     @Test
+    @Order(3)
     fun saveDeveloper() {
-        var developers: List<Developer> = entityManager
-            .createQuery("from Developer order by id", Developer::class.java)
-            .resultList
+        var developers: List<DeveloperDTO> = developerService.findAllDevelopers(page, max)
 
-        assertEquals(1, developers.size)
-        assertEquals("(2) José Carlos Costa (josecc@email.com)", developers[0].toString())
-        assertEquals(-1, developers[0].id)
+        assertEquals(2, developers.size)
+        assertEquals("(4) Carlos Antônio Moura (carlos@email.com)", developers[0].toString())
+        assertEquals(-2, developers[0].id)
 
-        val developer =
-            Developer(name = Name("Daniela", "Pereira", "Melo"), email = "daniela@email.com", age = 38, level = 4)
+        val developer = Developer(
+            name = Name("Daniela", "Pereira", "Melo"),
+            email = "daniela@email.com",
+            age = 38,
+            level = 4
+        )
 
         developerService.saveDeveloper(developer)
 
-        developers = entityManager
-            .createQuery("from Developer order by id", Developer::class.java)
-            .resultList
+        developers = developerService.findAllDevelopers(page, max)
 
-        assertEquals(2, developers.size)
-        assertEquals("(4) Daniela Pereira Melo (daniela@email.com)", developers[1].toString())
+        assertEquals(3, developers.size)
+        assertEquals("(4) Daniela Pereira Melo (daniela@email.com)", developers[2].toString())
+
+        developerService.deleteDeveloper(developers[2].id)
     }
 
     @Test
+    @Order(1)
     fun findAllDevelopers() {
         val developers: List<DeveloperDTO> = developerService.findAllDevelopers(page, max)
 
-        assertEquals(1, developers.size)
-        assertEquals("(2) José Carlos Costa (josecc@email.com)", developers[0].toString())
-        assertEquals(-1, developers[0].id)
+        assertEquals(2, developers.size)
+        assertEquals("(4) Carlos Antônio Moura (carlos@email.com)", developers[0].toString())
+        assertEquals(-2, developers[0].id)
     }
 
     @Test
+    @Order(2)
     fun findDeveloperById() {
-        val developer: DeveloperDTO = developerService.findDeveloperById(-1)
+        val developer: DeveloperDTO = developerService.findDeveloperById(-2)
 
-        assertEquals("(2) José Carlos Costa (josecc@email.com)", developer.toString())
+        assertEquals("(4) Carlos Antônio Moura (carlos@email.com)", developer.toString())
         assertThrows<NoResultException> { developerService.findDeveloperById(0) }
         assertThrows<NumberFormatException> { developerService.findDeveloperById("aaa".toInt()) }
     }
 
     @Test
+    @Order(4)
     fun updateDeveloper() {
         val developer = Developer(
             name = Name(firstName = "Paula", middleName = "Campos", lastName = "Resende"),
@@ -94,30 +80,38 @@ class DeveloperServiceImplTest(
             username = "pcresende",
             password = "1234",
             age = 40,
-            id = -1,
+            id = -2,
             level = 6
         )
 
         developerService.updateDeveloper(developer)
 
-        val developers: List<Developer> = entityManager
-            .createQuery("from Developer order by id", Developer::class.java)
-            .resultList
+        val developers: List<DeveloperDTO> = developerService.findAllDevelopers(page, max)
 
-        assertEquals(1, developers.size)
+        assertEquals(2, developers.size)
         assertEquals("(6) Paula Campos Resende (paula@email.com)", developers[0].toString())
         assertEquals("pcresende", developers[0].username)
-        assertEquals(-1, developers[0].id)
+        assertEquals(-2, developers[0].id)
     }
 
     @Test
+    @Order(5)
     fun deleteDeveloper() {
-        developerService.deleteDeveloper(-1)
+        val developer = Developer(
+            name = Name("Juliana", "Pereira", "Silva"),
+            email = "juliana@email.com",
+            age = 28,
+            level = 5
+        )
 
-        val developers: List<Developer> = entityManager
-            .createQuery("from Developer order by id", Developer::class.java)
-            .resultList
+        developerService.saveDeveloper(developer)
 
-        assertEquals(0, developers.size)
+        var developers: List<DeveloperDTO> = developerService.findAllDevelopers(page, max)
+
+        developerService.deleteDeveloper(developers[2].id)
+
+        developers = developerService.findAllDevelopers(page, max)
+
+        assertEquals(2, developers.size)
     }
 }

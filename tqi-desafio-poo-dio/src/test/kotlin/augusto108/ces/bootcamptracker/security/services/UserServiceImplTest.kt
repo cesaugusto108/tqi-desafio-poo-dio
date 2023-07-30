@@ -1,9 +1,10 @@
 package augusto108.ces.bootcamptracker.security.services
 
+import augusto108.ces.bootcamptracker.TestContainersConfig
 import augusto108.ces.bootcamptracker.security.model.User
 import jakarta.persistence.EntityManager
 import jakarta.persistence.PersistenceContext
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -11,7 +12,7 @@ import org.springframework.test.context.ActiveProfiles
 
 @SpringBootTest
 @ActiveProfiles("securitytest")
-class UserServiceImplTest(@Autowired private val userService: UserService) {
+class UserServiceImplTest(@Autowired private val userService: UserService) : TestContainersConfig() {
     @PersistenceContext
     private val entityManager: EntityManager? = null
 

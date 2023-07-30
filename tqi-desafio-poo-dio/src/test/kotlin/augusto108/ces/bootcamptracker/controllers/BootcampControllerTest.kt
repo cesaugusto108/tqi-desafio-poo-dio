@@ -1,13 +1,15 @@
 package augusto108.ces.bootcamptracker.controllers
 
+import augusto108.ces.bootcamptracker.TestContainersConfig
+import augusto108.ces.bootcamptracker.dto.BootcampDTO
 import augusto108.ces.bootcamptracker.entities.Bootcamp
+import augusto108.ces.bootcamptracker.services.BootcampService
 import augusto108.ces.bootcamptracker.util.API_VERSION
 import com.fasterxml.jackson.databind.ObjectMapper
-import jakarta.persistence.EntityManager
-import jakarta.persistence.PersistenceContext
-import org.hamcrest.Matchers.*
+import org.hamcrest.Matchers.`is`
 import org.junit.jupiter.api.*
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
@@ -21,45 +23,28 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.MvcResult
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
-import org.springframework.transaction.annotation.Transactional
 import augusto108.ces.bootcamptracker.util.MediaType as UtilMediaType
 
 @SpringBootTest
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
 @WithMockUser
-@Transactional
 @DisplayNameGeneration(DisplayNameGenerator.Simple::class)
 @TestPropertySource("classpath:app_params.properties")
+@TestMethodOrder(MethodOrderer.OrderAnnotation::class)
 class BootcampControllerTest(
     @Autowired private val mockMvc: MockMvc,
-    @Autowired private val objectMapper: ObjectMapper
-) {
-    @PersistenceContext
-    private val entityManager: EntityManager? = null
-
+    @Autowired private val objectMapper: ObjectMapper,
+    @Autowired private val bootcampService: BootcampService
+) : TestContainersConfig() {
     @Value("\${page.value}")
     var page: String = ""
 
     @Value("\${max.value}")
     var max: String = ""
 
-    @BeforeEach
-    fun setUp() {
-        val bootcampQuery: String =
-            "insert into " +
-                    "`bootcamp` (`id`, `bootcamp_description`, `bootcamp_details`, `finish_date`, `start_date`)" +
-                    " values (-1, 'TQI Kotlin Backend', 'Java e Kotlin backend', NULL, NULL);"
-
-        entityManager?.createNativeQuery(bootcampQuery, Bootcamp::class.java)?.executeUpdate()
-    }
-
-    @AfterEach
-    fun tearDown() {
-        entityManager?.createNativeQuery("delete from `bootcamp`;")
-    }
-
     @Test
+    @Order(4)
     fun saveBootcamp() {
         val bootcamp = Bootcamp(
             description = "Java backend",
@@ -78,9 +63,14 @@ class BootcampControllerTest(
             .andExpect(jsonPath("$.description", `is`("Java backend")))
             .andExpect(jsonPath("$.details", `is`("Java and Spring backend")))
             .andExpect(jsonPath("$._links.all.href", `is`("http://localhost${API_VERSION}bootcamps")))
+
+        val bootcamps: List<BootcampDTO> =
+            bootcampService.findAllBootcamps(Integer.parseInt(page), Integer.parseInt(max))
+        bootcampService.deleteBootcamp(bootcamps[3].id)
     }
 
     @Test
+    @Order(1)
     fun findAllBootcamps() {
         mockMvc.perform(
             get("${API_VERSION}bootcamps")
@@ -90,10 +80,10 @@ class BootcampControllerTest(
         )
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$[0].description", `is`("TQI Kotlin Backend")))
-            .andExpect(jsonPath("$[0].details", `is`("Java e Kotlin backend")))
-            .andExpect(jsonPath("$[0].links[0].href", `is`("http://localhost${API_VERSION}bootcamps")))
-            .andExpect(jsonPath("$[0].links[1].href", `is`("http://localhost${API_VERSION}bootcamps/-1")))
+            .andExpect(jsonPath("$[1].description", `is`("Linux Experience")))
+            .andExpect(jsonPath("$[1].details", `is`("Aperfeiçoamento Linux")))
+            .andExpect(jsonPath("$[1].links[0].href", `is`("http://localhost${API_VERSION}bootcamps")))
+            .andExpect(jsonPath("$[1].links[1].href", `is`("http://localhost${API_VERSION}bootcamps/-2")))
 
         val result: MvcResult = mockMvc.perform(
             get("${API_VERSION}bootcamps")
@@ -105,14 +95,15 @@ class BootcampControllerTest(
             .andExpect(content().contentType(UtilMediaType.APPLICATION_YAML))
             .andReturn()
 
-        val yamlResponse: String = "- id: -1\n" +
-                "  description: \"TQI Kotlin Backend\"\n" +
-                "  details: \"Java e Kotlin backend\""
+        val yamlResponse: String = "- id: -3\n" +
+                "  description: \"AWS Experience\"\n" +
+                "  details: \"Cloud Computing\""
 
         assertTrue(result.response.contentAsString.contains(yamlResponse))
     }
 
     @Test
+    @Order(2)
     fun findBootcampById() {
         mockMvc.perform(get("${API_VERSION}bootcamps/{id}", -1))
             .andExpect(status().isOk)
@@ -139,6 +130,7 @@ class BootcampControllerTest(
     }
 
     @Test
+    @Order(3)
     fun updateBootcamp() {
         val bootcamp = Bootcamp(
             description = "Go backend",
@@ -161,14 +153,23 @@ class BootcampControllerTest(
     }
 
     @Test
+    @Order(5)
     fun deleteBootcamp() {
-        mockMvc.perform(delete("${API_VERSION}bootcamps/{id}", -1).with(csrf()))
+        val bootcamp = Bootcamp(
+            description = "NodeJS",
+            details = "NodeJS backend development",
+            startDate = null,
+            finishDate = null
+        )
+
+        val b: BootcampDTO = bootcampService.saveBootcamp(bootcamp)
+
+        mockMvc.perform(delete("${API_VERSION}bootcamps/{id}", b.id).with(csrf()))
             .andExpect(status().isNoContent)
 
-        val bootcamps: MutableList<Bootcamp>? = entityManager
-            ?.createQuery("from Bootcamp order by id", Bootcamp::class.java)
-            ?.resultList
+        val bootcamps: List<BootcampDTO> =
+            bootcampService.findAllBootcamps(Integer.parseInt(page), Integer.parseInt(max))
 
-        assertEquals(0, bootcamps?.size)
+        assertEquals(3, bootcamps.size)
     }
 }

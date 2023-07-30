@@ -1,10 +1,11 @@
 package augusto108.ces.bootcamptracker.security.services
 
+import augusto108.ces.bootcamptracker.TestContainersConfig
 import augusto108.ces.bootcamptracker.security.model.Role
 import augusto108.ces.bootcamptracker.security.model.UserRole
 import jakarta.persistence.EntityManager
 import jakarta.persistence.PersistenceContext
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -13,9 +14,10 @@ import org.springframework.test.context.ActiveProfiles
 
 @SpringBootTest
 @ActiveProfiles("securitytest")
-class UserRoleServiceImplTest(@Autowired private val userRoleService: UserRoleService) {
+class UserRoleServiceImplTest(@Autowired private val userRoleService: UserRoleService) : TestContainersConfig() {
     @PersistenceContext
     private val entityManager: EntityManager? = null
+
     private var userRoles: MutableList<UserRole>? = null
 
     @BeforeEach
