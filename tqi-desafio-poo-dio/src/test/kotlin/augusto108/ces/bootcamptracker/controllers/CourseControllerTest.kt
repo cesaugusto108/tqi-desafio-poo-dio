@@ -50,7 +50,9 @@ class CourseControllerTest(
             Course(date = null, hours = 250, description = "POO", details = "Programação orientada a objetos com Java")
 
         mockMvc.perform(
-            post("${API_VERSION}courses").with(csrf())
+            post("${API_VERSION}courses")
+                .with(csrf())
+                .header(HEADER_KEY, HEADER_VALUE)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(course))
         )
@@ -68,7 +70,12 @@ class CourseControllerTest(
     @Test
     @Order(1)
     fun findAllCourses() {
-        mockMvc.perform(get("${API_VERSION}courses").param("page", "0").param("max", "10"))
+        mockMvc.perform(
+            get("${API_VERSION}courses")
+                .param("page", "0")
+                .param("max", "10")
+                .header(HEADER_KEY, HEADER_VALUE)
+        )
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$[0].description", `is`("Sintaxe Kotlin")))
@@ -81,6 +88,7 @@ class CourseControllerTest(
             get("${API_VERSION}courses")
                 .param("page", "0")
                 .param("max", "10")
+                .header(HEADER_KEY, HEADER_VALUE)
                 .accept(UtilMediaType.APPLICATION_YAML)
         )
             .andExpect(status().isOk)
@@ -99,7 +107,7 @@ class CourseControllerTest(
     @Test
     @Order(2)
     fun findCourseById() {
-        mockMvc.perform(get("${API_VERSION}courses/{id}", -4))
+        mockMvc.perform(get("${API_VERSION}courses/{id}", -4).header(HEADER_KEY, HEADER_VALUE))
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.description", `is`("Sintaxe Kotlin")))
@@ -110,6 +118,7 @@ class CourseControllerTest(
 
         val result: MvcResult = mockMvc.perform(
             get("${API_VERSION}courses/{id}", -4)
+                .header(HEADER_KEY, HEADER_VALUE)
                 .accept(UtilMediaType.APPLICATION_YAML)
         )
             .andExpect(status().isOk)
@@ -137,7 +146,9 @@ class CourseControllerTest(
             )
 
         mockMvc.perform(
-            put("${API_VERSION}courses").with(csrf())
+            put("${API_VERSION}courses")
+                .with(csrf())
+                .header(HEADER_KEY, HEADER_VALUE)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(course))
         )
@@ -155,7 +166,11 @@ class CourseControllerTest(
 
         val c: CourseDTO = courseService.saveCourse(course)
 
-        mockMvc.perform(delete("${API_VERSION}courses/{id}", c.id).with(csrf()))
+        mockMvc.perform(
+            delete("${API_VERSION}courses/{id}", c.id)
+                .with(csrf())
+                .header(HEADER_KEY, HEADER_VALUE)
+        )
             .andExpect(status().isNoContent)
 
         val courses: List<CourseDTO> = courseService.findAllCourses(Integer.parseInt(page), Integer.parseInt(max))

@@ -51,7 +51,9 @@ class InstructorControllerTest(
             Instructor(name = Name(firstName = "Fabiana", lastName = "Campos"), email = "fabiana@email.com", age = 38)
 
         mockMvc.perform(
-            post("${API_VERSION}instructors").with(csrf())
+            post("${API_VERSION}instructors")
+                .with(csrf())
+                .header(HEADER_KEY, HEADER_VALUE)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(instructor))
         )
@@ -70,7 +72,12 @@ class InstructorControllerTest(
     @Test
     @Order(1)
     fun findAllInstructors() {
-        mockMvc.perform(get("${API_VERSION}instructors").param("page", "0").param("max", "10"))
+        mockMvc.perform(
+            get("${API_VERSION}instructors")
+                .param("page", "0")
+                .param("max", "10")
+                .header(HEADER_KEY, HEADER_VALUE)
+        )
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$[0].id", `is`(-4)))
@@ -84,6 +91,7 @@ class InstructorControllerTest(
             get("${API_VERSION}instructors")
                 .param("page", "0")
                 .param("max", "10")
+                .header(HEADER_KEY, HEADER_VALUE)
                 .accept(UtilMediaType.APPLICATION_YAML)
         )
             .andExpect(status().isOk)
@@ -98,7 +106,10 @@ class InstructorControllerTest(
     @Test
     @Order(2)
     fun findInstructorById() {
-        mockMvc.perform(get("${API_VERSION}instructors/{id}", -4))
+        mockMvc.perform(
+            get("${API_VERSION}instructors/{id}", -4)
+                .header(HEADER_KEY, HEADER_VALUE)
+        )
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.id", `is`(-4)))
@@ -110,6 +121,7 @@ class InstructorControllerTest(
 
         val result: MvcResult = mockMvc.perform(
             get("${API_VERSION}instructors/{id}", -4)
+                .header(HEADER_KEY, HEADER_VALUE)
                 .accept(UtilMediaType.APPLICATION_YAML)
         )
             .andExpect(status().isOk)
@@ -134,7 +146,9 @@ class InstructorControllerTest(
             )
 
         mockMvc.perform(
-            put("${API_VERSION}instructors").with(csrf())
+            put("${API_VERSION}instructors")
+                .with(csrf())
+                .header(HEADER_KEY, HEADER_VALUE)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(instructor))
         )
@@ -162,7 +176,11 @@ class InstructorControllerTest(
 
         val i: InstructorDTO = instructorService.saveInstructor(instructor)
 
-        mockMvc.perform(delete("${API_VERSION}instructors/{id}", i.id).with(csrf()))
+        mockMvc.perform(
+            delete("${API_VERSION}instructors/{id}", i.id)
+                .with(csrf())
+                .header(HEADER_KEY, HEADER_VALUE)
+        )
             .andExpect(status().isNoContent)
 
         val instructors: List<InstructorDTO> =

@@ -50,7 +50,9 @@ class MentoringControllerTest(
             Mentoring(date = null, hours = null, description = "REST APIs", details = "REST APIs com Spring e Kotlin")
 
         mockMvc.perform(
-            post("${API_VERSION}mentoring").with(csrf())
+            post("${API_VERSION}mentoring")
+                .with(csrf())
+                .header(HEADER_KEY, HEADER_VALUE)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(mentoring))
         )
@@ -68,7 +70,12 @@ class MentoringControllerTest(
     @Test
     @Order(1)
     fun findAllMentoring() {
-        mockMvc.perform(get("${API_VERSION}mentoring").param("page", "0").param("max", "10"))
+        mockMvc.perform(
+            get("${API_VERSION}mentoring")
+                .param("page", "0")
+                .param("max", "10")
+                .header(HEADER_KEY, HEADER_VALUE)
+        )
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$[0].description", `is`("Java - POO")))
@@ -80,6 +87,7 @@ class MentoringControllerTest(
             get("${API_VERSION}mentoring")
                 .param("page", "0")
                 .param("max", "10")
+                .header(HEADER_KEY, HEADER_VALUE)
                 .accept(UtilMediaType.APPLICATION_YAML)
         )
             .andExpect(status().isOk)
@@ -94,7 +102,7 @@ class MentoringControllerTest(
     @Test
     @Order(2)
     fun findMentoringById() {
-        mockMvc.perform(get("${API_VERSION}mentoring/{id}", -2))
+        mockMvc.perform(get("${API_VERSION}mentoring/{id}", -2).header(HEADER_KEY, HEADER_VALUE))
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.description", `is`("Java - POO")))
@@ -104,6 +112,7 @@ class MentoringControllerTest(
 
         val result: MvcResult = mockMvc.perform(
             get("${API_VERSION}mentoring/{id}", -2)
+                .header(HEADER_KEY, HEADER_VALUE)
                 .accept(UtilMediaType.APPLICATION_YAML)
         )
             .andExpect(status().isOk)
@@ -128,7 +137,9 @@ class MentoringControllerTest(
             )
 
         mockMvc.perform(
-            put("${API_VERSION}mentoring").with(csrf())
+            put("${API_VERSION}mentoring")
+                .with(csrf())
+                .header(HEADER_KEY, HEADER_VALUE)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(mentoring))
         )
@@ -146,7 +157,11 @@ class MentoringControllerTest(
 
         val m: MentoringDTO = mentoringService.saveMentoring(mentoring)
 
-        mockMvc.perform(delete("${API_VERSION}mentoring/{id}", m.id).with(csrf()))
+        mockMvc.perform(
+            delete("${API_VERSION}mentoring/{id}", m.id)
+                .with(csrf())
+                .header(HEADER_KEY, HEADER_VALUE)
+        )
             .andExpect(status().isNoContent)
 
         val mentoringList: List<MentoringDTO> =

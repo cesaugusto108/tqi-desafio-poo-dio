@@ -56,7 +56,9 @@ class DeveloperControllerTest(
             )
 
         mockMvc.perform(
-            post("${API_VERSION}developers").with(csrf())
+            post("${API_VERSION}developers")
+                .with(csrf())
+                .header(HEADER_KEY, HEADER_VALUE)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(developer))
         )
@@ -77,7 +79,12 @@ class DeveloperControllerTest(
     @Test
     @Order(1)
     fun findAllDevelopers() {
-        mockMvc.perform(get("${API_VERSION}developers").param("page", "0").param("max", "10"))
+        mockMvc.perform(
+            get("${API_VERSION}developers")
+                .param("page", "0")
+                .param("max", "10")
+                .header(HEADER_KEY, HEADER_VALUE)
+        )
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$[0].id", `is`(-2)))
@@ -92,6 +99,7 @@ class DeveloperControllerTest(
             get("${API_VERSION}developers")
                 .param("page", "0")
                 .param("max", "10")
+                .header(HEADER_KEY, HEADER_VALUE)
                 .accept(UtilMediaType.APPLICATION_YAML)
         )
             .andExpect(status().isOk)
@@ -106,7 +114,7 @@ class DeveloperControllerTest(
     @Test
     @Order(2)
     fun findDeveloperById() {
-        mockMvc.perform(get("${API_VERSION}developers/{id}", -1))
+        mockMvc.perform(get("${API_VERSION}developers/{id}", -1).header(HEADER_KEY, HEADER_VALUE))
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.id", `is`(-1)))
@@ -119,6 +127,7 @@ class DeveloperControllerTest(
 
         val result: MvcResult = mockMvc.perform(
             get("${API_VERSION}developers/{id}", -1)
+                .header(HEADER_KEY, HEADER_VALUE)
                 .accept(UtilMediaType.APPLICATION_YAML)
         )
             .andExpect(status().isOk)
@@ -144,7 +153,9 @@ class DeveloperControllerTest(
             )
 
         mockMvc.perform(
-            put("${API_VERSION}developers").with(csrf())
+            put("${API_VERSION}developers")
+                .with(csrf())
+                .header(HEADER_KEY, HEADER_VALUE)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(developer))
         )
@@ -174,7 +185,11 @@ class DeveloperControllerTest(
 
         val d: DeveloperDTO = developerService.saveDeveloper(developer)
 
-        mockMvc.perform(delete("${API_VERSION}developers/{id}", d.id).with(csrf()))
+        mockMvc.perform(
+            delete("${API_VERSION}developers/{id}", d.id)
+                .with(csrf())
+                .header(HEADER_KEY, HEADER_VALUE)
+        )
             .andExpect(status().isNoContent)
 
         val developers: List<DeveloperDTO> =

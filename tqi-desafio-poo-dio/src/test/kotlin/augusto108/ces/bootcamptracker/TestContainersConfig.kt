@@ -22,7 +22,7 @@ abstract class TestContainersConfig {
     }
 
     companion object {
-        val mysql: MySQLContainer<*> = MySQLContainer("mysql:8.0.33")
+        private val mysql: MySQLContainer<*> = MySQLContainer("mysql:8.0.33")
 
         fun startContainer() {
             Startables.deepStart(mysql).join()

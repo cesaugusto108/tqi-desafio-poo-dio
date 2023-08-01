@@ -54,7 +54,9 @@ class BootcampControllerTest(
         )
 
         mockMvc.perform(
-            post("${API_VERSION}bootcamps").with(csrf())
+            post("${API_VERSION}bootcamps")
+                .with(csrf())
+                .header(HEADER_KEY, HEADER_VALUE)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(bootcamp))
         )
@@ -76,6 +78,7 @@ class BootcampControllerTest(
             get("${API_VERSION}bootcamps")
                 .param("page", page)
                 .param("max", max)
+                .header(HEADER_KEY, HEADER_VALUE)
                 .accept(MediaType.APPLICATION_JSON)
         )
             .andExpect(status().isOk)
@@ -89,6 +92,7 @@ class BootcampControllerTest(
             get("${API_VERSION}bootcamps")
                 .param("page", page)
                 .param("max", max)
+                .header(HEADER_KEY, HEADER_VALUE)
                 .accept(UtilMediaType.APPLICATION_YAML)
         )
             .andExpect(status().isOk)
@@ -105,7 +109,7 @@ class BootcampControllerTest(
     @Test
     @Order(2)
     fun findBootcampById() {
-        mockMvc.perform(get("${API_VERSION}bootcamps/{id}", -1))
+        mockMvc.perform(get("${API_VERSION}bootcamps/{id}", -1).header(HEADER_KEY, HEADER_VALUE))
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.description", `is`("TQI Kotlin Backend")))
@@ -141,7 +145,9 @@ class BootcampControllerTest(
         )
 
         mockMvc.perform(
-            put("${API_VERSION}bootcamps").with(csrf())
+            put("${API_VERSION}bootcamps")
+                .with(csrf())
+                .header(HEADER_KEY, HEADER_VALUE)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(bootcamp))
         )
@@ -164,7 +170,11 @@ class BootcampControllerTest(
 
         val b: BootcampDTO = bootcampService.saveBootcamp(bootcamp)
 
-        mockMvc.perform(delete("${API_VERSION}bootcamps/{id}", b.id).with(csrf()))
+        mockMvc.perform(
+            delete("${API_VERSION}bootcamps/{id}", b.id)
+                .with(csrf())
+                .header(HEADER_KEY, HEADER_VALUE)
+        )
             .andExpect(status().isNoContent)
 
         val bootcamps: List<BootcampDTO> =
