@@ -34,14 +34,14 @@ open class ApplicationSecurityConfig(
     val userPassword: String = ""
 
     @Bean
-    fun passwordEnconder(): BCryptPasswordEncoder = BCryptPasswordEncoder()
+    fun passwordEncoder(): BCryptPasswordEncoder = BCryptPasswordEncoder()
 
     @Bean
     fun authenticationProvider(userService: UserService): DaoAuthenticationProvider {
         val daoAuthenticationProvider = DaoAuthenticationProvider()
 
         daoAuthenticationProvider.setUserDetailsService(userService)
-        daoAuthenticationProvider.setPasswordEncoder(passwordEnconder())
+        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder())
 
         return daoAuthenticationProvider
     }
