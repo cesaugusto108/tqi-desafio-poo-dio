@@ -5,23 +5,15 @@ import augusto108.ces.bootcamptracker.dto.BootcampDTO
 import augusto108.ces.bootcamptracker.entities.Bootcamp
 import augusto108.ces.bootcamptracker.services.BootcampService
 import augusto108.ces.bootcamptracker.util.API_VERSION
-import augusto108.ces.bootcamptracker.util.MediaType
-import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
-@Tag(name = "Bootcamps", description = "endpoints to manage bootcamps information")
 @RestController
 @RequestMapping("${API_VERSION}bootcamps")
-class BootcampController(private val bootcampService: BootcampService) {
-    @PostMapping(
-        consumes = [MediaType.APPLICATION_JSON, MediaType.APPLICATION_YAML],
-        produces = [MediaType.APPLICATION_JSON, MediaType.APPLICATION_YAML]
-    )
-    @SaveOperation
-    fun saveBootcamp(@RequestBody bootcamp: Bootcamp): ResponseEntity<BootcampDTO> {
+class BootcampController(private val bootcampService: BootcampService) : BootcampOperations {
+    override fun saveBootcamp(bootcamp: Bootcamp): ResponseEntity<BootcampDTO> {
         val savedBootcamp: BootcampDTO = bootcampService.saveBootcamp(bootcamp)
         savedBootcamp.add(linkTo(BootcampController::class.java).slash("/${savedBootcamp.id}").withSelfRel())
         savedBootcamp.add(linkTo(BootcampController::class.java).withRel("all"))
@@ -29,12 +21,7 @@ class BootcampController(private val bootcampService: BootcampService) {
         return ResponseEntity.status(HttpStatus.CREATED).body(savedBootcamp)
     }
 
-    @GetMapping(produces = [MediaType.APPLICATION_JSON, MediaType.APPLICATION_YAML])
-    @FindAllOperation
-    fun findAllBootcamps(
-        @RequestParam(defaultValue = "0", required = false) page: Int,
-        @RequestParam(defaultValue = "10", required = false) max: Int
-    ): ResponseEntity<List<BootcampDTO>> {
+    override fun findAllBootcamps(page: Int, max: Int): ResponseEntity<List<BootcampDTO>> {
         val bootcampDTOList: List<BootcampDTO> = bootcampService.findAllBootcamps(page, max)
 
         for (bootcamp in bootcampDTOList) {
@@ -47,9 +34,7 @@ class BootcampController(private val bootcampService: BootcampService) {
         return ResponseEntity.status(HttpStatus.OK).body(bootcampDTOList)
     }
 
-    @GetMapping("/{id}", produces = [MediaType.APPLICATION_JSON, MediaType.APPLICATION_YAML])
-    @FindByIdOperation
-    fun findBootcampById(@PathVariable("id") id: Int): ResponseEntity<BootcampDTO> {
+    override fun findBootcampById(id: Int): ResponseEntity<BootcampDTO> {
         val bootcamp: BootcampDTO = bootcampService.findBootcampById(id)
         bootcamp.add(linkTo(BootcampController::class.java).slash("/${bootcamp.id}").withSelfRel())
         bootcamp.add(linkTo(BootcampController::class.java).withRel("all"))
@@ -57,12 +42,7 @@ class BootcampController(private val bootcampService: BootcampService) {
         return ResponseEntity.status(HttpStatus.OK).body(bootcamp)
     }
 
-    @PutMapping(
-        consumes = [MediaType.APPLICATION_JSON, MediaType.APPLICATION_YAML],
-        produces = [MediaType.APPLICATION_JSON, MediaType.APPLICATION_YAML]
-    )
-    @UpdateOperation
-    fun updateBootcamp(@RequestBody bootcamp: Bootcamp): ResponseEntity<BootcampDTO> {
+    override fun updateBootcamp(bootcamp: Bootcamp): ResponseEntity<BootcampDTO> {
         val updatedBootcamp: BootcampDTO = bootcampService.updateBootcamp(bootcamp)
         updatedBootcamp.add(linkTo(BootcampController::class.java).slash("/${updatedBootcamp.id}").withSelfRel())
         updatedBootcamp.add(linkTo(BootcampController::class.java).withRel("all"))
@@ -70,8 +50,6 @@ class BootcampController(private val bootcampService: BootcampService) {
         return ResponseEntity.status(HttpStatus.OK).body(updatedBootcamp)
     }
 
-    @DeleteMapping("/{id}")
-    @DeleteOperation
-    fun deleteBootcamp(@PathVariable("id") id: Int): ResponseEntity<Any> =
+    override fun deleteBootcamp(id: Int): ResponseEntity<Any> =
         ResponseEntity.status(HttpStatus.NO_CONTENT).body(bootcampService.deleteBootcamp(id))
 }
