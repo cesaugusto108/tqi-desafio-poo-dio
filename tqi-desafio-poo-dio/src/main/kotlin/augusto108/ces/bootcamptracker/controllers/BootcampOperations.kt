@@ -1,8 +1,8 @@
 package augusto108.ces.bootcamptracker.controllers
 
-import augusto108.ces.bootcamptracker.controllers.annotations.bootcamp.*
-import augusto108.ces.bootcamptracker.dto.BootcampDTO
-import augusto108.ces.bootcamptracker.entities.Bootcamp
+import augusto108.ces.bootcamptracker.annotations.bootcamp.*
+import augusto108.ces.bootcamptracker.model.dto.BootcampDTO
+import augusto108.ces.bootcamptracker.model.entities.Bootcamp
 import augusto108.ces.bootcamptracker.util.MediaType
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.ResponseEntity

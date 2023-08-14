@@ -1,8 +1,8 @@
 package augusto108.ces.bootcamptracker.services
 
 import augusto108.ces.bootcamptracker.TestContainersConfig
-import augusto108.ces.bootcamptracker.dto.BootcampDTO
-import augusto108.ces.bootcamptracker.entities.Bootcamp
+import augusto108.ces.bootcamptracker.model.dto.BootcampDTO
+import augusto108.ces.bootcamptracker.model.entities.Bootcamp
 import jakarta.persistence.NoResultException
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.assertEquals

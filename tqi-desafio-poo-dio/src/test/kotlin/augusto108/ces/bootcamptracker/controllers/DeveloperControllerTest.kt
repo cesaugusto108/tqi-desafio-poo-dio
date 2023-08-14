@@ -1,9 +1,11 @@
 package augusto108.ces.bootcamptracker.controllers
 
 import augusto108.ces.bootcamptracker.TestContainersConfig
-import augusto108.ces.bootcamptracker.dto.DeveloperDTO
-import augusto108.ces.bootcamptracker.entities.Developer
-import augusto108.ces.bootcamptracker.entities.Name
+import augusto108.ces.bootcamptracker.config.web.HEADER_KEY
+import augusto108.ces.bootcamptracker.config.web.HEADER_VALUE
+import augusto108.ces.bootcamptracker.model.dto.DeveloperDTO
+import augusto108.ces.bootcamptracker.model.entities.Developer
+import augusto108.ces.bootcamptracker.model.entities.Name
 import augusto108.ces.bootcamptracker.services.DeveloperService
 import augusto108.ces.bootcamptracker.util.API_VERSION
 import com.fasterxml.jackson.databind.ObjectMapper

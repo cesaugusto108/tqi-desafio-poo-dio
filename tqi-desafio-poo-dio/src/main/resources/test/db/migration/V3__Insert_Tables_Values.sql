@@ -1,10 +1,10 @@
-INSERT INTO `bootcamp`(`id`, `bootcamp_description`, `bootcamp_details`, `finish_date`, `start_date`)
+INSERT INTO `bootcamp` (`id`, `bootcamp_description`, `bootcamp_details`, `finish_date`, `start_date`)
     VALUES (-3, 'AWS Experience', 'Cloud Computing', NULL, NULL);
 
-INSERT INTO `bootcamp`(`id`, `bootcamp_description`, `bootcamp_details`, `finish_date`, `start_date`)
+INSERT INTO `bootcamp` (`id`, `bootcamp_description`, `bootcamp_details`, `finish_date`, `start_date`)
     VALUES (-2, 'Linux Experience', 'Aperfeiçoamento Linux', NULL, NULL);
 
-INSERT INTO `bootcamp`(`id`, `bootcamp_description`, `bootcamp_details`, `finish_date`, `start_date`)
+INSERT INTO `bootcamp` (`id`, `bootcamp_description`, `bootcamp_details`, `finish_date`, `start_date`)
     VALUES (-1, 'TQI Kotlin Backend', 'Java e Kotlin backend', NULL, NULL);
 
 INSERT INTO `activity` (`activity_type`, `id`, `activity_description`, `activity_details`, `mentoring_date`, `course_hours`)

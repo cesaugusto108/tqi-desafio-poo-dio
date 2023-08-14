@@ -8,21 +8,26 @@ CREATE TABLE IF NOT EXISTS `sec_seq_gen` (
 
 CREATE TABLE IF NOT EXISTS `user_tb` (
   `id` int NOT NULL,
-  `is_active` bit(1) NOT NULL,
-  `password` varchar(255) NOT NULL,
+  `first_name` varchar(80) NOT NULL,
+  `last_name` varchar(80) NOT NULL,
   `username` varchar(20) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `account_non_expired` bit(1) NOT NULL,
+  `account_non_locked` bit(1) NOT NULL,
+  `credentials_non_expired` bit(1) NOT NULL,
+  `enabled` bit(1) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `UK_lvx22t2upvjxxc86vf5daxc71` (`username`)
 );
 
 CREATE TABLE IF NOT EXISTS `user_role_tb` (
   `id` int NOT NULL,
-  `role` enum('ROLE_ADMIN','ROLE_NORMAL','ROLE_TEST') NOT NULL,
+  `role` enum('REGULAR','ADMIN','TEST') NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `UK_dt6okqixnqa9y4hnx7653g5y3` (`role`)
 );
 
-CREATE TABLE IF NOT EXISTS `user_roles_tb` (
+CREATE TABLE IF NOT EXISTS `users_roles_tb` (
   `user_id` int NOT NULL,
   `role_id` int NOT NULL,
   PRIMARY KEY (`user_id`,`role_id`),

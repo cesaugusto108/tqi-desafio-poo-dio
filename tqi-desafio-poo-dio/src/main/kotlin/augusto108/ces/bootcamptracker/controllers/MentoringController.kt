@@ -1,14 +1,14 @@
 package augusto108.ces.bootcamptracker.controllers
 
-import augusto108.ces.bootcamptracker.controllers.annotations.mentoring.*
-import augusto108.ces.bootcamptracker.dto.MentoringDTO
-import augusto108.ces.bootcamptracker.entities.Mentoring
+import augusto108.ces.bootcamptracker.model.dto.MentoringDTO
+import augusto108.ces.bootcamptracker.model.entities.Mentoring
 import augusto108.ces.bootcamptracker.services.MentoringService
 import augusto108.ces.bootcamptracker.util.API_VERSION
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("${API_VERSION}mentoring")

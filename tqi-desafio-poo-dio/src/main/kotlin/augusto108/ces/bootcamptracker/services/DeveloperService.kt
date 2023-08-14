@@ -1,7 +1,7 @@
 package augusto108.ces.bootcamptracker.services
 
-import augusto108.ces.bootcamptracker.dto.DeveloperDTO
-import augusto108.ces.bootcamptracker.entities.Developer
+import augusto108.ces.bootcamptracker.model.dto.DeveloperDTO
+import augusto108.ces.bootcamptracker.model.entities.Developer
 
 interface DeveloperService {
     fun saveDeveloper(developer: Developer): DeveloperDTO

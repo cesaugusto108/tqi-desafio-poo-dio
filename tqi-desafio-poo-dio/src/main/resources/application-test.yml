@@ -1,3 +1,12 @@
+security:
+  jwt:
+    token:
+      secret-key: ${SECRET_KEY}
+      expire-length: 3600000
+  test:
+    user:
+      password: ${SECURITY_PASSWORD}
+
 server:
   port: 8888
 
@@ -20,4 +29,4 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
   flyway:
-    locations: classpath:/db/migration, classpath:/test/db/migration
+    locations: classpath:/db/migration, classpath:/test/db/migration, classpath:/sec/db/migration

@@ -1,8 +1,10 @@
 package augusto108.ces.bootcamptracker.controllers
 
 import augusto108.ces.bootcamptracker.TestContainersConfig
-import augusto108.ces.bootcamptracker.dto.CourseDTO
-import augusto108.ces.bootcamptracker.entities.Course
+import augusto108.ces.bootcamptracker.config.web.HEADER_KEY
+import augusto108.ces.bootcamptracker.config.web.HEADER_VALUE
+import augusto108.ces.bootcamptracker.model.dto.CourseDTO
+import augusto108.ces.bootcamptracker.model.entities.Course
 import augusto108.ces.bootcamptracker.services.CourseService
 import augusto108.ces.bootcamptracker.util.API_VERSION
 import com.fasterxml.jackson.databind.ObjectMapper

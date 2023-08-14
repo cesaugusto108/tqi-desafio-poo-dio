@@ -1,7 +1,7 @@
 package augusto108.ces.bootcamptracker.services
 
-import augusto108.ces.bootcamptracker.dto.InstructorDTO
-import augusto108.ces.bootcamptracker.entities.Instructor
+import augusto108.ces.bootcamptracker.model.dto.InstructorDTO
+import augusto108.ces.bootcamptracker.model.entities.Instructor
 
 interface InstructorService {
     fun saveInstructor(instructor: Instructor): InstructorDTO
