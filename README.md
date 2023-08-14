@@ -12,6 +12,7 @@ Desafio de código do Bootcamp DIO TQI Kotlin Backend Developer (https://web.dio
 - Spring Security (basic authentication/authorization)
 - JWT
 - Flyway
+- Swagger (localhost:8081/bootcamp-tracker-dev/v3/api-docs | http://localhost:8081/bootcamp-tracker-dev/swagger-ui/index.html)
 
 Authenticate user:
 
