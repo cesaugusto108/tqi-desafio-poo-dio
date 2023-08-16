@@ -33,5 +33,19 @@ class InstructorDaoImpl(private val entityManager: EntityManager) : InstructorDa
         return i
     }
 
-    override fun deleteInstructor(id: Int): Any = entityManager.remove(findInstructorById(id))
+    override fun deleteInstructor(id: Int): Unit = entityManager.remove(findInstructorById(id))
+
+    override fun activateInstructor(id: Int) {
+        entityManager
+            .createNativeQuery("update `person` set `active` = b'1' where id = :id")
+            .setParameter("id", id)
+            .executeUpdate()
+    }
+
+    override fun deactivateInstructor(id: Int) {
+        entityManager
+            .createNativeQuery("update `person` set `active` = b'0' where id = :id")
+            .setParameter("id", id)
+            .executeUpdate()
+    }
 }

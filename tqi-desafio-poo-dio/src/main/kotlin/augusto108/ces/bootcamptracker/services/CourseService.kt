@@ -14,5 +14,5 @@ interface CourseService {
 
     fun updateCourse(course: Course): CourseDTO
 
-    fun deleteCourse(id: Int): Any
+    fun deleteCourse(id: Int)
 }

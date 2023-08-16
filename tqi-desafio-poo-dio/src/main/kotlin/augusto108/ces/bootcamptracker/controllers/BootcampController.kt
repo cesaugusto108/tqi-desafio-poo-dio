@@ -50,6 +50,6 @@ class BootcampController(private val bootcampService: BootcampService) : Bootcam
         return ResponseEntity.status(HttpStatus.OK).body(updatedBootcamp)
     }
 
-    override fun deleteBootcamp(id: Int): ResponseEntity<Any> =
+    override fun deleteBootcamp(id: Int): ResponseEntity<Unit> =
         ResponseEntity.status(HttpStatus.NO_CONTENT).body(bootcampService.deleteBootcamp(id))
 }

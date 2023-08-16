@@ -8,5 +8,6 @@ class InstructorDTO(
     age: Int = 0,
     email: String = "",
     username: String = "",
+    active: Boolean = true,
     id: Int = 0
-) : PersonDTO(name, age, email, username, id)
+) : PersonDTO(name, age, email, username, active, id)

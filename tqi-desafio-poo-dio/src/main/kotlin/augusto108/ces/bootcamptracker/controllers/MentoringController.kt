@@ -50,6 +50,6 @@ class MentoringController(private val mentoringService: MentoringService) : Ment
         return ResponseEntity.status(HttpStatus.OK).body(updatedMentoring)
     }
 
-    override fun deleteMentoring(id: Int): ResponseEntity<Any> =
+    override fun deleteMentoring(id: Int): ResponseEntity<Unit> =
         ResponseEntity.status(HttpStatus.NO_CONTENT).body(mentoringService.deleteMentoring(id))
 }

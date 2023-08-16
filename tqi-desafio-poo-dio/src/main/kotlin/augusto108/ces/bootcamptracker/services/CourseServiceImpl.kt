@@ -36,5 +36,5 @@ class CourseServiceImpl(private val courseDao: CourseDao) : CourseService {
     override fun updateCourse(course: Course): CourseDTO =
         courseDao.updateCourse(course).map(CourseDTO::class.java)
 
-    override fun deleteCourse(id: Int): Any = courseDao.deleteCourse(id)
+    override fun deleteCourse(id: Int): Unit = courseDao.deleteCourse(id)
 }

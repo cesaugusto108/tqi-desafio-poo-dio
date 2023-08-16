@@ -11,5 +11,9 @@ interface DeveloperDao {
 
     fun updateDeveloper(developer: Developer): Developer
 
-    fun deleteDeveloper(id: Int): Any
+    fun deleteDeveloper(id: Int)
+
+    fun activateDeveloper(id: Int)
+
+    fun deactivateDeveloper(id: Int)
 }

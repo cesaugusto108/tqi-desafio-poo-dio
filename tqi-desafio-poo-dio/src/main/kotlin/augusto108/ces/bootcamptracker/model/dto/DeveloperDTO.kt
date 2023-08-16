@@ -9,8 +9,10 @@ class DeveloperDTO(
     age: Int = 0,
     email: String = "",
     username: String = "",
-    var bootcamps: MutableSet<Bootcamp> = HashSet(),
+    active: Boolean = true,
     id: Int = 0
-) : PersonDTO(name, age, email, username, id) {
+) : PersonDTO(name, age, email, username, active, id) {
+    var bootcamps: MutableSet<Bootcamp> = HashSet()
+
     override fun toString(): String = "($level) ${super.toString()}"
 }

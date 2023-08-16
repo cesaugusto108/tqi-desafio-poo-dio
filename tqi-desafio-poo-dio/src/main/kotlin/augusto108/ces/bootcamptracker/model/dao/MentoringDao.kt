@@ -11,5 +11,5 @@ interface MentoringDao {
 
     fun updateMentoring(mentoring: Mentoring): Mentoring
 
-    fun deleteMentoring(id: Int): Any
+    fun deleteMentoring(id: Int)
 }

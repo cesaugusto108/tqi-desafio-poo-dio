@@ -11,5 +11,9 @@ interface InstructorDao {
 
     fun updateInstructor(instructor: Instructor): Instructor
 
-    fun deleteInstructor(id: Int): Any
+    fun deleteInstructor(id: Int)
+
+    fun activateInstructor(id: Int)
+
+    fun deactivateInstructor(id: Int)
 }

@@ -37,5 +37,13 @@ interface DeveloperOperations {
 
     @DeleteMapping("/{id}")
     @DeleteOperation
-    fun deleteDeveloper(@PathVariable("id") id: Int): ResponseEntity<Any>
+    fun deleteDeveloper(@PathVariable("id") id: Int): ResponseEntity<Unit>
+
+    @PatchMapping("/active/{id}")
+    @ActivateDeveloper
+    fun activateDeveloper(@PathVariable("id") id: Int): ResponseEntity<Unit>
+
+    @PatchMapping("/inactive/{id}")
+    @DeactivateDeveloper
+    fun deactivateDeveloper(@PathVariable("id") id: Int): ResponseEntity<Unit>
 }

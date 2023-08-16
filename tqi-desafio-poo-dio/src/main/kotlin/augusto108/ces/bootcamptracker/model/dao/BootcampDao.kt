@@ -11,5 +11,5 @@ interface BootcampDao {
 
     fun updateBootcamp(bootcamp: Bootcamp): Bootcamp
 
-    fun deleteBootcamp(id: Int): Any
+    fun deleteBootcamp(id: Int)
 }

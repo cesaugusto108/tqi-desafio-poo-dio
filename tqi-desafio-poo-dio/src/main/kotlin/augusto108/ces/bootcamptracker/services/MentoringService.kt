@@ -14,5 +14,5 @@ interface MentoringService {
 
     fun updateMentoring(mentoring: Mentoring): MentoringDTO
 
-    fun deleteMentoring(id: Int): Any
+    fun deleteMentoring(id: Int)
 }

@@ -37,5 +37,13 @@ class DeveloperServiceImpl(private val developerDao: DeveloperDao) : DeveloperSe
     override fun updateDeveloper(developer: Developer): DeveloperDTO =
         developerDao.updateDeveloper(developer).map(DeveloperDTO::class.java)
 
-    override fun deleteDeveloper(id: Int): Any = developerDao.deleteDeveloper(id)
+    override fun deleteDeveloper(id: Int): Unit = developerDao.deleteDeveloper(id)
+
+    override fun activateDeveloper(id: Int) {
+        developerDao.activateDeveloper(id)
+    }
+
+    override fun deactivateDeveloper(id: Int) {
+        developerDao.deactivateDeveloper(id)
+    }
 }

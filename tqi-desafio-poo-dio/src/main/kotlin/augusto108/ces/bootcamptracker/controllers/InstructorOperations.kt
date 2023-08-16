@@ -37,5 +37,13 @@ interface InstructorOperations {
 
     @DeleteMapping("/{id}")
     @DeleteOperation
-    fun deleteInstructor(@PathVariable("id") id: Int): ResponseEntity<Any>
+    fun deleteInstructor(@PathVariable("id") id: Int): ResponseEntity<Unit>
+
+    @PatchMapping("/active/{id}")
+    @ActivateInstructor
+    fun activateInstructor(@PathVariable("id") id: Int): ResponseEntity<Unit>
+
+    @PatchMapping("/inactive/{id}")
+    @DeactivateInstructor
+    fun deactivateInstructor(@PathVariable("id") id: Int): ResponseEntity<Unit>
 }

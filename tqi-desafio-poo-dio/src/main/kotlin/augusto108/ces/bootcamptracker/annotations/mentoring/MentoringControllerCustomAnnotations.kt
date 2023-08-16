@@ -65,7 +65,7 @@ annotation class UpdateOperation
         ApiResponse(
             description = "No content",
             responseCode = "204",
-            content = [Content(schema = Schema(implementation = MentoringDTO::class))]
+            content = [Content(schema = Schema(implementation = Unit::class))]
         )
     ]
 )

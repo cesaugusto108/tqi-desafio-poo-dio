@@ -13,6 +13,7 @@ abstract class Person(
     @Column(name = "email", nullable = false, length = 30) open var email: String = "",
     @Column(name = "username", nullable = false, length = 30) open var username: String = "",
     @Column(name = "password", nullable = false) open var password: String = "",
+    @Column(name = "active", nullable = false) open var active: Boolean = true,
     id: Int = 0
 ) : BaseEntity(id) {
     init {

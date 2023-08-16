@@ -7,6 +7,7 @@ import augusto108.ces.bootcamptracker.model.entities.Name
 import jakarta.persistence.NoResultException
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.context.SpringBootTest
@@ -108,6 +109,30 @@ class InstructorServiceImplTest(@Autowired private val instructorService: Instru
         instructors = instructorService.findAllInstructors(page, max)
 
         assertEquals(2, instructors.size)
+    }
+
+    @Test
+    @Order(6)
+    fun activateInstructor() {
+        val instructor: InstructorDTO = instructorService.findInstructorById(-3)
+
+        instructorService.activateInstructor(instructor.id)
+
+        val activeInstructor: InstructorDTO = instructorService.findInstructorById(instructor.id)
+
+        assertTrue(activeInstructor.active)
+    }
+
+    @Test
+    @Order(7)
+    fun deactivateInstructor() {
+        val instructor: InstructorDTO = instructorService.findInstructorById(-3)
+
+        instructorService.deactivateInstructor(instructor.id)
+
+        val inactiveInstructor: InstructorDTO = instructorService.findInstructorById(instructor.id)
+
+        assertTrue(!inactiveInstructor.active)
     }
 }
 

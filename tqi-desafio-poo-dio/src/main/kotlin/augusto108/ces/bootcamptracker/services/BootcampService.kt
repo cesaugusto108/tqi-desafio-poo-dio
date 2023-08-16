@@ -14,5 +14,5 @@ interface BootcampService {
 
     fun updateBootcamp(bootcamp: Bootcamp): BootcampDTO
 
-    fun deleteBootcamp(id: Int): Any
+    fun deleteBootcamp(id: Int)
 }

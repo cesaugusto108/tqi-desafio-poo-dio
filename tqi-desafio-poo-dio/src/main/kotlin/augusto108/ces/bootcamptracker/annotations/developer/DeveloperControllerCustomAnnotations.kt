@@ -65,9 +65,35 @@ annotation class UpdateOperation
         ApiResponse(
             description = "No content",
             responseCode = "204",
-            content = [Content(schema = Schema(implementation = DeveloperDTO::class))]
+            content = [Content(schema = Schema(implementation = Unit::class))]
         )
     ]
 )
 @Target(AnnotationTarget.FUNCTION)
 annotation class DeleteOperation
+
+@Operation(
+    summary = "makes a developer active",
+    responses = [
+        ApiResponse(
+            description = "No content",
+            responseCode = "204",
+            content = [Content(schema = Schema(implementation = Unit::class))]
+        )
+    ]
+)
+@Target(AnnotationTarget.FUNCTION)
+annotation class ActivateDeveloper
+
+@Operation(
+    summary = "makes a developer inactive",
+    responses = [
+        ApiResponse(
+            description = "No content",
+            responseCode = "204",
+            content = [Content(schema = Schema(implementation = Unit::class))]
+        )
+    ]
+)
+@Target(AnnotationTarget.FUNCTION)
+annotation class DeactivateDeveloper

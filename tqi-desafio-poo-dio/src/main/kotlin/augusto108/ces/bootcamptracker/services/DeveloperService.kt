@@ -14,5 +14,9 @@ interface DeveloperService {
 
     fun updateDeveloper(developer: Developer): DeveloperDTO
 
-    fun deleteDeveloper(id: Int): Any
+    fun deleteDeveloper(id: Int)
+
+    fun activateDeveloper(id: Int)
+
+    fun deactivateDeveloper(id: Int)
 }

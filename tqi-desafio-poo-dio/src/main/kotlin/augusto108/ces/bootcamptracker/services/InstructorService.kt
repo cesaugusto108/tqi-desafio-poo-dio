@@ -14,5 +14,9 @@ interface InstructorService {
 
     fun updateInstructor(instructor: Instructor): InstructorDTO
 
-    fun deleteInstructor(id: Int): Any
+    fun deleteInstructor(id: Int)
+
+    fun activateInstructor(id: Int)
+
+    fun deactivateInstructor(id: Int)
 }

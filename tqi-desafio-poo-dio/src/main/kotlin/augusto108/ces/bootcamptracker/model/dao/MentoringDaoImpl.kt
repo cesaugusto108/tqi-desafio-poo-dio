@@ -34,5 +34,5 @@ class MentoringDaoImpl(private val entityManager: EntityManager) : MentoringDao 
         return m
     }
 
-    override fun deleteMentoring(id: Int): Any = entityManager.remove(findMentoringById(id))
+    override fun deleteMentoring(id: Int): Unit = entityManager.remove(findMentoringById(id))
 }

@@ -68,7 +68,7 @@ class InstructorControllerTest(
 
         val instructors: List<InstructorDTO> =
             instructorService.findAllInstructors(Integer.parseInt(page), Integer.parseInt(max))
-        instructorService.deleteInstructor(instructors[1].id)
+        instructorService.deleteInstructor(instructors[2].id)
     }
 
     @Test
@@ -189,5 +189,35 @@ class InstructorControllerTest(
             instructorService.findAllInstructors(Integer.parseInt(page), Integer.parseInt(max))
 
         assertEquals(2, instructors.size)
+    }
+
+    @Test
+    @Order(6)
+    fun activateInstructor() {
+        mockMvc.perform(
+            patch("${API_VERSION}instructors/active/{ìd}", -3)
+                .with(csrf())
+                .header(HEADER_KEY, HEADER_VALUE)
+        )
+            .andExpect(status().isNoContent)
+
+        val instructor: InstructorDTO = instructorService.findInstructorById(-3)
+
+        assertTrue(instructor.active)
+    }
+
+    @Test
+    @Order(7)
+    fun deactivateInstructor() {
+        mockMvc.perform(
+            patch("${API_VERSION}instructors/inactive/{ìd}", -3)
+                .with(csrf())
+                .header(HEADER_KEY, HEADER_VALUE)
+        )
+            .andExpect(status().isNoContent)
+
+        val instructor: InstructorDTO = instructorService.findInstructorById(-3)
+
+        assertTrue(!instructor.active)
     }
 }

@@ -11,8 +11,9 @@ class Developer(
     email: String = "",
     username: String = "",
     password: String = "",
+    active: Boolean = true,
     id: Int = 0
-) : Person(name, age, email, username, password, id) {
+) : Person(name, age, email, username, password, active, id) {
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(

@@ -37,5 +37,5 @@ class BootcampServiceImpl(private val bootcampDao: BootcampDao) : BootcampServic
     override fun updateBootcamp(bootcamp: Bootcamp): BootcampDTO =
         bootcampDao.updateBootcamp(bootcamp).map(BootcampDTO::class.java)
 
-    override fun deleteBootcamp(id: Int): Any = bootcampDao.deleteBootcamp(id)
+    override fun deleteBootcamp(id: Int): Unit = bootcampDao.deleteBootcamp(id)
 }

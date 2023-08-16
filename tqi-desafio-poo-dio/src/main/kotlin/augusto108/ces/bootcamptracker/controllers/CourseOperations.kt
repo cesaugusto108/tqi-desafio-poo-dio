@@ -37,5 +37,5 @@ interface CourseOperations {
 
     @DeleteMapping("/{id}")
     @DeleteOperation
-    fun deleteCourse(@PathVariable("id") id: Int): ResponseEntity<Any>
+    fun deleteCourse(@PathVariable("id") id: Int): ResponseEntity<Unit>
 }

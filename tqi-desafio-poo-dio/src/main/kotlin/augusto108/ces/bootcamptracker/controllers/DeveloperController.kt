@@ -50,6 +50,12 @@ class DeveloperController(private val developerService: DeveloperService) : Deve
         return ResponseEntity.status(HttpStatus.OK).body(updatedDeveloper)
     }
 
-    override fun deleteDeveloper(id: Int): ResponseEntity<Any> =
+    override fun deleteDeveloper(id: Int): ResponseEntity<Unit> =
         ResponseEntity.status(HttpStatus.NO_CONTENT).body(developerService.deleteDeveloper(id))
+
+    override fun activateDeveloper(id: Int): ResponseEntity<Unit> =
+        ResponseEntity.status(HttpStatus.NO_CONTENT).body(developerService.activateDeveloper(id))
+
+    override fun deactivateDeveloper(id: Int): ResponseEntity<Unit> =
+        ResponseEntity.status(HttpStatus.NO_CONTENT).body(developerService.deactivateDeveloper(id))
 }

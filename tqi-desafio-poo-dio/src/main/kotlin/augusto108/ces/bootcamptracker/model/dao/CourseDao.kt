@@ -11,5 +11,5 @@ interface CourseDao {
 
     fun updateCourse(course: Course): Course
 
-    fun deleteCourse(id: Int): Any
+    fun deleteCourse(id: Int)
 }

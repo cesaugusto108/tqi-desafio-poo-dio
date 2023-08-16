@@ -34,5 +34,5 @@ class BootcampDaoImpl(private val entityManager: EntityManager) : BootcampDao {
         return b
     }
 
-    override fun deleteBootcamp(id: Int): Any = entityManager.remove(findBootcampById(id))
+    override fun deleteBootcamp(id: Int): Unit = entityManager.remove(findBootcampById(id))
 }

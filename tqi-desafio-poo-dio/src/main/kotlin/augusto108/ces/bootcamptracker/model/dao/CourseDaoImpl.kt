@@ -30,5 +30,5 @@ class CourseDaoImpl(private val entityManager: EntityManager) : CourseDao {
         return c
     }
 
-    override fun deleteCourse(id: Int): Any = entityManager.remove(findCourseById(id))
+    override fun deleteCourse(id: Int): Unit = entityManager.remove(findCourseById(id))
 }

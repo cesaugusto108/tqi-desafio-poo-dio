@@ -34,5 +34,19 @@ class DeveloperDaoImpl(private val entityManager: EntityManager) : DeveloperDao 
         return d
     }
 
-    override fun deleteDeveloper(id: Int): Any = entityManager.remove(findDeveloperById(id))
+    override fun deleteDeveloper(id: Int): Unit = entityManager.remove(findDeveloperById(id))
+
+    override fun activateDeveloper(id: Int) {
+        entityManager
+            .createNativeQuery("update `person` set `active` = b'1' where id = :id")
+            .setParameter("id", id)
+            .executeUpdate()
+    }
+
+    override fun deactivateDeveloper(id: Int) {
+        entityManager
+            .createNativeQuery("update `person` set `active` = b'0' where id = :id")
+            .setParameter("id", id)
+            .executeUpdate()
+    }
 }

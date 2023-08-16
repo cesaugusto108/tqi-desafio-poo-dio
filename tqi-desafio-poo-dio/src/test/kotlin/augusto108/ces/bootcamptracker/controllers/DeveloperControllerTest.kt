@@ -75,7 +75,7 @@ class DeveloperControllerTest(
 
         val developers: List<DeveloperDTO> =
             developerService.findAllDevelopers(Integer.parseInt(page), Integer.parseInt(max))
-        developerService.deleteDeveloper(developers[1].id)
+        developerService.deleteDeveloper(developers[2].id)
     }
 
     @Test
@@ -108,7 +108,7 @@ class DeveloperControllerTest(
             .andExpect(content().contentType(UtilMediaType.APPLICATION_YAML))
             .andReturn()
 
-        val yamlResponse: String = "email: \"josecc@email.com\""
+        val yamlResponse = "email: \"josecc@email.com\""
 
         assertTrue(result.response.contentAsString.contains(yamlResponse))
     }
@@ -136,7 +136,7 @@ class DeveloperControllerTest(
             .andExpect(content().contentType(UtilMediaType.APPLICATION_YAML))
             .andReturn()
 
-        val yamlResponse: String = "email: \"josecc@email.com\""
+        val yamlResponse = "email: \"josecc@email.com\""
 
         assertTrue(result.response.contentAsString.contains(yamlResponse))
     }
@@ -198,5 +198,35 @@ class DeveloperControllerTest(
             developerService.findAllDevelopers(Integer.parseInt(page), Integer.parseInt(max))
 
         assertEquals(2, developers.size)
+    }
+
+    @Test
+    @Order(6)
+    fun activateDeveloper() {
+        mockMvc.perform(
+            patch("${API_VERSION}developers/active/{id}", -1)
+                .with(csrf())
+                .header(HEADER_KEY, HEADER_VALUE)
+        )
+            .andExpect(status().isNoContent)
+
+        val developer: DeveloperDTO = developerService.findDeveloperById(-1)
+
+        assertTrue(developer.active)
+    }
+
+    @Test
+    @Order(7)
+    fun deactivateDeveloper() {
+        mockMvc.perform(
+            patch("${API_VERSION}developers/inactive/{id}", -1)
+                .with(csrf())
+                .header(HEADER_KEY, HEADER_VALUE)
+        )
+            .andExpect(status().isNoContent)
+
+        val developer: DeveloperDTO = developerService.findDeveloperById(-1)
+
+        assertTrue(!developer.active)
     }
 }

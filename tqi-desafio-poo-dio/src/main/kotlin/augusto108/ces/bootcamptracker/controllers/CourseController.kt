@@ -48,6 +48,6 @@ class CourseController(private val courseService: CourseService) : CourseOperati
         return ResponseEntity.status(HttpStatus.OK).body(updatedCourse)
     }
 
-    override fun deleteCourse(id: Int): ResponseEntity<Any> =
+    override fun deleteCourse(id: Int): ResponseEntity<Unit> =
         ResponseEntity.status(HttpStatus.NO_CONTENT).body(courseService.deleteCourse(id))
 }

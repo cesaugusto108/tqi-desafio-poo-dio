@@ -37,5 +37,13 @@ class InstructorServiceImpl(private val instructorDao: InstructorDao) : Instruct
     override fun updateInstructor(instructor: Instructor): InstructorDTO =
         instructorDao.updateInstructor(instructor).map(InstructorDTO::class.java)
 
-    override fun deleteInstructor(id: Int): Any = instructorDao.deleteInstructor(id)
+    override fun deleteInstructor(id: Int): Unit = instructorDao.deleteInstructor(id)
+
+    override fun activateInstructor(id: Int) {
+        instructorDao.activateInstructor(id)
+    }
+
+    override fun deactivateInstructor(id: Int) {
+        instructorDao.deactivateInstructor(id)
+    }
 }

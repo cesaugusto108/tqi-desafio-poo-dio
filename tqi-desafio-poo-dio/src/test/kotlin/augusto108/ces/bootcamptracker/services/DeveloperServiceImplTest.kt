@@ -7,6 +7,7 @@ import augusto108.ces.bootcamptracker.model.entities.Name
 import jakarta.persistence.NoResultException
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.context.SpringBootTest
@@ -113,5 +114,29 @@ class DeveloperServiceImplTest(@Autowired private val developerService: Develope
         developers = developerService.findAllDevelopers(page, max)
 
         assertEquals(2, developers.size)
+    }
+
+    @Test
+    @Order(6)
+    fun activateDeveloper() {
+        val developer: DeveloperDTO = developerService.findDeveloperById(-1)
+
+        developerService.activateDeveloper(developer.id)
+
+        val activeDeveloper: DeveloperDTO = developerService.findDeveloperById(developer.id)
+
+        assertTrue(activeDeveloper.active)
+    }
+
+    @Test
+    @Order(7)
+    fun deactivateDeveloper() {
+        val developer: DeveloperDTO = developerService.findDeveloperById(-1)
+
+        developerService.deactivateDeveloper(developer.id)
+
+        val inactiveDeveloper: DeveloperDTO = developerService.findDeveloperById(developer.id)
+
+        assertTrue(!inactiveDeveloper.active)
     }
 }

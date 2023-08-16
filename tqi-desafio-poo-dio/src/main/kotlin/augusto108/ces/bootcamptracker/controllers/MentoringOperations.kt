@@ -37,5 +37,5 @@ interface MentoringOperations {
 
     @DeleteMapping("/{id}")
     @DeleteOperation
-    fun deleteMentoring(@PathVariable("id") id: Int): ResponseEntity<Any>
+    fun deleteMentoring(@PathVariable("id") id: Int): ResponseEntity<Unit>
 }

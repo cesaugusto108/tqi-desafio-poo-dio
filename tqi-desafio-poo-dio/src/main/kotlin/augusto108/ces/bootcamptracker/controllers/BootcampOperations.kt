@@ -37,5 +37,5 @@ interface BootcampOperations {
 
     @DeleteMapping("/{id}")
     @DeleteOperation
-    fun deleteBootcamp(@PathVariable("id") id: Int): ResponseEntity<Any>
+    fun deleteBootcamp(@PathVariable("id") id: Int): ResponseEntity<Unit>
 }

@@ -65,9 +65,35 @@ annotation class UpdateOperation
         ApiResponse(
             description = "No content",
             responseCode = "204",
-            content = [Content(schema = Schema(implementation = InstructorDTO::class))]
+            content = [Content(schema = Schema(implementation = Unit::class))]
         )
     ]
 )
 @Target(AnnotationTarget.FUNCTION)
 annotation class DeleteOperation
+
+@Operation(
+    summary = "makes an instructor active",
+    responses = [
+        ApiResponse(
+            description = "No content",
+            responseCode = "204",
+            content = [Content(schema = Schema(implementation = Unit::class))]
+        )
+    ]
+)
+@Target(AnnotationTarget.FUNCTION)
+annotation class ActivateInstructor
+
+@Operation(
+    summary = "makes an instructor inactive",
+    responses = [
+        ApiResponse(
+            description = "No content",
+            responseCode = "204",
+            content = [Content(schema = Schema(implementation = Unit::class))]
+        )
+    ]
+)
+@Target(AnnotationTarget.FUNCTION)
+annotation class DeactivateInstructor

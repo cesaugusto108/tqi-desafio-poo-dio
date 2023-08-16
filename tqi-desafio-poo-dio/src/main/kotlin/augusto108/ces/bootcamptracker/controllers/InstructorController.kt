@@ -51,6 +51,14 @@ class InstructorController(private val instructorService: InstructorService) : I
         return ResponseEntity.status(HttpStatus.OK).body(updatedInstructor)
     }
 
-    override fun deleteInstructor(id: Int): ResponseEntity<Any> =
+    override fun deleteInstructor(id: Int): ResponseEntity<Unit> =
         ResponseEntity.status(HttpStatus.NO_CONTENT).body(instructorService.deleteInstructor(id))
+
+    override fun activateInstructor(id: Int): ResponseEntity<Unit> {
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(instructorService.activateInstructor(id))
+    }
+
+    override fun deactivateInstructor(id: Int): ResponseEntity<Unit> {
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(instructorService.deactivateInstructor(id))
+    }
 }

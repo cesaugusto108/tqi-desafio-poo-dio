@@ -37,7 +37,7 @@ class WebContentConfiguration : WebMvcConfigurer {
         registry
             .addMapping("/**")
             .allowedOrigins(*allowedOrigins)
-            .allowedMethods("GET", "POST", "PUT", "DELETE")
+            .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH")
             .allowCredentials(true)
     }
 }

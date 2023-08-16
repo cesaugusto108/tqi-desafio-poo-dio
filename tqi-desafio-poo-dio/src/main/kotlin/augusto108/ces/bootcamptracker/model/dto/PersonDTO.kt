@@ -9,6 +9,7 @@ abstract class PersonDTO(
     var age: Int = 0,
     var email: String = "",
     var username: String = "",
+    var active: Boolean = true,
     id: Int
 ) : BaseDto(id) {
     override fun toString(): String = "$name ($email)"
