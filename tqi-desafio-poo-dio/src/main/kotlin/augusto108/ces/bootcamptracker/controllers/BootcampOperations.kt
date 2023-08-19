@@ -5,6 +5,8 @@ import augusto108.ces.bootcamptracker.model.dto.BootcampDTO
 import augusto108.ces.bootcamptracker.model.entities.Bootcamp
 import augusto108.ces.bootcamptracker.util.MediaType
 import io.swagger.v3.oas.annotations.tags.Tag
+import org.springframework.hateoas.EntityModel
+import org.springframework.hateoas.PagedModel
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
@@ -22,7 +24,7 @@ interface BootcampOperations {
     fun findAllBootcamps(
         @RequestParam(defaultValue = "0", required = false) page: Int,
         @RequestParam(defaultValue = "10", required = false) max: Int
-    ): ResponseEntity<List<BootcampDTO>>
+    ): ResponseEntity<PagedModel<EntityModel<BootcampDTO>>>
 
     @GetMapping("/{id}", produces = [MediaType.APPLICATION_JSON, MediaType.APPLICATION_YAML])
     @FindByIdOperation

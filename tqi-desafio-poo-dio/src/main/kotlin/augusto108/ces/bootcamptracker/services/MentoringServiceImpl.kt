@@ -5,22 +5,29 @@ import augusto108.ces.bootcamptracker.model.dao.MentoringDao
 import augusto108.ces.bootcamptracker.model.dto.MentoringDTO
 import augusto108.ces.bootcamptracker.model.entities.Mentoring
 import augusto108.ces.bootcamptracker.model.mapper.map
+import augusto108.ces.bootcamptracker.services.PageRequest.getPageRequest
 import org.springframework.dao.EmptyResultDataAccessException
+import org.springframework.data.web.PagedResourcesAssembler
+import org.springframework.hateoas.EntityModel
+import org.springframework.hateoas.PagedModel
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Service
 @Transactional
-class MentoringServiceImpl(private val mentoringDao: MentoringDao) : MentoringService {
+class MentoringServiceImpl(
+    private val mentoringDao: MentoringDao,
+    private val pagedResourcesAssembler: PagedResourcesAssembler<MentoringDTO>
+) : MentoringService {
     override fun saveMentoring(mentoring: Mentoring): MentoringDTO =
         mentoringDao.saveMentoring(mentoring).map(MentoringDTO::class.java)
 
-    override fun findAllMentoring(page: Int, max: Int): List<MentoringDTO> {
+    override fun findAllMentoring(page: Int, max: Int): PagedModel<EntityModel<MentoringDTO>> {
         val mentoringDTOList: MutableList<MentoringDTO> = ArrayList()
 
-        mentoringDao.findAllMentoring(page, max).forEach { mentoringDTOList.add(it.map(MentoringDTO::class.java)) }
+        mentoringDao.findAllMentoring().forEach { mentoringDTOList.add(it.map(MentoringDTO::class.java)) }
 
-        return mentoringDTOList
+        return pagedResourcesAssembler.toModel(getPageRequest(page, max, mentoringDTOList))
     }
 
     override fun findMentoringById(id: Int): MentoringDTO = mentoringById(id).map(MentoringDTO::class.java)

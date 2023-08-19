@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.hateoas.EntityModel
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.TestPropertySource
 
@@ -29,11 +30,11 @@ class DeveloperServiceImplTest(@Autowired private val developerService: Develope
     @Test
     @Order(3)
     fun saveDeveloper() {
-        var developers: List<DeveloperDTO> = developerService.findAllDevelopers(page, max)
+        var developers: List<EntityModel<DeveloperDTO>> = developerService.findAllDevelopers(page, max).toList()
 
         assertEquals(2, developers.size)
-        assertEquals("(4) Carlos Antônio Moura (carlos@email.com)", developers[0].toString())
-        assertEquals(-2, developers[0].id)
+        assertEquals("(4) Carlos Antônio Moura (carlos@email.com)", developers[0].content.toString())
+        assertEquals(-2, developers[0].content?.id)
 
         val developer = Developer(
             name = Name("Daniela", "Pereira", "Melo"),
@@ -44,22 +45,22 @@ class DeveloperServiceImplTest(@Autowired private val developerService: Develope
 
         developerService.saveDeveloper(developer)
 
-        developers = developerService.findAllDevelopers(page, max)
+        developers = developerService.findAllDevelopers(page, max).toList()
 
         assertEquals(3, developers.size)
-        assertEquals("(4) Daniela Pereira Melo (daniela@email.com)", developers[2].toString())
+        assertEquals("(4) Daniela Pereira Melo (daniela@email.com)", developers[2].content.toString())
 
-        developerService.deleteDeveloper(developers[2].id)
+        developerService.deleteDeveloper(developers[2].content?.id!!)
     }
 
     @Test
     @Order(1)
     fun findAllDevelopers() {
-        val developers: List<DeveloperDTO> = developerService.findAllDevelopers(page, max)
+        val developers: List<EntityModel<DeveloperDTO>> = developerService.findAllDevelopers(page, max).toList()
 
         assertEquals(2, developers.size)
-        assertEquals("(4) Carlos Antônio Moura (carlos@email.com)", developers[0].toString())
-        assertEquals(-2, developers[0].id)
+        assertEquals("(4) Carlos Antônio Moura (carlos@email.com)", developers[0].content.toString())
+        assertEquals(-2, developers[0].content?.id)
     }
 
     @Test
@@ -87,12 +88,12 @@ class DeveloperServiceImplTest(@Autowired private val developerService: Develope
 
         developerService.updateDeveloper(developer)
 
-        val developers: List<DeveloperDTO> = developerService.findAllDevelopers(page, max)
+        val developers: List<EntityModel<DeveloperDTO>> = developerService.findAllDevelopers(page, max).toList()
 
         assertEquals(2, developers.size)
-        assertEquals("(6) Paula Campos Resende (paula@email.com)", developers[0].toString())
-        assertEquals("pcresende", developers[0].username)
-        assertEquals(-2, developers[0].id)
+        assertEquals("(6) Paula Campos Resende (paula@email.com)", developers[0].content.toString())
+        assertEquals("pcresende", developers[0].content?.username)
+        assertEquals(-2, developers[0].content?.id)
     }
 
     @Test
@@ -107,11 +108,11 @@ class DeveloperServiceImplTest(@Autowired private val developerService: Develope
 
         developerService.saveDeveloper(developer)
 
-        var developers: List<DeveloperDTO> = developerService.findAllDevelopers(page, max)
+        var developers: List<EntityModel<DeveloperDTO>> = developerService.findAllDevelopers(page, max).toList()
 
-        developerService.deleteDeveloper(developers[2].id)
+        developerService.deleteDeveloper(developers[2].content?.id!!)
 
-        developers = developerService.findAllDevelopers(page, max)
+        developers = developerService.findAllDevelopers(page, max).toList()
 
         assertEquals(2, developers.size)
     }

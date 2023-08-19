@@ -5,22 +5,29 @@ import augusto108.ces.bootcamptracker.model.dao.DeveloperDao
 import augusto108.ces.bootcamptracker.model.dto.DeveloperDTO
 import augusto108.ces.bootcamptracker.model.entities.Developer
 import augusto108.ces.bootcamptracker.model.mapper.map
+import augusto108.ces.bootcamptracker.services.PageRequest.getPageRequest
 import org.springframework.dao.EmptyResultDataAccessException
+import org.springframework.data.web.PagedResourcesAssembler
+import org.springframework.hateoas.EntityModel
+import org.springframework.hateoas.PagedModel
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Service
 @Transactional
-class DeveloperServiceImpl(private val developerDao: DeveloperDao) : DeveloperService {
+class DeveloperServiceImpl(
+    private val developerDao: DeveloperDao,
+    private val pagedResourcesAssembler: PagedResourcesAssembler<DeveloperDTO>
+) : DeveloperService {
     override fun saveDeveloper(developer: Developer): DeveloperDTO =
         developerDao.saveDeveloper(developer).map(DeveloperDTO::class.java)
 
-    override fun findAllDevelopers(page: Int, max: Int): List<DeveloperDTO> {
+    override fun findAllDevelopers(page: Int, max: Int): PagedModel<EntityModel<DeveloperDTO>> {
         val developerDTOList: MutableList<DeveloperDTO> = ArrayList()
 
-        developerDao.findAllDevelopers(page, max).forEach { developerDTOList.add(it.map(DeveloperDTO::class.java)) }
+        developerDao.findAllDevelopers().forEach { developerDTOList.add(it.map(DeveloperDTO::class.java)) }
 
-        return developerDTOList
+        return pagedResourcesAssembler.toModel(getPageRequest(page, max, developerDTOList))
     }
 
     override fun findDeveloperById(id: Int): DeveloperDTO = developerById(id).map(DeveloperDTO::class.java)

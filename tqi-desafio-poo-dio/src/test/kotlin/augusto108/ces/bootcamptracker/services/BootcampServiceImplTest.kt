@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.hateoas.EntityModel
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.TestPropertySource
 import java.time.LocalDateTime
@@ -28,11 +29,11 @@ class BootcampServiceImplTest(@Autowired private val bootcampService: BootcampSe
     @Test
     @Order(3)
     fun saveBootcamp() {
-        var bootcamps: List<BootcampDTO> = bootcampService.findAllBootcamps(page, max)
+        var bootcamps: List<EntityModel<BootcampDTO>> = bootcampService.findAllBootcamps(page, max).toList()
 
         assertEquals(3, bootcamps.size)
-        assertEquals("AWS Experience", bootcamps[0].toString())
-        assertEquals(-3, bootcamps[0].id)
+        assertEquals("AWS Experience", bootcamps[0].content.toString())
+        assertEquals(-3, bootcamps[0].content?.id)
 
         val bootcamp = Bootcamp(
             description = "AWS Cloud Computing",
@@ -43,22 +44,22 @@ class BootcampServiceImplTest(@Autowired private val bootcampService: BootcampSe
 
         bootcampService.saveBootcamp(bootcamp)
 
-        bootcamps = bootcampService.findAllBootcamps(page, max)
+        bootcamps = bootcampService.findAllBootcamps(page, max).toList()
 
         assertEquals(4, bootcamps.size)
-        assertEquals("AWS Cloud Computing", bootcamps[3].toString())
+        assertEquals("AWS Cloud Computing", bootcamps[3].content.toString())
 
-        bootcampService.deleteBootcamp(bootcamps[3].id)
+        bootcampService.deleteBootcamp(bootcamps[3].content?.id!!)
     }
 
     @Test
     @Order(1)
     fun findAllBootcamps() {
-        val bootcamps: List<BootcampDTO> = bootcampService.findAllBootcamps(page, max)
+        val bootcamps: List<EntityModel<BootcampDTO>> = bootcampService.findAllBootcamps(page, max).toList()
 
         assertEquals(3, bootcamps.size)
-        assertEquals("AWS Experience", bootcamps[0].toString())
-        assertEquals(-3, bootcamps[0].id)
+        assertEquals("AWS Experience", bootcamps[0].content.toString())
+        assertEquals(-3, bootcamps[0].content?.id)
     }
 
     @Test
@@ -84,11 +85,11 @@ class BootcampServiceImplTest(@Autowired private val bootcampService: BootcampSe
 
         bootcampService.updateBootcamp(bootcamp)
 
-        val bootcamps: List<BootcampDTO> = bootcampService.findAllBootcamps(page, max)
+        val bootcamps: List<EntityModel<BootcampDTO>> = bootcampService.findAllBootcamps(page, max).toList()
 
         assertEquals(3, bootcamps.size)
-        assertEquals("TQI Go Backend", bootcamps[0].toString())
-        assertEquals(-3, bootcamps[0].id)
+        assertEquals("TQI Go Backend", bootcamps[0].content.toString())
+        assertEquals(-3, bootcamps[0].content?.id)
     }
 
     @Test
@@ -103,11 +104,11 @@ class BootcampServiceImplTest(@Autowired private val bootcampService: BootcampSe
 
         bootcampService.saveBootcamp(bootcamp)
 
-        var bootcamps: List<BootcampDTO> = bootcampService.findAllBootcamps(page, max)
+        var bootcamps: List<EntityModel<BootcampDTO>> = bootcampService.findAllBootcamps(page, max).toList()
 
-        bootcampService.deleteBootcamp(bootcamps[3].id)
+        bootcampService.deleteBootcamp(bootcamps[3].content?.id!!)
 
-        bootcamps = bootcampService.findAllBootcamps(page, max)
+        bootcamps = bootcampService.findAllBootcamps(page, max).toList()
 
         assertEquals(3, bootcamps.size)
     }

@@ -5,21 +5,28 @@ import augusto108.ces.bootcamptracker.model.dao.CourseDao
 import augusto108.ces.bootcamptracker.model.dto.CourseDTO
 import augusto108.ces.bootcamptracker.model.entities.Course
 import augusto108.ces.bootcamptracker.model.mapper.map
+import augusto108.ces.bootcamptracker.services.PageRequest.getPageRequest
 import org.springframework.dao.EmptyResultDataAccessException
+import org.springframework.data.web.PagedResourcesAssembler
+import org.springframework.hateoas.EntityModel
+import org.springframework.hateoas.PagedModel
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Service
 @Transactional
-class CourseServiceImpl(private val courseDao: CourseDao) : CourseService {
+class CourseServiceImpl(
+    private val courseDao: CourseDao,
+    private val pagedResourcesAssembler: PagedResourcesAssembler<CourseDTO>
+) : CourseService {
     override fun saveCourse(course: Course): CourseDTO = courseDao.saveCourse(course).map(CourseDTO::class.java)
 
-    override fun findAllCourses(page: Int, max: Int): List<CourseDTO> {
+    override fun findAllCourses(page: Int, max: Int): PagedModel<EntityModel<CourseDTO>> {
         val courseDTOList: MutableList<CourseDTO> = ArrayList()
 
-        courseDao.findAllCourses(page, max).forEach { courseDTOList.add(it.map(CourseDTO::class.java)) }
+        courseDao.findAllCourses().forEach { courseDTOList.add(it.map(CourseDTO::class.java)) }
 
-        return courseDTOList
+        return pagedResourcesAssembler.toModel(getPageRequest(page, max, courseDTOList))
     }
 
     override fun findCourseById(id: Int): CourseDTO = courseById(id).map(CourseDTO::class.java)

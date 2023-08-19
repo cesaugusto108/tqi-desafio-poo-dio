@@ -5,6 +5,8 @@ import augusto108.ces.bootcamptracker.model.dto.CourseDTO
 import augusto108.ces.bootcamptracker.model.entities.Course
 import augusto108.ces.bootcamptracker.util.MediaType
 import io.swagger.v3.oas.annotations.tags.Tag
+import org.springframework.hateoas.EntityModel
+import org.springframework.hateoas.PagedModel
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
@@ -22,7 +24,7 @@ interface CourseOperations {
     fun findAllCourses(
         @RequestParam(defaultValue = "0", required = false) page: Int,
         @RequestParam(defaultValue = "10", required = false) max: Int
-    ): ResponseEntity<List<CourseDTO>>
+    ): ResponseEntity<PagedModel<EntityModel<CourseDTO>>>
 
     @GetMapping("/{id}", produces = [MediaType.APPLICATION_JSON, MediaType.APPLICATION_YAML])
     @FindByIdOperation

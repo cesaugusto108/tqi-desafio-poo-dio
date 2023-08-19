@@ -4,7 +4,10 @@ import augusto108.ces.bootcamptracker.model.dto.BootcampDTO
 import augusto108.ces.bootcamptracker.model.entities.Bootcamp
 import augusto108.ces.bootcamptracker.services.BootcampService
 import augusto108.ces.bootcamptracker.util.API_VERSION
+import org.springframework.hateoas.EntityModel
+import org.springframework.hateoas.PagedModel
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo
+import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.RequestMapping
@@ -21,17 +24,24 @@ class BootcampController(private val bootcampService: BootcampService) : Bootcam
         return ResponseEntity.status(HttpStatus.CREATED).body(savedBootcamp)
     }
 
-    override fun findAllBootcamps(page: Int, max: Int): ResponseEntity<List<BootcampDTO>> {
-        val bootcampDTOList: List<BootcampDTO> = bootcampService.findAllBootcamps(page, max)
+    override fun findAllBootcamps(page: Int, max: Int): ResponseEntity<PagedModel<EntityModel<BootcampDTO>>> {
+        val pagedModel: PagedModel<EntityModel<BootcampDTO>> = bootcampService.findAllBootcamps(page, max)
+        val bootcampDTOList: MutableList<BootcampDTO?> = mutableListOf()
 
-        for (bootcamp in bootcampDTOList) {
-            bootcamp.add(linkTo(BootcampController::class.java).withSelfRel())
-            bootcamp.add(
+        for (entityModel: EntityModel<BootcampDTO> in pagedModel) bootcampDTOList.add(entityModel.content)
+
+        for (bootcamp: BootcampDTO? in bootcampDTOList) {
+            bootcamp?.add(linkTo(BootcampController::class.java).withSelfRel())
+            bootcamp?.add(
                 linkTo(BootcampController::class.java).slash("/${bootcamp.id}").withRel("bootcamp${bootcamp.id}")
             )
         }
 
-        return ResponseEntity.status(HttpStatus.OK).body(bootcampDTOList)
+        val headers = HttpHeaders()
+        headers.add("X-Page-Number", pagedModel.metadata?.number.toString())
+        headers.add("X-Page-Size", pagedModel.metadata?.size.toString())
+
+        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(pagedModel)
     }
 
     override fun findBootcampById(id: Int): ResponseEntity<BootcampDTO> {

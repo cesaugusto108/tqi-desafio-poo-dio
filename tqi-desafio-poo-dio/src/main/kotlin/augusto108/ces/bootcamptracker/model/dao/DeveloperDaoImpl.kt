@@ -12,11 +12,9 @@ class DeveloperDaoImpl(private val entityManager: EntityManager) : DeveloperDao 
         return developer
     }
 
-    override fun findAllDevelopers(page: Int, max: Int): List<Developer> =
+    override fun findAllDevelopers(): List<Developer> =
         entityManager
             .createQuery("from Developer order by id", Developer::class.java)
-            .setFirstResult(page * max)
-            .setMaxResults(max)
             .resultList
 
     override fun findDeveloperById(id: Int): Developer =

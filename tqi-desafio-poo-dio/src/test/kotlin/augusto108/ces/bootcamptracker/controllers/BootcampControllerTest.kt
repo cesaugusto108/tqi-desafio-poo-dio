@@ -16,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.hateoas.EntityModel
+import org.springframework.hateoas.PagedModel
 import org.springframework.http.MediaType
 import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf
@@ -68,9 +70,9 @@ class BootcampControllerTest(
             .andExpect(jsonPath("$.details", `is`("Java and Spring backend")))
             .andExpect(jsonPath("$._links.all.href", `is`("http://localhost${API_VERSION}bootcamps")))
 
-        val bootcamps: List<BootcampDTO> =
+        val pagedModel: PagedModel<EntityModel<BootcampDTO>> =
             bootcampService.findAllBootcamps(Integer.parseInt(page), Integer.parseInt(max))
-        bootcampService.deleteBootcamp(bootcamps[3].id)
+        bootcampService.deleteBootcamp(pagedModel.content.toList()[3].content?.id!!)
     }
 
     @Test
@@ -85,10 +87,26 @@ class BootcampControllerTest(
         )
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$[1].description", `is`("Linux Experience")))
-            .andExpect(jsonPath("$[1].details", `is`("Aperfeiçoamento Linux")))
-            .andExpect(jsonPath("$[1].links[0].href", `is`("http://localhost${API_VERSION}bootcamps")))
-            .andExpect(jsonPath("$[1].links[1].href", `is`("http://localhost${API_VERSION}bootcamps/-2")))
+            .andExpect(header().string("X-Page-Number", "0"))
+            .andExpect(header().string("X-Page-Size", "10"))
+            .andExpect(jsonPath("$._embedded.bootcampDTOList[1].description", `is`("Linux Experience")))
+            .andExpect(jsonPath("$._embedded.bootcampDTOList[1].details", `is`("Aperfeiçoamento Linux")))
+            .andExpect(
+                jsonPath(
+                    "$._embedded.bootcampDTOList[1]._links.self.href",
+                    `is`("http://localhost${API_VERSION}bootcamps")
+                )
+            )
+            .andExpect(
+                jsonPath(
+                    "$._embedded.bootcampDTOList[1]._links.bootcamp-2.href",
+                    `is`("http://localhost${API_VERSION}bootcamps/-2")
+                )
+            )
+            .andExpect(jsonPath("$.page.size", `is`(10)))
+            .andExpect(jsonPath("$.page.totalElements", `is`(10)))
+            .andExpect(jsonPath("$.page.totalPages", `is`(1)))
+            .andExpect(jsonPath("$.page.number", `is`(0)))
 
         val result: MvcResult = mockMvc.perform(
             get("${API_VERSION}bootcamps")
@@ -179,9 +197,9 @@ class BootcampControllerTest(
         )
             .andExpect(status().isNoContent)
 
-        val bootcamps: List<BootcampDTO> =
+        val pagedModel: PagedModel<EntityModel<BootcampDTO>> =
             bootcampService.findAllBootcamps(Integer.parseInt(page), Integer.parseInt(max))
 
-        assertEquals(3, bootcamps.size)
+        assertEquals(3, pagedModel.content.toList().size)
     }
 }

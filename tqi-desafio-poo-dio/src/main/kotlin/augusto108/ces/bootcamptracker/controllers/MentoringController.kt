@@ -4,7 +4,10 @@ import augusto108.ces.bootcamptracker.model.dto.MentoringDTO
 import augusto108.ces.bootcamptracker.model.entities.Mentoring
 import augusto108.ces.bootcamptracker.services.MentoringService
 import augusto108.ces.bootcamptracker.util.API_VERSION
+import org.springframework.hateoas.EntityModel
+import org.springframework.hateoas.PagedModel
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo
+import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.RequestMapping
@@ -21,17 +24,24 @@ class MentoringController(private val mentoringService: MentoringService) : Ment
         return ResponseEntity.status(HttpStatus.CREATED).body(savedMentoring)
     }
 
-    override fun findAllMentoring(page: Int, max: Int): ResponseEntity<List<MentoringDTO>> {
-        val mentoringDTOList: List<MentoringDTO> = mentoringService.findAllMentoring(page, max)
+    override fun findAllMentoring(page: Int, max: Int): ResponseEntity<PagedModel<EntityModel<MentoringDTO>>> {
+        val pagedModel: PagedModel<EntityModel<MentoringDTO>> = mentoringService.findAllMentoring(page, max)
+        val mentoringDTOList: MutableList<MentoringDTO?> = mutableListOf()
 
-        for (mentoring in mentoringDTOList) {
-            mentoring.add(linkTo(MentoringController::class.java).withSelfRel())
-            mentoring.add(
+        for (entityModel: EntityModel<MentoringDTO> in pagedModel) mentoringDTOList.add(entityModel.content)
+
+        for (mentoring: MentoringDTO? in mentoringDTOList) {
+            mentoring?.add(linkTo(MentoringController::class.java).withSelfRel())
+            mentoring?.add(
                 linkTo(MentoringController::class.java).slash("/${mentoring.id}").withRel("mentoring${mentoring.id}")
             )
         }
 
-        return ResponseEntity.status(HttpStatus.OK).body(mentoringDTOList)
+        val headers = HttpHeaders()
+        headers.add("X-Page-Number", pagedModel.metadata?.number.toString())
+        headers.add("X-Page-Size", pagedModel.metadata?.size.toString())
+
+        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(pagedModel)
     }
 
     override fun findMentoringById(id: Int): ResponseEntity<MentoringDTO> {

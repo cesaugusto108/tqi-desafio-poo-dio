@@ -5,7 +5,7 @@ import augusto108.ces.bootcamptracker.model.entities.Bootcamp
 interface BootcampDao {
     fun saveBootcamp(bootcamp: Bootcamp): Bootcamp
 
-    fun findAllBootcamps(page: Int, max: Int): List<Bootcamp>
+    fun findAllBootcamps(): List<Bootcamp>
 
     fun findBootcampById(id: Int): Bootcamp
 

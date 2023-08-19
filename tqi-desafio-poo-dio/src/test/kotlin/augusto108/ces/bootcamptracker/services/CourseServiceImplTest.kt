@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.hateoas.EntityModel
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.TestPropertySource
 
@@ -27,33 +28,33 @@ class CourseServiceImplTest(@Autowired private val courseService: CourseService)
     @Test
     @Order(3)
     fun saveCourse() {
-        var courses: List<CourseDTO> = courseService.findAllCourses(page, max)
+        var courses: List<EntityModel<CourseDTO>> = courseService.findAllCourses(page, max).toList()
 
         assertEquals(2, courses.size)
-        assertEquals("Sintaxe Kotlin (course)", courses[0].toString())
-        assertEquals(-4, courses[0].id)
+        assertEquals("Sintaxe Kotlin (course)", courses[0].content.toString())
+        assertEquals(-4, courses[0].content?.id)
 
         val course =
             Course(date = null, hours = 300, description = "Django", details = "Python and Django")
 
         courseService.saveCourse(course)
 
-        courses = courseService.findAllCourses(page, max)
+        courses = courseService.findAllCourses(page, max).toList()
 
         assertEquals(3, courses.size)
-        assertEquals("Django (course)", courses[2].toString())
+        assertEquals("Django (course)", courses[2].content.toString())
 
-        courseService.deleteCourse(courses[2].id)
+        courseService.deleteCourse(courses[2].content?.id!!)
     }
 
     @Test
     @Order(1)
     fun findAllCourses() {
-        val courses: List<CourseDTO> = courseService.findAllCourses(page, max)
+        val courses: List<EntityModel<CourseDTO>> = courseService.findAllCourses(page, max).toList()
 
         assertEquals(2, courses.size)
-        assertEquals("Sintaxe Kotlin (course)", courses[0].toString())
-        assertEquals(-4, courses[0].id)
+        assertEquals("Sintaxe Kotlin (course)", courses[0].content.toString())
+        assertEquals(-4, courses[0].content?.id)
     }
 
     @Test
@@ -73,11 +74,11 @@ class CourseServiceImplTest(@Autowired private val courseService: CourseService)
 
         courseService.updateCourse(course)
 
-        val courses: List<CourseDTO> = courseService.findAllCourses(page, max)
+        val courses: List<EntityModel<CourseDTO>> = courseService.findAllCourses(page, max).toList()
 
         assertEquals(2, courses.size)
-        assertEquals("Scrum (course)", courses[1].toString())
-        assertEquals(-3, courses[1].id)
+        assertEquals("Scrum (course)", courses[1].content.toString())
+        assertEquals(-3, courses[1].content?.id)
     }
 
     @Test
@@ -87,11 +88,11 @@ class CourseServiceImplTest(@Autowired private val courseService: CourseService)
 
         courseService.saveCourse(course)
 
-        var courses: List<CourseDTO> = courseService.findAllCourses(page, max)
+        var courses: List<EntityModel<CourseDTO>> = courseService.findAllCourses(page, max).toList()
 
-        courseService.deleteCourse(courses[2].id)
+        courseService.deleteCourse(courses[2].content?.id!!)
 
-        courses = courseService.findAllCourses(page, max)
+        courses = courseService.findAllCourses(page, max).toList()
 
         assertEquals(2, courses.size)
     }

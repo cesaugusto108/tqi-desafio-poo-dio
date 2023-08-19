@@ -16,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.hateoas.EntityModel
+import org.springframework.hateoas.PagedModel
 import org.springframework.http.MediaType
 import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf
@@ -64,9 +66,9 @@ class MentoringControllerTest(
             .andExpect(jsonPath("$.details", `is`("REST APIs com Spring e Kotlin")))
             .andExpect(jsonPath("$._links.all.href", `is`("http://localhost${API_VERSION}mentoring")))
 
-        val mentoringList: List<MentoringDTO> =
+        val pagedModel: PagedModel<EntityModel<MentoringDTO>> =
             mentoringService.findAllMentoring(Integer.parseInt(page), Integer.parseInt(max))
-        mentoringService.deleteMentoring(mentoringList[1].id)
+        mentoringService.deleteMentoring(pagedModel.content.toList()[1].content?.id!!)
     }
 
     @Test
@@ -80,10 +82,26 @@ class MentoringControllerTest(
         )
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$[0].description", `is`("Java - POO")))
-            .andExpect(jsonPath("$[0].details", `is`("Orientação a objetos com Java")))
-            .andExpect(jsonPath("$[0].links[0].href", `is`("http://localhost${API_VERSION}mentoring")))
-            .andExpect(jsonPath("$[0].links[1].href", `is`("http://localhost${API_VERSION}mentoring/-2")))
+            .andExpect(header().string("X-Page-Number", "0"))
+            .andExpect(header().string("X-Page-Size", "10"))
+            .andExpect(jsonPath("$._embedded.mentoringDTOList[0].description", `is`("Java - POO")))
+            .andExpect(jsonPath("$._embedded.mentoringDTOList[0].details", `is`("Orientação a objetos com Java")))
+            .andExpect(
+                jsonPath(
+                    "$._embedded.mentoringDTOList[0]._links.self.href",
+                    `is`("http://localhost${API_VERSION}mentoring")
+                )
+            )
+            .andExpect(
+                jsonPath(
+                    "$._embedded.mentoringDTOList[0]._links.mentoring-2.href",
+                    `is`("http://localhost${API_VERSION}mentoring/-2")
+                )
+            )
+            .andExpect(jsonPath("$.page.size", `is`(10)))
+            .andExpect(jsonPath("$.page.totalElements", `is`(10)))
+            .andExpect(jsonPath("$.page.totalPages", `is`(1)))
+            .andExpect(jsonPath("$.page.number", `is`(0)))
 
         val result: MvcResult = mockMvc.perform(
             get("${API_VERSION}mentoring")
@@ -166,9 +184,9 @@ class MentoringControllerTest(
         )
             .andExpect(status().isNoContent)
 
-        val mentoringList: List<MentoringDTO> =
+        val pagedModel: PagedModel<EntityModel<MentoringDTO>> =
             mentoringService.findAllMentoring(Integer.parseInt(page), Integer.parseInt(max))
 
-        assertEquals(2, mentoringList.size)
+        assertEquals(2, pagedModel.content.size)
     }
 }

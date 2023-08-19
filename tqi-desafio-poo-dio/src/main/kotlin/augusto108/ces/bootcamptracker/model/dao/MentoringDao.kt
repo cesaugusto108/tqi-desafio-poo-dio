@@ -5,7 +5,7 @@ import augusto108.ces.bootcamptracker.model.entities.Mentoring
 interface MentoringDao {
     fun saveMentoring(mentoring: Mentoring): Mentoring
 
-    fun findAllMentoring(page: Int, max: Int): List<Mentoring>
+    fun findAllMentoring(): List<Mentoring>
 
     fun findMentoringById(id: Int): Mentoring
 

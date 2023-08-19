@@ -5,22 +5,29 @@ import augusto108.ces.bootcamptracker.model.dao.BootcampDao
 import augusto108.ces.bootcamptracker.model.dto.BootcampDTO
 import augusto108.ces.bootcamptracker.model.entities.Bootcamp
 import augusto108.ces.bootcamptracker.model.mapper.map
+import augusto108.ces.bootcamptracker.services.PageRequest.getPageRequest
 import org.springframework.dao.EmptyResultDataAccessException
+import org.springframework.data.web.PagedResourcesAssembler
+import org.springframework.hateoas.EntityModel
+import org.springframework.hateoas.PagedModel
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Service
 @Transactional
-class BootcampServiceImpl(private val bootcampDao: BootcampDao) : BootcampService {
+class BootcampServiceImpl(
+    private val bootcampDao: BootcampDao,
+    private val pagedResourcesAssembler: PagedResourcesAssembler<BootcampDTO>
+) : BootcampService {
     override fun saveBootcamp(bootcamp: Bootcamp): BootcampDTO =
         bootcampDao.saveBootcamp(bootcamp).map(BootcampDTO::class.java)
 
-    override fun findAllBootcamps(page: Int, max: Int): List<BootcampDTO> {
+    override fun findAllBootcamps(page: Int, max: Int): PagedModel<EntityModel<BootcampDTO>> {
         val bootcampDTOList: MutableList<BootcampDTO> = ArrayList()
 
-        bootcampDao.findAllBootcamps(page, max).forEach { bootcampDTOList.add(it.map(BootcampDTO::class.java)) }
+        bootcampDao.findAllBootcamps().forEach { bootcampDTOList.add(it.map(BootcampDTO::class.java)) }
 
-        return bootcampDTOList
+        return pagedResourcesAssembler.toModel(getPageRequest(page, max, bootcampDTOList))
     }
 
     override fun findBootcampById(id: Int): BootcampDTO = bootcampById(id).map(BootcampDTO::class.java)

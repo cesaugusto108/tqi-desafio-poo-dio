@@ -16,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.hateoas.EntityModel
+import org.springframework.hateoas.PagedModel
 import org.springframework.http.MediaType
 import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf
@@ -65,8 +67,9 @@ class CourseControllerTest(
             .andExpect(jsonPath("$.hours", `is`(250)))
             .andExpect(jsonPath("$._links.all.href", `is`("http://localhost${API_VERSION}courses")))
 
-        val courses: List<CourseDTO> = courseService.findAllCourses(Integer.parseInt(page), Integer.parseInt(max))
-        courseService.deleteCourse(courses[2].id)
+        val pagedModel: PagedModel<EntityModel<CourseDTO>> =
+            courseService.findAllCourses(Integer.parseInt(page), Integer.parseInt(max))
+        courseService.deleteCourse(pagedModel.content.toList()[2].content?.id!!)
     }
 
     @Test
@@ -80,11 +83,27 @@ class CourseControllerTest(
         )
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$[0].description", `is`("Sintaxe Kotlin")))
-            .andExpect(jsonPath("$[0].details", `is`("Aprendendo a sintaxe Kotlin")))
-            .andExpect(jsonPath("$[0].hours", `is`(300)))
-            .andExpect(jsonPath("$[0].links[0].href", `is`("http://localhost${API_VERSION}courses")))
-            .andExpect(jsonPath("$[0].links[1].href", `is`("http://localhost${API_VERSION}courses/-4")))
+            .andExpect(header().string("X-Page-Number", "0"))
+            .andExpect(header().string("X-Page-Size", "10"))
+            .andExpect(jsonPath("$._embedded.courseDTOList[0].description", `is`("Sintaxe Kotlin")))
+            .andExpect(jsonPath("$._embedded.courseDTOList[0].details", `is`("Aprendendo a sintaxe Kotlin")))
+            .andExpect(jsonPath("$._embedded.courseDTOList[0].hours", `is`(300)))
+            .andExpect(
+                jsonPath(
+                    "$._embedded.courseDTOList[0]._links.self.href",
+                    `is`("http://localhost${API_VERSION}courses")
+                )
+            )
+            .andExpect(
+                jsonPath(
+                    "$._embedded.courseDTOList[0]._links.course-4.href",
+                    `is`("http://localhost${API_VERSION}courses/-4")
+                )
+            )
+            .andExpect(jsonPath("$.page.size", `is`(10)))
+            .andExpect(jsonPath("$.page.totalElements", `is`(10)))
+            .andExpect(jsonPath("$.page.totalPages", `is`(1)))
+            .andExpect(jsonPath("$.page.number", `is`(0)))
 
         val result: MvcResult = mockMvc.perform(
             get("${API_VERSION}courses")
@@ -97,7 +116,10 @@ class CourseControllerTest(
             .andExpect(content().contentType(UtilMediaType.APPLICATION_YAML))
             .andReturn()
 
-        val yamlResponse: String = "---\n" +
+        val yamlResponse: String = "links:\n" +
+                "- rel: \"self\"\n" +
+                "  href: \"http://localhost/v1/courses?page=0&size=10\"\n" +
+                "content:\n" +
                 "- id: -4\n" +
                 "  description: \"Sintaxe Kotlin\"\n" +
                 "  details: \"Aprendendo a sintaxe Kotlin\"\n" +
@@ -175,8 +197,9 @@ class CourseControllerTest(
         )
             .andExpect(status().isNoContent)
 
-        val courses: List<CourseDTO> = courseService.findAllCourses(Integer.parseInt(page), Integer.parseInt(max))
+        val pagedModel: PagedModel<EntityModel<CourseDTO>> =
+            courseService.findAllCourses(Integer.parseInt(page), Integer.parseInt(max))
 
-        assertEquals(2, courses.size)
+        assertEquals(2, pagedModel.content.toList().size)
     }
 }

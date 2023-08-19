@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.hateoas.EntityModel
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.TestPropertySource
 
@@ -26,32 +27,32 @@ class MentoringServiceImplTests(@Autowired private val mentoringService: Mentori
 
     @Test
     fun saveMentoring() {
-        var mentorings: List<MentoringDTO> = mentoringService.findAllMentoring(page, max)
+        var mentorings: List<EntityModel<MentoringDTO>> = mentoringService.findAllMentoring(page, max).toList()
 
         assertEquals(2, mentorings.size)
-        assertEquals("Java - POO (mentoring)", mentorings[0].toString())
-        assertEquals(-2, mentorings[0].id)
+        assertEquals("Java - POO (mentoring)", mentorings[0].content.toString())
+        assertEquals(-2, mentorings[0].content?.id)
 
         val mentoring =
             Mentoring(date = null, hours = null, description = "Extreme Programming", details = "Gestão de times ágeis")
 
         mentoringService.saveMentoring(mentoring)
 
-        mentorings = mentoringService.findAllMentoring(page, max)
+        mentorings = mentoringService.findAllMentoring(page, max).toList()
 
         assertEquals(3, mentorings.size)
-        assertEquals("Extreme Programming (mentoring)", mentorings[2].toString())
+        assertEquals("Extreme Programming (mentoring)", mentorings[2].content.toString())
 
-        mentoringService.deleteMentoring(mentorings[2].id)
+        mentoringService.deleteMentoring(mentorings[2].content?.id!!)
     }
 
     @Test
     fun findAllMentoring() {
-        val mentorings: List<MentoringDTO> = mentoringService.findAllMentoring(page, max)
+        val mentoringList: List<EntityModel<MentoringDTO>> = mentoringService.findAllMentoring(page, max).toList()
 
-        assertEquals(2, mentorings.size)
-        assertEquals("Kotlin - POO (mentoring)", mentorings[1].toString())
-        assertEquals(-1, mentorings[1].id)
+        assertEquals(2, mentoringList.size)
+        assertEquals("Kotlin - POO (mentoring)", mentoringList[1].content.toString())
+        assertEquals(-1, mentoringList[1].content?.id)
     }
 
     @Test
@@ -70,11 +71,11 @@ class MentoringServiceImplTests(@Autowired private val mentoringService: Mentori
 
         mentoringService.updateMentoring(mentoring)
 
-        val mentorings: List<MentoringDTO> = mentoringService.findAllMentoring(page, max)
+        val mentorings: List<EntityModel<MentoringDTO>> = mentoringService.findAllMentoring(page, max).toList()
 
         assertEquals(2, mentorings.size)
-        assertEquals("Agile (mentoring)", mentorings[1].toString())
-        assertEquals(-1, mentorings[1].id)
+        assertEquals("Agile (mentoring)", mentorings[1].content.toString())
+        assertEquals(-1, mentorings[1].content?.id)
     }
 
     @Test
@@ -84,11 +85,11 @@ class MentoringServiceImplTests(@Autowired private val mentoringService: Mentori
 
         mentoringService.saveMentoring(mentoring)
 
-        var mentoringList: List<MentoringDTO> = mentoringService.findAllMentoring(page, max)
+        var mentoringList: List<EntityModel<MentoringDTO>> = mentoringService.findAllMentoring(page, max).toList()
 
-        mentoringService.deleteMentoring(mentoringList[2].id)
+        mentoringService.deleteMentoring(mentoringList[2].content?.id!!)
 
-        mentoringList = mentoringService.findAllMentoring(page, max)
+        mentoringList = mentoringService.findAllMentoring(page, max).toList()
 
         assertEquals(2, mentoringList.size)
     }

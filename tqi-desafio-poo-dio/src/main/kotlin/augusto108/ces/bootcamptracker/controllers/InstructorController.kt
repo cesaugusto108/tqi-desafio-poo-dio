@@ -4,7 +4,10 @@ import augusto108.ces.bootcamptracker.model.dto.InstructorDTO
 import augusto108.ces.bootcamptracker.model.entities.Instructor
 import augusto108.ces.bootcamptracker.services.InstructorService
 import augusto108.ces.bootcamptracker.util.API_VERSION
+import org.springframework.hateoas.EntityModel
+import org.springframework.hateoas.PagedModel
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo
+import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.RequestMapping
@@ -21,18 +24,25 @@ class InstructorController(private val instructorService: InstructorService) : I
         return ResponseEntity.status(HttpStatus.CREATED).body(savedInstructor)
     }
 
-    override fun findAllInstructors(page: Int, max: Int): ResponseEntity<List<InstructorDTO>> {
-        val instructorDTOList: List<InstructorDTO> = instructorService.findAllInstructors(page, max)
+    override fun findAllInstructors(page: Int, max: Int): ResponseEntity<PagedModel<EntityModel<InstructorDTO>>> {
+        val pagedModel: PagedModel<EntityModel<InstructorDTO>> = instructorService.findAllInstructors(page, max)
+        val instructorDTOList: MutableList<InstructorDTO?> = mutableListOf()
 
-        for (instructor in instructorDTOList) {
-            instructor.add(linkTo(InstructorController::class.java).withSelfRel())
-            instructor.add(
+        for (entityModel in pagedModel) instructorDTOList.add(entityModel.content)
+
+        for (instructor: InstructorDTO? in instructorDTOList) {
+            instructor?.add(linkTo(InstructorController::class.java).withSelfRel())
+            instructor?.add(
                 linkTo(InstructorController::class.java).slash("/${instructor.id}")
                     .withRel("instructor${instructor.id}")
             )
         }
 
-        return ResponseEntity.status(HttpStatus.OK).body(instructorDTOList)
+        val headers = HttpHeaders()
+        headers.add("X-Page-Number", pagedModel.metadata?.number.toString())
+        headers.add("X-Page-Size", pagedModel.metadata?.size.toString())
+
+        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(pagedModel)
     }
 
     override fun findInstructorById(id: Int): ResponseEntity<InstructorDTO> {

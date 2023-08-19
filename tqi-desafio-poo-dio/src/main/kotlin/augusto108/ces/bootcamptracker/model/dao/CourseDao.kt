@@ -5,7 +5,7 @@ import augusto108.ces.bootcamptracker.model.entities.Course
 interface CourseDao {
     fun saveCourse(course: Course): Course
 
-    fun findAllCourses(page: Int, max: Int): List<Course>
+    fun findAllCourses(): List<Course>
 
     fun findCourseById(id: Int): Course
 

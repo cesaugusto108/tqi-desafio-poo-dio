@@ -17,6 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.hateoas.EntityModel
+import org.springframework.hateoas.PagedModel
 import org.springframework.http.MediaType
 import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf
@@ -73,9 +75,9 @@ class DeveloperControllerTest(
             .andExpect(jsonPath("$._links.self.href", `is`("http://localhost${API_VERSION}developers/1")))
             .andExpect(jsonPath("$._links.all.href", `is`("http://localhost${API_VERSION}developers")))
 
-        val developers: List<DeveloperDTO> =
+        val pagedModel: PagedModel<EntityModel<DeveloperDTO>> =
             developerService.findAllDevelopers(Integer.parseInt(page), Integer.parseInt(max))
-        developerService.deleteDeveloper(developers[2].id)
+        developerService.deleteDeveloper(pagedModel.content.toList()[2].content?.id!!)
     }
 
     @Test
@@ -89,13 +91,29 @@ class DeveloperControllerTest(
         )
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$[0].id", `is`(-2)))
-            .andExpect(jsonPath("$[0].age", `is`(28)))
-            .andExpect(jsonPath("$[0].name.lastName", `is`("Moura")))
-            .andExpect(jsonPath("$[0].email", `is`("carlos@email.com")))
-            .andExpect(jsonPath("$[0].level", `is`(4)))
-            .andExpect(jsonPath("$[0].links[0].href", `is`("http://localhost${API_VERSION}developers")))
-            .andExpect(jsonPath("$[0].links[1].href", `is`("http://localhost${API_VERSION}developers/-2")))
+            .andExpect(header().string("X-Page-Number", "0"))
+            .andExpect(header().string("X-Page-Size", "10"))
+            .andExpect(jsonPath("$._embedded.developerDTOList[0].id", `is`(-2)))
+            .andExpect(jsonPath("$._embedded.developerDTOList[0].age", `is`(28)))
+            .andExpect(jsonPath("$._embedded.developerDTOList[0].name.lastName", `is`("Moura")))
+            .andExpect(jsonPath("$._embedded.developerDTOList[0].email", `is`("carlos@email.com")))
+            .andExpect(jsonPath("$._embedded.developerDTOList[0].level", `is`(4)))
+            .andExpect(
+                jsonPath(
+                    "$._embedded.developerDTOList[0]._links.self.href",
+                    `is`("http://localhost${API_VERSION}developers")
+                )
+            )
+            .andExpect(
+                jsonPath(
+                    "$._embedded.developerDTOList[0]._links.developer-2.href",
+                    `is`("http://localhost${API_VERSION}developers/-2")
+                )
+            )
+            .andExpect(jsonPath("$.page.size", `is`(10)))
+            .andExpect(jsonPath("$.page.totalElements", `is`(10)))
+            .andExpect(jsonPath("$.page.totalPages", `is`(1)))
+            .andExpect(jsonPath("$.page.number", `is`(0)))
 
         val result: MvcResult = mockMvc.perform(
             get("${API_VERSION}developers")
@@ -194,10 +212,10 @@ class DeveloperControllerTest(
         )
             .andExpect(status().isNoContent)
 
-        val developers: List<DeveloperDTO> =
+        val pagedModel: PagedModel<EntityModel<DeveloperDTO>> =
             developerService.findAllDevelopers(Integer.parseInt(page), Integer.parseInt(max))
 
-        assertEquals(2, developers.size)
+        assertEquals(2, pagedModel.content.size)
     }
 
     @Test

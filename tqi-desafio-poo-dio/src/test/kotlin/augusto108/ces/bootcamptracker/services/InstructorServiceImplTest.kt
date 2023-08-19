@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.hateoas.EntityModel
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.TestPropertySource
 
@@ -29,32 +30,32 @@ class InstructorServiceImplTest(@Autowired private val instructorService: Instru
     @Test
     @Order(3)
     fun saveInstructor() {
-        var instructors: List<InstructorDTO> = instructorService.findAllInstructors(page, max)
+        var instructors: List<EntityModel<InstructorDTO>> = instructorService.findAllInstructors(page, max).toList()
 
         assertEquals(2, instructors.size)
-        assertEquals("Maria Souza (maria@email.com)", instructors[1].toString())
-        assertEquals(-3, instructors[1].id)
+        assertEquals("Maria Souza (maria@email.com)", instructors[1].content.toString())
+        assertEquals(-3, instructors[1].content?.id)
 
         val instructor = Instructor(name = Name("João", "Roberto", "Silva"), email = "joao@email.com", age = 37)
 
         instructorService.saveInstructor(instructor)
 
-        instructors = instructorService.findAllInstructors(page, max)
+        instructors = instructorService.findAllInstructors(page, max).toList()
 
         assertEquals(3, instructors.size)
-        assertEquals("João Roberto Silva (joao@email.com)", instructors[2].toString())
+        assertEquals("João Roberto Silva (joao@email.com)", instructors[2].content.toString())
 
-        instructorService.deleteInstructor(instructors[2].id)
+        instructorService.deleteInstructor(instructors[2].content?.id!!)
     }
 
     @Test
     @Order(1)
     fun findAllInstructors() {
-        val instructors: List<InstructorDTO> = instructorService.findAllInstructors(page, max)
+        val instructors: List<EntityModel<InstructorDTO>> = instructorService.findAllInstructors(page, max).toList()
 
         assertEquals(2, instructors.size)
-        assertEquals("Maria Souza (maria@email.com)", instructors[1].toString())
-        assertEquals(-3, instructors[1].id)
+        assertEquals("Maria Souza (maria@email.com)", instructors[1].content.toString())
+        assertEquals(-3, instructors[1].content?.id)
     }
 
     @Test
@@ -81,12 +82,12 @@ class InstructorServiceImplTest(@Autowired private val instructorService: Instru
 
         instructorService.updateInstructor(instructor)
 
-        val instructors: List<InstructorDTO> = instructorService.findAllInstructors(page, max)
+        val instructors: List<EntityModel<InstructorDTO>> = instructorService.findAllInstructors(page, max).toList()
 
         assertEquals(2, instructors.size)
-        assertEquals("Josias Campos Souza (josias@email.com)", instructors[1].toString())
-        assertEquals("jcsouza", instructors[1].username)
-        assertEquals(-3, instructors[1].id)
+        assertEquals("Josias Campos Souza (josias@email.com)", instructors[1].content.toString())
+        assertEquals("jcsouza", instructors[1].content?.username)
+        assertEquals(-3, instructors[1].content?.id)
     }
 
     @Test
@@ -102,11 +103,11 @@ class InstructorServiceImplTest(@Autowired private val instructorService: Instru
 
         instructorService.saveInstructor(instructor)
 
-        var instructors: List<InstructorDTO> = instructorService.findAllInstructors(page, max)
+        var instructors: List<EntityModel<InstructorDTO>> = instructorService.findAllInstructors(page, max).toList()
 
-        instructorService.deleteInstructor(instructors[2].id)
+        instructorService.deleteInstructor(instructors[2].content?.id!!)
 
-        instructors = instructorService.findAllInstructors(page, max)
+        instructors = instructorService.findAllInstructors(page, max).toList()
 
         assertEquals(2, instructors.size)
     }
