@@ -1,6 +1,6 @@
 # tqi-desafio-poo-dio
 
-Desafio de código do Bootcamp DIO TQI Kotlin Backend Developer (https://web.dio.me/track/bootcamp-tqi-kotlin)
+Desafio de código do Bootcamp DIO TQI Kotlin Backend Developer
 
 - REST API
 - Orientação a objetos (Abstração, encapsulamento, herança e polimorfismo)
