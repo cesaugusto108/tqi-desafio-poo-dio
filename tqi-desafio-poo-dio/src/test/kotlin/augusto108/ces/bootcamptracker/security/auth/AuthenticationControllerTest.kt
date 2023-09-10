@@ -51,15 +51,20 @@ class AuthenticationControllerTest(
             objectMapper.readValue(authenticationResult.response.contentAsString, Token::class.java).token
 
         mockMvc.perform(
-            get("${API_VERSION}instructors/{id}", -4)
+            get("${API_VERSION}instructors/{id}", "e8fd1a04-1c85-45e0-8f35-8ee8520e1800")
                 .header("Authorization", "Bearer $token")
         )
             .andExpect(status().isOk)
-            .andExpect(jsonPath("$.id", `is`(-4)))
+            .andExpect(jsonPath("$.id", `is`("e8fd1a04-1c85-45e0-8f35-8ee8520e1800")))
             .andExpect(jsonPath("$.age", `is`(32)))
             .andExpect(jsonPath("$.name.lastName", `is`("Santos")))
             .andExpect(jsonPath("$.email", `is`("florinda@email.com")))
-            .andExpect(jsonPath("$._links.self.href", `is`("http://localhost${API_VERSION}instructors/-4")))
+            .andExpect(
+                jsonPath(
+                    "$._links.self.href",
+                    `is`("http://localhost${API_VERSION}instructors/e8fd1a04-1c85-45e0-8f35-8ee8520e1800")
+                )
+            )
             .andExpect(jsonPath("$._links.all.href", `is`("http://localhost${API_VERSION}instructors")))
     }
 

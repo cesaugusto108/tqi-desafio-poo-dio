@@ -14,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.hateoas.EntityModel
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.TestPropertySource
+import java.util.*
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -32,9 +33,9 @@ class DeveloperServiceImplTest(@Autowired private val developerService: Develope
     fun saveDeveloper() {
         var developers: List<EntityModel<DeveloperDTO>> = developerService.findAllDevelopers(page, max).toList()
 
-        assertEquals(2, developers.size)
-        assertEquals("(4) Carlos Antônio Moura (carlos@email.com)", developers[0].content.toString())
-        assertEquals(-2, developers[0].content?.id)
+        assertEquals(3, developers.size)
+        assertEquals("(9) Fernando Alves (fernando@email.com)", developers[0].content.toString())
+        assertEquals(UUID.fromString("96f2c93e-dc1b-4ce1-9aee-989a2cd9f722"), developers[0].content?.id)
 
         val developer = Developer(
             name = Name("Daniela", "Pereira", "Melo"),
@@ -47,10 +48,13 @@ class DeveloperServiceImplTest(@Autowired private val developerService: Develope
 
         developers = developerService.findAllDevelopers(page, max).toList()
 
-        assertEquals(3, developers.size)
-        assertEquals("(4) Daniela Pereira Melo (daniela@email.com)", developers[2].content.toString())
+        val persistedDeveloper: DeveloperDTO? =
+            developers.stream().filter { it.content?.email == "daniela@email.com" }.findFirst().get().content
 
-        developerService.deleteDeveloper(developers[2].content?.id!!)
+        assertEquals(4, developers.size)
+        assertEquals("(4) Daniela Pereira Melo (daniela@email.com)", persistedDeveloper.toString())
+
+        developerService.deleteDeveloper(persistedDeveloper?.id.toString())
     }
 
     @Test
@@ -58,19 +62,18 @@ class DeveloperServiceImplTest(@Autowired private val developerService: Develope
     fun findAllDevelopers() {
         val developers: List<EntityModel<DeveloperDTO>> = developerService.findAllDevelopers(page, max).toList()
 
-        assertEquals(2, developers.size)
-        assertEquals("(4) Carlos Antônio Moura (carlos@email.com)", developers[0].content.toString())
-        assertEquals(-2, developers[0].content?.id)
+        assertEquals(3, developers.size)
+        assertEquals("(2) José Carlos Costa (josecc@email.com)", developers[1].content.toString())
+        assertEquals(UUID.fromString("96f2c93e-dc1b-4ce1-9aee-989a2cd9f7ad"), developers[1].content?.id)
     }
 
     @Test
     @Order(2)
     fun findDeveloperById() {
-        val developer: DeveloperDTO = developerService.findDeveloperById(-2)
+        val developer: DeveloperDTO = developerService.findDeveloperById("96f2c93e-dc1b-4ce1-9aee-989a2cd9f722")
 
-        assertEquals("(4) Carlos Antônio Moura (carlos@email.com)", developer.toString())
-        assertThrows<NoResultException> { developerService.findDeveloperById(0) }
-        assertThrows<NumberFormatException> { developerService.findDeveloperById("aaa".toInt()) }
+        assertEquals("(9) Fernando Alves (fernando@email.com)", developer.toString())
+        assertThrows<NoResultException> { developerService.findDeveloperById("96f2c93e-dc1b-4ce1-9aee-989a2cd9f788") }
     }
 
     @Test
@@ -82,7 +85,7 @@ class DeveloperServiceImplTest(@Autowired private val developerService: Develope
             username = "pcresende",
             password = "1234",
             age = 40,
-            id = -2,
+            id = UUID.fromString("d8b5e8de-d938-4daa-9699-b9cfcc599e37"),
             level = 6
         )
 
@@ -90,10 +93,10 @@ class DeveloperServiceImplTest(@Autowired private val developerService: Develope
 
         val developers: List<EntityModel<DeveloperDTO>> = developerService.findAllDevelopers(page, max).toList()
 
-        assertEquals(2, developers.size)
-        assertEquals("(6) Paula Campos Resende (paula@email.com)", developers[0].content.toString())
-        assertEquals("pcresende", developers[0].content?.username)
-        assertEquals(-2, developers[0].content?.id)
+        assertEquals(3, developers.size)
+        assertEquals("(6) Paula Campos Resende (paula@email.com)", developers[2].content.toString())
+        assertEquals("pcresende", developers[2].content?.username)
+        assertEquals(UUID.fromString("d8b5e8de-d938-4daa-9699-b9cfcc599e37"), developers[2].content?.id)
     }
 
     @Test
@@ -106,25 +109,23 @@ class DeveloperServiceImplTest(@Autowired private val developerService: Develope
             level = 5
         )
 
-        developerService.saveDeveloper(developer)
+        val persistedDeveloper: DeveloperDTO = developerService.saveDeveloper(developer)
 
-        var developers: List<EntityModel<DeveloperDTO>> = developerService.findAllDevelopers(page, max).toList()
+        developerService.deleteDeveloper(persistedDeveloper.id.toString())
 
-        developerService.deleteDeveloper(developers[2].content?.id!!)
+        val developers: List<EntityModel<DeveloperDTO>> = developerService.findAllDevelopers(page, max).toList()
 
-        developers = developerService.findAllDevelopers(page, max).toList()
-
-        assertEquals(2, developers.size)
+        assertEquals(3, developers.size)
     }
 
     @Test
     @Order(6)
     fun activateDeveloper() {
-        val developer: DeveloperDTO = developerService.findDeveloperById(-1)
+        val developer: DeveloperDTO = developerService.findDeveloperById("96f2c93e-dc1b-4ce1-9aee-989a2cd9f7ad")
 
-        developerService.activateDeveloper(developer.id)
+        developerService.activateDeveloper(developer.id.toString())
 
-        val activeDeveloper: DeveloperDTO = developerService.findDeveloperById(developer.id)
+        val activeDeveloper: DeveloperDTO = developerService.findDeveloperById(developer.id.toString())
 
         assertTrue(activeDeveloper.active)
     }
@@ -132,11 +133,11 @@ class DeveloperServiceImplTest(@Autowired private val developerService: Develope
     @Test
     @Order(7)
     fun deactivateDeveloper() {
-        val developer: DeveloperDTO = developerService.findDeveloperById(-1)
+        val developer: DeveloperDTO = developerService.findDeveloperById("d8b5e8de-d938-4daa-9699-b9cfcc599e37")
 
-        developerService.deactivateDeveloper(developer.id)
+        developerService.deactivateDeveloper(developer.id.toString())
 
-        val inactiveDeveloper: DeveloperDTO = developerService.findDeveloperById(developer.id)
+        val inactiveDeveloper: DeveloperDTO = developerService.findDeveloperById(developer.id.toString())
 
         assertTrue(!inactiveDeveloper.active)
     }

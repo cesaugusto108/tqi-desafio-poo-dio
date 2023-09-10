@@ -10,15 +10,15 @@ interface InstructorService {
 
     fun findAllInstructors(page: Int, max: Int): PagedModel<EntityModel<InstructorDTO>>
 
-    fun findInstructorById(id: Int): InstructorDTO
+    fun findInstructorById(id: String): InstructorDTO
 
-    fun instructorById(id: Int): Instructor
+    fun instructorById(id: String): Instructor
 
     fun updateInstructor(instructor: Instructor): InstructorDTO
 
-    fun deleteInstructor(id: Int)
+    fun deleteInstructor(id: String)
 
-    fun activateInstructor(id: Int)
+    fun activateInstructor(id: String)
 
-    fun deactivateInstructor(id: Int)
+    fun deactivateInstructor(id: String)
 }

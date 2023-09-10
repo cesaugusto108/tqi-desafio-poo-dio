@@ -28,7 +28,7 @@ interface DeveloperOperations {
 
     @GetMapping("/{id}", produces = [MediaType.APPLICATION_JSON, MediaType.APPLICATION_YAML])
     @FindByIdOperation
-    fun findDeveloperById(@PathVariable("id") id: Int): ResponseEntity<DeveloperDTO>
+    fun findDeveloperById(@PathVariable("id") id: String): ResponseEntity<DeveloperDTO>
 
     @PutMapping(
         consumes = [MediaType.APPLICATION_JSON, MediaType.APPLICATION_YAML],
@@ -39,13 +39,13 @@ interface DeveloperOperations {
 
     @DeleteMapping("/{id}")
     @DeleteOperation
-    fun deleteDeveloper(@PathVariable("id") id: Int): ResponseEntity<Unit>
+    fun deleteDeveloper(@PathVariable("id") id: String): ResponseEntity<Unit>
 
     @PatchMapping("/active/{id}")
     @ActivateDeveloper
-    fun activateDeveloper(@PathVariable("id") id: Int): ResponseEntity<Unit>
+    fun activateDeveloper(@PathVariable("id") id: String): ResponseEntity<Unit>
 
     @PatchMapping("/inactive/{id}")
     @DeactivateDeveloper
-    fun deactivateDeveloper(@PathVariable("id") id: Int): ResponseEntity<Unit>
+    fun deactivateDeveloper(@PathVariable("id") id: String): ResponseEntity<Unit>
 }

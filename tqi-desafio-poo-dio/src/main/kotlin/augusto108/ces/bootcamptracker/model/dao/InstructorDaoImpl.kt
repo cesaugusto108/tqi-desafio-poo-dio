@@ -3,6 +3,7 @@ package augusto108.ces.bootcamptracker.model.dao
 import augusto108.ces.bootcamptracker.model.entities.Instructor
 import jakarta.persistence.EntityManager
 import org.springframework.stereotype.Repository
+import java.util.*
 
 @Repository
 class InstructorDaoImpl(private val entityManager: EntityManager) : InstructorDao {
@@ -17,31 +18,31 @@ class InstructorDaoImpl(private val entityManager: EntityManager) : InstructorDa
             .createQuery("from Instructor order by id", Instructor::class.java)
             .resultList
 
-    override fun findInstructorById(id: Int): Instructor =
+    override fun findInstructorById(id: UUID): Instructor =
         entityManager
             .createQuery("from Instructor i where id = :id", Instructor::class.java)
             .setParameter("id", id)
             .singleResult
 
     override fun updateInstructor(instructor: Instructor): Instructor {
-        var i: Instructor = findInstructorById(instructor.id)
-        i = instructor.copyProperties(i)
+        var i: Instructor? = instructor.id?.let { findInstructorById(it) }
+        i = instructor.copyProperties(i!!)
 
         entityManager.persist(i)
 
         return i
     }
 
-    override fun deleteInstructor(id: Int): Unit = entityManager.remove(findInstructorById(id))
+    override fun deleteInstructor(id: UUID): Unit = entityManager.remove(findInstructorById(id))
 
-    override fun activateInstructor(id: Int) {
+    override fun activateInstructor(id: UUID) {
         entityManager
             .createNativeQuery("update `person` set `active` = b'1' where id = :id")
             .setParameter("id", id)
             .executeUpdate()
     }
 
-    override fun deactivateInstructor(id: Int) {
+    override fun deactivateInstructor(id: UUID) {
         entityManager
             .createNativeQuery("update `person` set `active` = b'0' where id = :id")
             .setParameter("id", id)

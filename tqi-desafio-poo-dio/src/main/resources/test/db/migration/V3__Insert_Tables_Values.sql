@@ -39,10 +39,10 @@ INSERT INTO `bootcamp_activity` (`bootcamp_id`, `activity_id`) VALUES (-1, -1);
 
 INSERT INTO `bootcamp_activity` (`bootcamp_id`, `activity_id`) VALUES (-1, -2);
 
-INSERT INTO `developer_bootcamp` (`developer_id`, `bootcamp_id`) VALUES ( -2, -2);
+INSERT INTO `developer_bootcamp` (`developer_id`, `bootcamp_id`) VALUES (-2, -2);
 
-INSERT INTO `developer_bootcamp` (`developer_id`, `bootcamp_id`) VALUES ( -1, -1);
+INSERT INTO `developer_bootcamp` (`developer_id`, `bootcamp_id`) VALUES (-1, -1);
 
-INSERT INTO `developer_bootcamp` (`developer_id`, `bootcamp_id`) VALUES ( -2, -1);
+INSERT INTO `developer_bootcamp` (`developer_id`, `bootcamp_id`) VALUES (-2, -1);
 
-INSERT INTO `developer_bootcamp` (`developer_id`, `bootcamp_id`) VALUES ( -1, -2);
+INSERT INTO `developer_bootcamp` (`developer_id`, `bootcamp_id`) VALUES (-1, -2);

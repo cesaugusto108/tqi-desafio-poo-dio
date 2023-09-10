@@ -14,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.hateoas.EntityModel
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.TestPropertySource
+import java.util.*
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -32,20 +33,22 @@ class InstructorServiceImplTest(@Autowired private val instructorService: Instru
     fun saveInstructor() {
         var instructors: List<EntityModel<InstructorDTO>> = instructorService.findAllInstructors(page, max).toList()
 
-        assertEquals(2, instructors.size)
-        assertEquals("Maria Souza (maria@email.com)", instructors[1].content.toString())
-        assertEquals(-3, instructors[1].content?.id)
+        assertEquals(3, instructors.size)
+        assertEquals("Osvaldo Pires (osvaldo@email.com)", instructors[0].content.toString())
+        assertEquals(UUID.fromString("4879ee9d-27d3-4b4b-a39c-1360d70d5a00"), instructors[0].content?.id)
 
         val instructor = Instructor(name = Name("João", "Roberto", "Silva"), email = "joao@email.com", age = 37)
 
         instructorService.saveInstructor(instructor)
 
         instructors = instructorService.findAllInstructors(page, max).toList()
+        val persistedInstructor: InstructorDTO? =
+            instructors.stream().filter { it.content?.email == "joao@email.com" }.findFirst().get().content
 
-        assertEquals(3, instructors.size)
-        assertEquals("João Roberto Silva (joao@email.com)", instructors[2].content.toString())
+        assertEquals(4, instructors.size)
+        assertEquals("João Roberto Silva (joao@email.com)", persistedInstructor.toString())
 
-        instructorService.deleteInstructor(instructors[2].content?.id!!)
+        instructorService.deleteInstructor(persistedInstructor?.id.toString())
     }
 
     @Test
@@ -53,19 +56,18 @@ class InstructorServiceImplTest(@Autowired private val instructorService: Instru
     fun findAllInstructors() {
         val instructors: List<EntityModel<InstructorDTO>> = instructorService.findAllInstructors(page, max).toList()
 
-        assertEquals(2, instructors.size)
-        assertEquals("Maria Souza (maria@email.com)", instructors[1].content.toString())
-        assertEquals(-3, instructors[1].content?.id)
+        assertEquals(3, instructors.size)
+        assertEquals("Osvaldo Pires (osvaldo@email.com)", instructors[0].content.toString())
+        assertEquals(UUID.fromString("4879ee9d-27d3-4b4b-a39c-1360d70d5a00"), instructors[0].content?.id)
     }
 
     @Test
     @Order(2)
     fun findInstructorById() {
-        val instructor: InstructorDTO = instructorService.findInstructorById(-3)
+        val instructor: InstructorDTO = instructorService.findInstructorById("4879ee9d-27d3-4b4b-a39c-1360d70d5a04")
 
         assertEquals("Maria Souza (maria@email.com)", instructor.toString())
-        assertThrows<NoResultException> { instructorService.findInstructorById(0) }
-        assertThrows<NumberFormatException> { instructorService.findInstructorById("aaa".toInt()) }
+        assertThrows<NoResultException> { instructorService.findInstructorById("4879ee9d-27d3-4b4b-a39c-1360d70d5abb") }
     }
 
     @Test
@@ -77,17 +79,17 @@ class InstructorServiceImplTest(@Autowired private val instructorService: Instru
             username = "jcsouza",
             password = "0987",
             age = 40,
-            id = -3
+            id = UUID.fromString("4879ee9d-27d3-4b4b-a39c-1360d70d5a04")
         )
 
         instructorService.updateInstructor(instructor)
 
         val instructors: List<EntityModel<InstructorDTO>> = instructorService.findAllInstructors(page, max).toList()
 
-        assertEquals(2, instructors.size)
+        assertEquals(3, instructors.size)
         assertEquals("Josias Campos Souza (josias@email.com)", instructors[1].content.toString())
         assertEquals("jcsouza", instructors[1].content?.username)
-        assertEquals(-3, instructors[1].content?.id)
+        assertEquals(UUID.fromString("4879ee9d-27d3-4b4b-a39c-1360d70d5a04"), instructors[1].content?.id)
     }
 
     @Test
@@ -101,25 +103,24 @@ class InstructorServiceImplTest(@Autowired private val instructorService: Instru
             age = 34
         )
 
-        instructorService.saveInstructor(instructor)
+        val persistedInstructor: InstructorDTO = instructorService.saveInstructor(instructor)
 
-        var instructors: List<EntityModel<InstructorDTO>> = instructorService.findAllInstructors(page, max).toList()
 
-        instructorService.deleteInstructor(instructors[2].content?.id!!)
+        instructorService.deleteInstructor(persistedInstructor.id.toString())
 
-        instructors = instructorService.findAllInstructors(page, max).toList()
+        val instructors: List<EntityModel<InstructorDTO>> = instructorService.findAllInstructors(page, max).toList()
 
-        assertEquals(2, instructors.size)
+        assertEquals(3, instructors.size)
     }
 
     @Test
     @Order(6)
     fun activateInstructor() {
-        val instructor: InstructorDTO = instructorService.findInstructorById(-3)
+        val instructor: InstructorDTO = instructorService.findInstructorById("4879ee9d-27d3-4b4b-a39c-1360d70d5a04")
 
-        instructorService.activateInstructor(instructor.id)
+        instructorService.activateInstructor(instructor.id.toString())
 
-        val activeInstructor: InstructorDTO = instructorService.findInstructorById(instructor.id)
+        val activeInstructor: InstructorDTO = instructorService.findInstructorById(instructor.id.toString())
 
         assertTrue(activeInstructor.active)
     }
@@ -127,11 +128,11 @@ class InstructorServiceImplTest(@Autowired private val instructorService: Instru
     @Test
     @Order(7)
     fun deactivateInstructor() {
-        val instructor: InstructorDTO = instructorService.findInstructorById(-3)
+        val instructor: InstructorDTO = instructorService.findInstructorById("e8fd1a04-1c85-45e0-8f35-8ee8520e1800")
 
-        instructorService.deactivateInstructor(instructor.id)
+        instructorService.deactivateInstructor(instructor.id.toString())
 
-        val inactiveInstructor: InstructorDTO = instructorService.findInstructorById(instructor.id)
+        val inactiveInstructor: InstructorDTO = instructorService.findInstructorById(instructor.id.toString())
 
         assertTrue(!inactiveInstructor.active)
     }

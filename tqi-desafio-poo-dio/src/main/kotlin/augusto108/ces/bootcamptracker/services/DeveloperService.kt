@@ -10,15 +10,15 @@ interface DeveloperService {
 
     fun findAllDevelopers(page: Int, max: Int): PagedModel<EntityModel<DeveloperDTO>>
 
-    fun findDeveloperById(id: Int): DeveloperDTO
+    fun findDeveloperById(id: String): DeveloperDTO
 
-    fun developerById(id: Int): Developer
+    fun developerById(id: String): Developer
 
     fun updateDeveloper(developer: Developer): DeveloperDTO
 
-    fun deleteDeveloper(id: Int)
+    fun deleteDeveloper(id: String)
 
-    fun activateDeveloper(id: Int)
+    fun activateDeveloper(id: String)
 
-    fun deactivateDeveloper(id: Int)
+    fun deactivateDeveloper(id: String)
 }

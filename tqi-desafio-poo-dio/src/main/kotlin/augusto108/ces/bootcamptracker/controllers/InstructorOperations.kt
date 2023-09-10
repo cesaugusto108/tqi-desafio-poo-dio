@@ -28,7 +28,7 @@ interface InstructorOperations {
 
     @GetMapping("/{id}", produces = [MediaType.APPLICATION_JSON, MediaType.APPLICATION_YAML])
     @FindByIdOperation
-    fun findInstructorById(@PathVariable("id") id: Int): ResponseEntity<InstructorDTO>
+    fun findInstructorById(@PathVariable("id") id: String): ResponseEntity<InstructorDTO>
 
     @PutMapping(
         consumes = [MediaType.APPLICATION_JSON, MediaType.APPLICATION_YAML],
@@ -39,13 +39,13 @@ interface InstructorOperations {
 
     @DeleteMapping("/{id}")
     @DeleteOperation
-    fun deleteInstructor(@PathVariable("id") id: Int): ResponseEntity<Unit>
+    fun deleteInstructor(@PathVariable("id") id: String): ResponseEntity<Unit>
 
     @PatchMapping("/active/{id}")
     @ActivateInstructor
-    fun activateInstructor(@PathVariable("id") id: Int): ResponseEntity<Unit>
+    fun activateInstructor(@PathVariable("id") id: String): ResponseEntity<Unit>
 
     @PatchMapping("/inactive/{id}")
     @DeactivateInstructor
-    fun deactivateInstructor(@PathVariable("id") id: Int): ResponseEntity<Unit>
+    fun deactivateInstructor(@PathVariable("id") id: String): ResponseEntity<Unit>
 }

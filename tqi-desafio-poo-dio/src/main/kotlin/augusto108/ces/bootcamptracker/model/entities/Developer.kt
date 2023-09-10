@@ -1,6 +1,7 @@
 package augusto108.ces.bootcamptracker.model.entities
 
 import jakarta.persistence.*
+import java.util.*
 
 @Entity
 @DiscriminatorValue(value = "developer")
@@ -12,7 +13,7 @@ class Developer(
     username: String = "",
     password: String = "",
     active: Boolean = true,
-    id: Int = 0
+    id: UUID? = null
 ) : Person(name, age, email, username, password, active, id) {
 
     @ManyToMany(fetch = FetchType.EAGER)

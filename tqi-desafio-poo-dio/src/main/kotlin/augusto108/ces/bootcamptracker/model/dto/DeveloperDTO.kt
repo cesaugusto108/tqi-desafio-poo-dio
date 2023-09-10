@@ -2,6 +2,7 @@ package augusto108.ces.bootcamptracker.model.dto
 
 import augusto108.ces.bootcamptracker.model.entities.Bootcamp
 import augusto108.ces.bootcamptracker.model.entities.Name
+import java.util.*
 
 class DeveloperDTO(
     var level: Int = 0,
@@ -10,7 +11,7 @@ class DeveloperDTO(
     email: String = "",
     username: String = "",
     active: Boolean = true,
-    id: Int = 0
+    id: UUID? = null
 ) : PersonDTO(name, age, email, username, active, id) {
     var bootcamps: MutableSet<Bootcamp> = HashSet()
 

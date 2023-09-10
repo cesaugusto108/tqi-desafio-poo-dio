@@ -4,14 +4,15 @@ import augusto108.ces.bootcamptracker.exceptions.NoResultForQueryException
 import augusto108.ces.bootcamptracker.model.dao.DeveloperDao
 import augusto108.ces.bootcamptracker.model.dto.DeveloperDTO
 import augusto108.ces.bootcamptracker.model.entities.Developer
-import augusto108.ces.bootcamptracker.model.mapper.map
-import augusto108.ces.bootcamptracker.services.PageRequest.getPageRequest
+import augusto108.ces.bootcamptracker.model.mapper.personMap
+import augusto108.ces.bootcamptracker.services.PageRequest.getPersonPageRequest
 import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.data.web.PagedResourcesAssembler
 import org.springframework.hateoas.EntityModel
 import org.springframework.hateoas.PagedModel
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.util.*
 
 @Service
 @Transactional
@@ -20,37 +21,35 @@ class DeveloperServiceImpl(
     private val pagedResourcesAssembler: PagedResourcesAssembler<DeveloperDTO>
 ) : DeveloperService {
     override fun saveDeveloper(developer: Developer): DeveloperDTO =
-        developerDao.saveDeveloper(developer).map(DeveloperDTO::class.java)
+        developerDao.saveDeveloper(developer).personMap(DeveloperDTO::class.java)
 
     override fun findAllDevelopers(page: Int, max: Int): PagedModel<EntityModel<DeveloperDTO>> {
         val developerDTOList: MutableList<DeveloperDTO> = ArrayList()
 
-        developerDao.findAllDevelopers().forEach { developerDTOList.add(it.map(DeveloperDTO::class.java)) }
+        developerDao.findAllDevelopers().forEach { developerDTOList.add(it.personMap(DeveloperDTO::class.java)) }
 
-        return pagedResourcesAssembler.toModel(getPageRequest(page, max, developerDTOList))
+        return pagedResourcesAssembler.toModel(getPersonPageRequest(page, max, developerDTOList))
     }
 
-    override fun findDeveloperById(id: Int): DeveloperDTO = developerById(id).map(DeveloperDTO::class.java)
+    override fun findDeveloperById(id: String): DeveloperDTO = developerById(id).personMap(DeveloperDTO::class.java)
 
-    override fun developerById(id: Int): Developer =
+    override fun developerById(id: String): Developer =
         try {
-            developerDao.findDeveloperById(id)
+            developerDao.findDeveloperById(UUID.fromString(id))
         } catch (e: EmptyResultDataAccessException) {
             throw NoResultForQueryException("Id: $id")
-        } catch (e: NumberFormatException) {
-            throw NumberFormatException()
         }
 
     override fun updateDeveloper(developer: Developer): DeveloperDTO =
-        developerDao.updateDeveloper(developer).map(DeveloperDTO::class.java)
+        developerDao.updateDeveloper(developer).personMap(DeveloperDTO::class.java)
 
-    override fun deleteDeveloper(id: Int): Unit = developerDao.deleteDeveloper(id)
+    override fun deleteDeveloper(id: String): Unit = developerDao.deleteDeveloper(UUID.fromString(id))
 
-    override fun activateDeveloper(id: Int) {
-        developerDao.activateDeveloper(id)
+    override fun activateDeveloper(id: String) {
+        developerDao.activateDeveloper(UUID.fromString(id))
     }
 
-    override fun deactivateDeveloper(id: Int) {
-        developerDao.deactivateDeveloper(id)
+    override fun deactivateDeveloper(id: String) {
+        developerDao.deactivateDeveloper(UUID.fromString(id))
     }
 }

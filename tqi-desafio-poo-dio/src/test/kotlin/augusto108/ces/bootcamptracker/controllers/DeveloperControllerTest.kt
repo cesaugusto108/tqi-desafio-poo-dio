@@ -28,6 +28,7 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.MvcResult
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
+import java.util.*
 import augusto108.ces.bootcamptracker.util.MediaType as UtilMediaType
 
 @SpringBootTest
@@ -72,12 +73,14 @@ class DeveloperControllerTest(
             .andExpect(jsonPath("$.name.lastName", `is`("Pires")))
             .andExpect(jsonPath("$.email", `is`("rosana@email.com")))
             .andExpect(jsonPath("$.level", `is`(3)))
-            .andExpect(jsonPath("$._links.self.href", `is`("http://localhost${API_VERSION}developers/1")))
             .andExpect(jsonPath("$._links.all.href", `is`("http://localhost${API_VERSION}developers")))
 
         val pagedModel: PagedModel<EntityModel<DeveloperDTO>> =
             developerService.findAllDevelopers(Integer.parseInt(page), Integer.parseInt(max))
-        developerService.deleteDeveloper(pagedModel.content.toList()[2].content?.id!!)
+        val persistedDeveloper: DeveloperDTO? =
+            pagedModel.content.stream().filter { it.content?.email == "rosana@email.com" }.findFirst().get().content
+
+        developerService.deleteDeveloper(persistedDeveloper?.id.toString())
     }
 
     @Test
@@ -93,11 +96,11 @@ class DeveloperControllerTest(
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(header().string("X-Page-Number", "0"))
             .andExpect(header().string("X-Page-Size", "10"))
-            .andExpect(jsonPath("$._embedded.developerDTOList[0].id", `is`(-2)))
-            .andExpect(jsonPath("$._embedded.developerDTOList[0].age", `is`(28)))
-            .andExpect(jsonPath("$._embedded.developerDTOList[0].name.lastName", `is`("Moura")))
-            .andExpect(jsonPath("$._embedded.developerDTOList[0].email", `is`("carlos@email.com")))
-            .andExpect(jsonPath("$._embedded.developerDTOList[0].level", `is`(4)))
+            .andExpect(jsonPath("$._embedded.developerDTOList[0].id", `is`("96f2c93e-dc1b-4ce1-9aee-989a2cd9f722")))
+            .andExpect(jsonPath("$._embedded.developerDTOList[0].age", `is`(49)))
+            .andExpect(jsonPath("$._embedded.developerDTOList[0].name.lastName", `is`("Alves")))
+            .andExpect(jsonPath("$._embedded.developerDTOList[0].email", `is`("fernando@email.com")))
+            .andExpect(jsonPath("$._embedded.developerDTOList[0].level", `is`(9)))
             .andExpect(
                 jsonPath(
                     "$._embedded.developerDTOList[0]._links.self.href",
@@ -106,8 +109,8 @@ class DeveloperControllerTest(
             )
             .andExpect(
                 jsonPath(
-                    "$._embedded.developerDTOList[0]._links.developer-2.href",
-                    `is`("http://localhost${API_VERSION}developers/-2")
+                    "$._embedded.developerDTOList[0]._links.developer96f2c93e-dc1b-4ce1-9aee-989a2cd9f722.href",
+                    `is`("http://localhost${API_VERSION}developers/96f2c93e-dc1b-4ce1-9aee-989a2cd9f722")
                 )
             )
             .andExpect(jsonPath("$.page.size", `is`(10)))
@@ -126,7 +129,7 @@ class DeveloperControllerTest(
             .andExpect(content().contentType(UtilMediaType.APPLICATION_YAML))
             .andReturn()
 
-        val yamlResponse = "email: \"josecc@email.com\""
+        val yamlResponse = "email: \"fernando@email.com\""
 
         assertTrue(result.response.contentAsString.contains(yamlResponse))
     }
@@ -134,19 +137,29 @@ class DeveloperControllerTest(
     @Test
     @Order(2)
     fun findDeveloperById() {
-        mockMvc.perform(get("${API_VERSION}developers/{id}", -1).header(HEADER_KEY, HEADER_VALUE))
+        mockMvc.perform(
+            get("${API_VERSION}developers/{id}", "96f2c93e-dc1b-4ce1-9aee-989a2cd9f7ad").header(
+                HEADER_KEY,
+                HEADER_VALUE
+            )
+        )
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.id", `is`(-1)))
+            .andExpect(jsonPath("$.id", `is`("96f2c93e-dc1b-4ce1-9aee-989a2cd9f7ad")))
             .andExpect(jsonPath("$.age", `is`(29)))
             .andExpect(jsonPath("$.name.lastName", `is`("Costa")))
             .andExpect(jsonPath("$.email", `is`("josecc@email.com")))
             .andExpect(jsonPath("$.level", `is`(2)))
-            .andExpect(jsonPath("$._links.self.href", `is`("http://localhost${API_VERSION}developers/-1")))
+            .andExpect(
+                jsonPath(
+                    "$._links.self.href",
+                    `is`("http://localhost${API_VERSION}developers/96f2c93e-dc1b-4ce1-9aee-989a2cd9f7ad")
+                )
+            )
             .andExpect(jsonPath("$._links.all.href", `is`("http://localhost${API_VERSION}developers")))
 
         val result: MvcResult = mockMvc.perform(
-            get("${API_VERSION}developers/{id}", -1)
+            get("${API_VERSION}developers/{id}", "96f2c93e-dc1b-4ce1-9aee-989a2cd9f7ad")
                 .header(HEADER_KEY, HEADER_VALUE)
                 .accept(UtilMediaType.APPLICATION_YAML)
         )
@@ -169,7 +182,7 @@ class DeveloperControllerTest(
                 email = "pedro@email.com",
                 username = "pedrosantos",
                 age = 31,
-                id = -1
+                id = UUID.fromString("d8b5e8de-d938-4daa-9699-b9cfcc599e37")
             )
 
         mockMvc.perform(
@@ -181,13 +194,18 @@ class DeveloperControllerTest(
         )
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.id", `is`(-1)))
+            .andExpect(jsonPath("$.id", `is`("d8b5e8de-d938-4daa-9699-b9cfcc599e37")))
             .andExpect(jsonPath("$.age", `is`(31)))
             .andExpect(jsonPath("$.name.lastName", `is`("Santos")))
             .andExpect(jsonPath("$.email", `is`("pedro@email.com")))
             .andExpect(jsonPath("$.username", `is`("pedrosantos")))
             .andExpect(jsonPath("$.level", `is`(7)))
-            .andExpect(jsonPath("$._links.self.href", `is`("http://localhost${API_VERSION}developers/-1")))
+            .andExpect(
+                jsonPath(
+                    "$._links.self.href",
+                    `is`("http://localhost${API_VERSION}developers/d8b5e8de-d938-4daa-9699-b9cfcc599e37")
+                )
+            )
             .andExpect(jsonPath("$._links.all.href", `is`("http://localhost${API_VERSION}developers")))
     }
 
@@ -206,7 +224,7 @@ class DeveloperControllerTest(
         val d: DeveloperDTO = developerService.saveDeveloper(developer)
 
         mockMvc.perform(
-            delete("${API_VERSION}developers/{id}", d.id)
+            delete("${API_VERSION}developers/{id}", d.id.toString())
                 .with(csrf())
                 .header(HEADER_KEY, HEADER_VALUE)
         )
@@ -215,20 +233,20 @@ class DeveloperControllerTest(
         val pagedModel: PagedModel<EntityModel<DeveloperDTO>> =
             developerService.findAllDevelopers(Integer.parseInt(page), Integer.parseInt(max))
 
-        assertEquals(2, pagedModel.content.size)
+        assertEquals(3, pagedModel.content.size)
     }
 
     @Test
     @Order(6)
     fun activateDeveloper() {
         mockMvc.perform(
-            patch("${API_VERSION}developers/active/{id}", -1)
+            patch("${API_VERSION}developers/active/{id}", "96f2c93e-dc1b-4ce1-9aee-989a2cd9f7ad")
                 .with(csrf())
                 .header(HEADER_KEY, HEADER_VALUE)
         )
             .andExpect(status().isNoContent)
 
-        val developer: DeveloperDTO = developerService.findDeveloperById(-1)
+        val developer: DeveloperDTO = developerService.findDeveloperById("96f2c93e-dc1b-4ce1-9aee-989a2cd9f7ad")
 
         assertTrue(developer.active)
     }
@@ -237,13 +255,13 @@ class DeveloperControllerTest(
     @Order(7)
     fun deactivateDeveloper() {
         mockMvc.perform(
-            patch("${API_VERSION}developers/inactive/{id}", -1)
+            patch("${API_VERSION}developers/inactive/{id}", "d8b5e8de-d938-4daa-9699-b9cfcc599e37")
                 .with(csrf())
                 .header(HEADER_KEY, HEADER_VALUE)
         )
             .andExpect(status().isNoContent)
 
-        val developer: DeveloperDTO = developerService.findDeveloperById(-1)
+        val developer: DeveloperDTO = developerService.findDeveloperById("d8b5e8de-d938-4daa-9699-b9cfcc599e37")
 
         assertTrue(!developer.active)
     }

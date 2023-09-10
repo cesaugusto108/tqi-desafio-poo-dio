@@ -45,7 +45,7 @@ class InstructorController(private val instructorService: InstructorService) : I
         return ResponseEntity.status(HttpStatus.OK).headers(headers).body(pagedModel)
     }
 
-    override fun findInstructorById(id: Int): ResponseEntity<InstructorDTO> {
+    override fun findInstructorById(id: String): ResponseEntity<InstructorDTO> {
         val instructor: InstructorDTO = instructorService.findInstructorById(id)
         instructor.add(linkTo(InstructorController::class.java).slash("/${instructor.id}").withSelfRel())
         instructor.add(linkTo(InstructorController::class.java).withRel("all"))
@@ -61,14 +61,14 @@ class InstructorController(private val instructorService: InstructorService) : I
         return ResponseEntity.status(HttpStatus.OK).body(updatedInstructor)
     }
 
-    override fun deleteInstructor(id: Int): ResponseEntity<Unit> =
+    override fun deleteInstructor(id: String): ResponseEntity<Unit> =
         ResponseEntity.status(HttpStatus.NO_CONTENT).body(instructorService.deleteInstructor(id))
 
-    override fun activateInstructor(id: Int): ResponseEntity<Unit> {
+    override fun activateInstructor(id: String): ResponseEntity<Unit> {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(instructorService.activateInstructor(id))
     }
 
-    override fun deactivateInstructor(id: Int): ResponseEntity<Unit> {
+    override fun deactivateInstructor(id: String): ResponseEntity<Unit> {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(instructorService.deactivateInstructor(id))
     }
 }

@@ -44,7 +44,7 @@ class DeveloperController(private val developerService: DeveloperService) : Deve
         return ResponseEntity.status(HttpStatus.OK).headers(headers).body(pagedModel)
     }
 
-    override fun findDeveloperById(id: Int): ResponseEntity<DeveloperDTO> {
+    override fun findDeveloperById(id: String): ResponseEntity<DeveloperDTO> {
         val developer: DeveloperDTO = developerService.findDeveloperById(id)
         developer.add(linkTo(DeveloperController::class.java).slash("/${developer.id}").withSelfRel())
         developer.add(linkTo(DeveloperController::class.java).withRel("all"))
@@ -60,12 +60,12 @@ class DeveloperController(private val developerService: DeveloperService) : Deve
         return ResponseEntity.status(HttpStatus.OK).body(updatedDeveloper)
     }
 
-    override fun deleteDeveloper(id: Int): ResponseEntity<Unit> =
+    override fun deleteDeveloper(id: String): ResponseEntity<Unit> =
         ResponseEntity.status(HttpStatus.NO_CONTENT).body(developerService.deleteDeveloper(id))
 
-    override fun activateDeveloper(id: Int): ResponseEntity<Unit> =
+    override fun activateDeveloper(id: String): ResponseEntity<Unit> =
         ResponseEntity.status(HttpStatus.NO_CONTENT).body(developerService.activateDeveloper(id))
 
-    override fun deactivateDeveloper(id: Int): ResponseEntity<Unit> =
+    override fun deactivateDeveloper(id: String): ResponseEntity<Unit> =
         ResponseEntity.status(HttpStatus.NO_CONTENT).body(developerService.deactivateDeveloper(id))
 }

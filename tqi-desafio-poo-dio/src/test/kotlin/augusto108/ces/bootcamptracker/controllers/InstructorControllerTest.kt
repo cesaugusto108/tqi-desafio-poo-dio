@@ -28,6 +28,7 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.MvcResult
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
+import java.util.*
 import augusto108.ces.bootcamptracker.util.MediaType as UtilMediaType
 
 @SpringBootTest
@@ -70,7 +71,10 @@ class InstructorControllerTest(
 
         val pagedModel: PagedModel<EntityModel<InstructorDTO>> =
             instructorService.findAllInstructors(Integer.parseInt(page), Integer.parseInt(max))
-        instructorService.deleteInstructor(pagedModel.content.toList()[2].content?.id!!)
+        val persistedInstructor: InstructorDTO? =
+            pagedModel.content.stream().filter { it.content?.email == "fabiana@email.com" }.findFirst().get().content
+
+        instructorService.deleteInstructor(persistedInstructor?.id.toString())
     }
 
     @Test
@@ -86,10 +90,10 @@ class InstructorControllerTest(
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(header().string("X-Page-Number", "0"))
             .andExpect(header().string("X-Page-Size", "10"))
-            .andExpect(jsonPath("$._embedded.instructorDTOList[0].id", `is`(-4)))
-            .andExpect(jsonPath("$._embedded.instructorDTOList[0].age", `is`(32)))
-            .andExpect(jsonPath("$._embedded.instructorDTOList[0].name.lastName", `is`("Santos")))
-            .andExpect(jsonPath("$._embedded.instructorDTOList[0].email", `is`("florinda@email.com")))
+            .andExpect(jsonPath("$._embedded.instructorDTOList[0].id", `is`("4879ee9d-27d3-4b4b-a39c-1360d70d5a00")))
+            .andExpect(jsonPath("$._embedded.instructorDTOList[0].age", `is`(22)))
+            .andExpect(jsonPath("$._embedded.instructorDTOList[0].name.lastName", `is`("Pires")))
+            .andExpect(jsonPath("$._embedded.instructorDTOList[0].email", `is`("osvaldo@email.com")))
             .andExpect(
                 jsonPath(
                     "$._embedded.instructorDTOList[0]._links.self.href",
@@ -98,8 +102,8 @@ class InstructorControllerTest(
             )
             .andExpect(
                 jsonPath(
-                    "$._embedded.instructorDTOList[0]._links.instructor-4.href",
-                    `is`("http://localhost${API_VERSION}instructors/-4")
+                    "$._embedded.instructorDTOList[0]._links.instructor4879ee9d-27d3-4b4b-a39c-1360d70d5a00.href",
+                    `is`("http://localhost${API_VERSION}instructors/4879ee9d-27d3-4b4b-a39c-1360d70d5a00")
                 )
             )
             .andExpect(jsonPath("$.page.size", `is`(10)))
@@ -118,7 +122,7 @@ class InstructorControllerTest(
             .andExpect(content().contentType(UtilMediaType.APPLICATION_YAML))
             .andReturn()
 
-        val yamlResponse: String = "email: \"florinda@email.com\""
+        val yamlResponse: String = "email: \"osvaldo@email.com\""
 
         assertTrue(result.response.contentAsString.contains(yamlResponse))
     }
@@ -127,20 +131,25 @@ class InstructorControllerTest(
     @Order(2)
     fun findInstructorById() {
         mockMvc.perform(
-            get("${API_VERSION}instructors/{id}", -4)
+            get("${API_VERSION}instructors/{id}", "4879ee9d-27d3-4b4b-a39c-1360d70d5a00")
                 .header(HEADER_KEY, HEADER_VALUE)
         )
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.id", `is`(-4)))
-            .andExpect(jsonPath("$.age", `is`(32)))
-            .andExpect(jsonPath("$.name.lastName", `is`("Santos")))
-            .andExpect(jsonPath("$.email", `is`("florinda@email.com")))
-            .andExpect(jsonPath("$._links.self.href", `is`("http://localhost${API_VERSION}instructors/-4")))
+            .andExpect(jsonPath("$.id", `is`("4879ee9d-27d3-4b4b-a39c-1360d70d5a00")))
+            .andExpect(jsonPath("$.age", `is`(22)))
+            .andExpect(jsonPath("$.name.lastName", `is`("Pires")))
+            .andExpect(jsonPath("$.email", `is`("osvaldo@email.com")))
+            .andExpect(
+                jsonPath(
+                    "$._links.self.href",
+                    `is`("http://localhost${API_VERSION}instructors/4879ee9d-27d3-4b4b-a39c-1360d70d5a00")
+                )
+            )
             .andExpect(jsonPath("$._links.all.href", `is`("http://localhost${API_VERSION}instructors")))
 
         val result: MvcResult = mockMvc.perform(
-            get("${API_VERSION}instructors/{id}", -4)
+            get("${API_VERSION}instructors/{id}", "4879ee9d-27d3-4b4b-a39c-1360d70d5a00")
                 .header(HEADER_KEY, HEADER_VALUE)
                 .accept(UtilMediaType.APPLICATION_YAML)
         )
@@ -148,7 +157,7 @@ class InstructorControllerTest(
             .andExpect(content().contentType(UtilMediaType.APPLICATION_YAML))
             .andReturn()
 
-        val yamlResponse: String = "email: \"florinda@email.com\""
+        val yamlResponse: String = "email: \"osvaldo@email.com\""
 
         assertTrue(result.response.contentAsString.contains(yamlResponse))
     }
@@ -162,7 +171,7 @@ class InstructorControllerTest(
                 email = "madalena@email.com",
                 username = "madalenac",
                 age = 26,
-                id = -4
+                id = UUID.fromString("4879ee9d-27d3-4b4b-a39c-1360d70d5a04")
             )
 
         mockMvc.perform(
@@ -174,12 +183,17 @@ class InstructorControllerTest(
         )
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.id", `is`(-4)))
+            .andExpect(jsonPath("$.id", `is`("4879ee9d-27d3-4b4b-a39c-1360d70d5a04")))
             .andExpect(jsonPath("$.age", `is`(26)))
             .andExpect(jsonPath("$.name.lastName", `is`("Castro")))
             .andExpect(jsonPath("$.email", `is`("madalena@email.com")))
             .andExpect(jsonPath("$.username", `is`("madalenac")))
-            .andExpect(jsonPath("$._links.self.href", `is`("http://localhost${API_VERSION}instructors/-4")))
+            .andExpect(
+                jsonPath(
+                    "$._links.self.href",
+                    `is`("http://localhost${API_VERSION}instructors/4879ee9d-27d3-4b4b-a39c-1360d70d5a04")
+                )
+            )
             .andExpect(jsonPath("$._links.all.href", `is`("http://localhost${API_VERSION}instructors")))
     }
 
@@ -206,20 +220,20 @@ class InstructorControllerTest(
         val pagedModel: PagedModel<EntityModel<InstructorDTO>> =
             instructorService.findAllInstructors(Integer.parseInt(page), Integer.parseInt(max))
 
-        assertEquals(2, pagedModel.content.size)
+        assertEquals(3, pagedModel.content.size)
     }
 
     @Test
     @Order(6)
     fun activateInstructor() {
         mockMvc.perform(
-            patch("${API_VERSION}instructors/active/{ìd}", -3)
+            patch("${API_VERSION}instructors/active/{ìd}", "4879ee9d-27d3-4b4b-a39c-1360d70d5a04")
                 .with(csrf())
                 .header(HEADER_KEY, HEADER_VALUE)
         )
             .andExpect(status().isNoContent)
 
-        val instructor: InstructorDTO = instructorService.findInstructorById(-3)
+        val instructor: InstructorDTO = instructorService.findInstructorById("4879ee9d-27d3-4b4b-a39c-1360d70d5a04")
 
         assertTrue(instructor.active)
     }
@@ -228,13 +242,13 @@ class InstructorControllerTest(
     @Order(7)
     fun deactivateInstructor() {
         mockMvc.perform(
-            patch("${API_VERSION}instructors/inactive/{ìd}", -3)
+            patch("${API_VERSION}instructors/inactive/{ìd}", "e8fd1a04-1c85-45e0-8f35-8ee8520e1800")
                 .with(csrf())
                 .header(HEADER_KEY, HEADER_VALUE)
         )
             .andExpect(status().isNoContent)
 
-        val instructor: InstructorDTO = instructorService.findInstructorById(-3)
+        val instructor: InstructorDTO = instructorService.findInstructorById("e8fd1a04-1c85-45e0-8f35-8ee8520e1800")
 
         assertTrue(!instructor.active)
     }
