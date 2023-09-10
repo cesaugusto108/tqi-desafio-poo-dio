@@ -1,6 +1,7 @@
 package augusto108.ces.bootcamptracker.model.dao
 
 import augusto108.ces.bootcamptracker.model.entities.Instructor
+import augusto108.ces.bootcamptracker.model.helpers.PropertyDuplicate.copy
 import jakarta.persistence.EntityManager
 import org.springframework.stereotype.Repository
 import java.util.*
@@ -26,7 +27,7 @@ class InstructorDaoImpl(private val entityManager: EntityManager) : InstructorDa
 
     override fun updateInstructor(instructor: Instructor): Instructor {
         var i: Instructor? = instructor.id?.let { findInstructorById(it) }
-        i = instructor.copyProperties(i!!)
+        i = instructor.copy(i!!)
 
         entityManager.persist(i)
 
