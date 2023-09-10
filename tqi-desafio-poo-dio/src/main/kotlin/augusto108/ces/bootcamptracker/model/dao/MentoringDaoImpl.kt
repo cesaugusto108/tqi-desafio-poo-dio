@@ -1,7 +1,7 @@
 package augusto108.ces.bootcamptracker.model.dao
 
 import augusto108.ces.bootcamptracker.model.entities.Mentoring
-import augusto108.ces.bootcamptracker.model.helpers.PropertyDuplicate.copy
+import augusto108.ces.bootcamptracker.model.helpers.PropertyDuplicate.copyTo
 import jakarta.persistence.EntityManager
 import org.springframework.stereotype.Repository
 
@@ -25,12 +25,12 @@ class MentoringDaoImpl(private val entityManager: EntityManager) : MentoringDao 
             .singleResult
 
     override fun updateMentoring(mentoring: Mentoring): Mentoring {
-        var m: Mentoring = findMentoringById(mentoring.id)
-        m = mentoring.copy(m)
+        val existingMentoring: Mentoring = findMentoringById(mentoring.id)
+        val updatedMentoring: Mentoring = mentoring.copyTo(existingMentoring)
 
-        entityManager.persist(m)
+        entityManager.persist(updatedMentoring)
 
-        return m
+        return updatedMentoring
     }
 
     override fun deleteMentoring(id: Int): Unit = entityManager.remove(findMentoringById(id))

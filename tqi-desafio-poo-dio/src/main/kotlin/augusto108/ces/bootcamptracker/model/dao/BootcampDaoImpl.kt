@@ -1,7 +1,7 @@
 package augusto108.ces.bootcamptracker.model.dao
 
 import augusto108.ces.bootcamptracker.model.entities.Bootcamp
-import augusto108.ces.bootcamptracker.model.helpers.PropertyDuplicate.copy
+import augusto108.ces.bootcamptracker.model.helpers.PropertyDuplicate.copyTo
 import jakarta.persistence.EntityManager
 import org.springframework.stereotype.Repository
 
@@ -25,12 +25,12 @@ class BootcampDaoImpl(private val entityManager: EntityManager) : BootcampDao {
             .singleResult
 
     override fun updateBootcamp(bootcamp: Bootcamp): Bootcamp {
-        var b: Bootcamp = findBootcampById(bootcamp.id)
-        b = bootcamp.copy(b)
+        val existingBootcamp: Bootcamp = findBootcampById(bootcamp.id)
+        val updatedBootcamp: Bootcamp = bootcamp.copyTo(existingBootcamp)
 
-        entityManager.persist(b)
+        entityManager.persist(updatedBootcamp)
 
-        return b
+        return updatedBootcamp
     }
 
     override fun deleteBootcamp(id: Int): Unit = entityManager.remove(findBootcampById(id))

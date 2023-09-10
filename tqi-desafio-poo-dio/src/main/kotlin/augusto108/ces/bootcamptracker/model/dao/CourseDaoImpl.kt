@@ -1,9 +1,10 @@
 package augusto108.ces.bootcamptracker.model.dao
 
 import augusto108.ces.bootcamptracker.model.entities.Course
-import augusto108.ces.bootcamptracker.model.helpers.PropertyDuplicate.copy
+import augusto108.ces.bootcamptracker.model.helpers.PropertyDuplicate.copyTo
 import jakarta.persistence.EntityManager
 import org.springframework.stereotype.Repository
+import org.testcontainers.shaded.org.bouncycastle.asn1.x500.style.RFC4519Style.c
 
 @Repository
 class CourseDaoImpl(private val entityManager: EntityManager) : CourseDao {
@@ -25,12 +26,12 @@ class CourseDaoImpl(private val entityManager: EntityManager) : CourseDao {
             .singleResult
 
     override fun updateCourse(course: Course): Course {
-        var c: Course = findCourseById(course.id)
-        c = course.copy(c)
+        val existingCourse: Course = findCourseById(course.id)
+        val updatedCourse: Course = course.copyTo(existingCourse)
 
-        entityManager.persist(c)
+        entityManager.persist(updatedCourse)
 
-        return c
+        return updatedCourse
     }
 
     override fun deleteCourse(id: Int): Unit = entityManager.remove(findCourseById(id))

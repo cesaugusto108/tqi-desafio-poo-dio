@@ -1,7 +1,7 @@
 package augusto108.ces.bootcamptracker.model.dao
 
 import augusto108.ces.bootcamptracker.model.entities.Developer
-import augusto108.ces.bootcamptracker.model.helpers.PropertyDuplicate.copy
+import augusto108.ces.bootcamptracker.model.helpers.PropertyDuplicate.copyTo
 import jakarta.persistence.EntityManager
 import org.springframework.stereotype.Repository
 import java.util.*
@@ -26,12 +26,12 @@ class DeveloperDaoImpl(private val entityManager: EntityManager) : DeveloperDao 
             .singleResult
 
     override fun updateDeveloper(developer: Developer): Developer {
-        var d: Developer? = developer.id?.let { findDeveloperById(it) }
-        d = developer.copy(d!!)
+        val existingDeveloper:Developer? = developer.id?.let { findDeveloperById(it) }
+        val updatedDeveloper: Developer = developer.copyTo(existingDeveloper!!)
 
-        entityManager.persist(d)
+        entityManager.persist(updatedDeveloper)
 
-        return d
+        return updatedDeveloper
     }
 
     override fun deleteDeveloper(id: UUID): Unit = entityManager.remove(findDeveloperById(id))
