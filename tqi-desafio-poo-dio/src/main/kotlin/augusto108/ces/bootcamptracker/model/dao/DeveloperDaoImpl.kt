@@ -26,7 +26,7 @@ class DeveloperDaoImpl(private val entityManager: EntityManager) : DeveloperDao 
             .singleResult
 
     override fun updateDeveloper(developer: Developer): Developer {
-        val existingDeveloper:Developer? = developer.id?.let { findDeveloperById(it) }
+        val existingDeveloper: Developer? = developer.id?.let { findDeveloperById(it) }
         val updatedDeveloper: Developer = developer.copyTo(existingDeveloper!!)
 
         entityManager.persist(updatedDeveloper)

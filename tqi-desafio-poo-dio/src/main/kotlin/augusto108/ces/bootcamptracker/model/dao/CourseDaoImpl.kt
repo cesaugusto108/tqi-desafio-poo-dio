@@ -4,7 +4,6 @@ import augusto108.ces.bootcamptracker.model.entities.Course
 import augusto108.ces.bootcamptracker.model.helpers.PropertyDuplicate.copyTo
 import jakarta.persistence.EntityManager
 import org.springframework.stereotype.Repository
-import org.testcontainers.shaded.org.bouncycastle.asn1.x500.style.RFC4519Style.c
 
 @Repository
 class CourseDaoImpl(private val entityManager: EntityManager) : CourseDao {
