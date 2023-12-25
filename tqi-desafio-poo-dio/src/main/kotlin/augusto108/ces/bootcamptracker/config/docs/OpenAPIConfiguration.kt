@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration
 
 @Configuration
 class OpenAPIConfiguration {
+
     @Bean
     fun openApiConfig(): OpenAPI =
         OpenAPI().info(Info().title("Bootcamp tracker").description("Kotlin Backend Developer challenge").version("v1"))

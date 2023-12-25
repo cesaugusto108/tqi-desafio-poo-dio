@@ -14,6 +14,7 @@ import augusto108.ces.bootcamptracker.util.MediaType as UtilMediaType
 @Configuration
 @PropertySource("classpath:app_cors.properties")
 class WebContentConfiguration : WebMvcConfigurer {
+
     @Value("\${cors.origins}")
     private val origins: String = ""
 

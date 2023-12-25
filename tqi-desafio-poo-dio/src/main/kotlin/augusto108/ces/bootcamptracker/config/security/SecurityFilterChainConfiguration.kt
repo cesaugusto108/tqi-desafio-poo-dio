@@ -20,11 +20,10 @@ class SecurityFilterChainConfiguration(
     private val authenticationProvider: AuthenticationProvider,
     private val applicationAuthenticationEntryPoint: ApplicationAuthenticationEntryPoint
 ) {
+
     @Bean
     fun securityFilterChain(httpSecurity: HttpSecurity): SecurityFilterChain {
-        httpSecurity
-            .httpBasic().disable()
-            .csrf { obj: CsrfConfigurer<HttpSecurity> -> obj.disable() }
+        httpSecurity.httpBasic().disable().csrf { obj: CsrfConfigurer<HttpSecurity> -> obj.disable() }
             .authorizeHttpRequests {
                 it
                     .requestMatchers(
