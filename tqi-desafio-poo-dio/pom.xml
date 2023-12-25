@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.0.6</version>
+        <version>3.2.1</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>augusto108.ces</groupId>
@@ -16,7 +16,8 @@
     <properties>
         <java.version>17</java.version>
         <kotlin.version>1.8.21</kotlin.version>
-        <springdoc.version>2.0.2</springdoc.version>
+        <springdoc.version>2.0.4</springdoc.version>
+        <mysql-connector-j.version>8.2.0</mysql-connector-j.version>
     </properties>
     <dependencies>
         <dependency>
@@ -74,7 +75,7 @@
         <dependency>
             <groupId>com.mysql</groupId>
             <artifactId>mysql-connector-j</artifactId>
-            <version>8.0.33</version>
+            <version>${mysql-connector-j.version}</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
@@ -124,6 +125,7 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${parent.version}</version>
             </plugin>
             <plugin>
                 <groupId>org.jetbrains.kotlin</groupId>
