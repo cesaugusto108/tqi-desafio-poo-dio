@@ -3,41 +3,50 @@ package augusto108.ces.bootcamptracker.controllers
 import augusto108.ces.bootcamptracker.annotations.bootcamp.*
 import augusto108.ces.bootcamptracker.model.dto.BootcampDTO
 import augusto108.ces.bootcamptracker.model.entities.Bootcamp
+import augusto108.ces.bootcamptracker.util.API_VERSION
 import augusto108.ces.bootcamptracker.util.MediaType
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.hateoas.EntityModel
 import org.springframework.hateoas.PagedModel
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @Tag(name = "Bootcamps", description = "endpoints to manage bootcamps information")
+@RequestMapping("${API_VERSION}bootcamps")
 interface BootcampOperations {
+
+    @ResponseStatus(HttpStatus.CREATED)
+    @SaveOperation
     @PostMapping(
         consumes = [MediaType.APPLICATION_JSON, MediaType.APPLICATION_YAML],
         produces = [MediaType.APPLICATION_JSON, MediaType.APPLICATION_YAML]
     )
-    @SaveOperation
     fun saveBootcamp(@RequestBody bootcamp: Bootcamp): ResponseEntity<BootcampDTO>
 
-    @GetMapping(produces = [MediaType.APPLICATION_JSON, MediaType.APPLICATION_YAML])
+    @ResponseStatus(HttpStatus.OK)
     @FindAllOperation
+    @GetMapping(produces = [MediaType.APPLICATION_JSON, MediaType.APPLICATION_YAML])
     fun findAllBootcamps(
         @RequestParam(defaultValue = "0", required = false) page: Int,
         @RequestParam(defaultValue = "10", required = false) max: Int
     ): ResponseEntity<PagedModel<EntityModel<BootcampDTO>>>
 
-    @GetMapping("/{id}", produces = [MediaType.APPLICATION_JSON, MediaType.APPLICATION_YAML])
+    @ResponseStatus(HttpStatus.OK)
     @FindByIdOperation
+    @GetMapping("/{id}", produces = [MediaType.APPLICATION_JSON, MediaType.APPLICATION_YAML])
     fun findBootcampById(@PathVariable("id") id: Int): ResponseEntity<BootcampDTO>
 
+    @ResponseStatus(HttpStatus.OK)
+    @UpdateOperation
     @PutMapping(
         consumes = [MediaType.APPLICATION_JSON, MediaType.APPLICATION_YAML],
         produces = [MediaType.APPLICATION_JSON, MediaType.APPLICATION_YAML]
     )
-    @UpdateOperation
     fun updateBootcamp(@RequestBody bootcamp: Bootcamp): ResponseEntity<BootcampDTO>
 
-    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteOperation
+    @DeleteMapping("/{id}")
     fun deleteBootcamp(@PathVariable("id") id: Int): ResponseEntity<Unit>
 }

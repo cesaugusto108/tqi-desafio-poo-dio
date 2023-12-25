@@ -41,6 +41,7 @@ class BootcampControllerTest(
     @Autowired private val objectMapper: ObjectMapper,
     @Autowired private val bootcampService: BootcampService
 ) : TestContainersConfig() {
+
     @Value("\${page.value}")
     var page: String = ""
 
@@ -57,7 +58,7 @@ class BootcampControllerTest(
             finishDate = null
         )
 
-        mockMvc.perform(
+        val result: MvcResult = mockMvc.perform(
             post("${API_VERSION}bootcamps")
                 .with(csrf())
                 .header(HEADER_KEY, HEADER_VALUE)
@@ -69,10 +70,21 @@ class BootcampControllerTest(
             .andExpect(jsonPath("$.description", `is`("Java backend")))
             .andExpect(jsonPath("$.details", `is`("Java and Spring backend")))
             .andExpect(jsonPath("$._links.all.href", `is`("http://localhost${API_VERSION}bootcamps")))
+            .andReturn()
 
-        val pagedModel: PagedModel<EntityModel<BootcampDTO>> =
-            bootcampService.findAllBootcamps(Integer.parseInt(page), Integer.parseInt(max))
+        val locationHeader: String? = result.response.getHeader("Location")
+        val jsonResult: String = result.response.contentAsString
+        val savedBootcamp: Bootcamp = objectMapper.readerFor(Bootcamp::class.java).readValue(jsonResult)
+        val uri = "http://localhost${API_VERSION}bootcamps/${savedBootcamp.id}"
+        assertEquals(locationHeader, uri)
+
+        val pageInt: Int = Integer.parseInt(page)
+        val maxInt: Int = Integer.parseInt(max)
+        var pagedModel: PagedModel<EntityModel<BootcampDTO>> = bootcampService.findAllBootcamps(pageInt, maxInt)
+        assertEquals(4, pagedModel.content.size)
         bootcampService.deleteBootcamp(pagedModel.content.toList()[3].content?.id!!)
+        pagedModel = bootcampService.findAllBootcamps(pageInt, maxInt)
+        assertEquals(3, pagedModel.content.size)
     }
 
     @Test
