@@ -5,6 +5,7 @@ import org.springframework.security.core.userdetails.UserDetails
 import java.util.function.Function
 
 interface JwtService {
+
     fun generateToken(claims: Map<String, Any>, userDetails: UserDetails): String
 
     fun <T> extractClaim(token: String, claimsResolver: Function<Claims, T>): T

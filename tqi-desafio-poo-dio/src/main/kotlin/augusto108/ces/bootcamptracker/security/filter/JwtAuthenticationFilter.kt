@@ -25,6 +25,7 @@ class JwtAuthenticationFilter(
     private val jwtService: JwtService,
     private val objectMapper: ObjectMapper
 ) : OncePerRequestFilter() {
+
     override fun doFilterInternal(
         request: HttpServletRequest,
         response: HttpServletResponse,
@@ -36,7 +37,6 @@ class JwtAuthenticationFilter(
 
         if ((authorizationHeader == null) || !authorizationHeader.startsWith(prefix)) {
             filterChain.doFilter(request, response)
-
             return
         }
 
@@ -44,24 +44,19 @@ class JwtAuthenticationFilter(
         try {
             identification = jwtService.extractIdentification(token)
         } catch (e: Exception) {
-            val condition: Boolean = e is ExpiredJwtException || e is MalformedJwtException
-
-            when (condition) {
+            when (e is ExpiredJwtException || e is MalformedJwtException) {
                 true -> sendExceptionResponse(response, e)
                 else -> throw Exception()
             }
-
             return
         }
 
         authenticate(identification, token, request)
-
         filterChain.doFilter(request, response)
     }
 
     private fun sendExceptionResponse(response: HttpServletResponse, e: Exception) {
         val exceptionResponse: JwtAuthenticationFilter.ExceptionResponse? = e.message?.let { ExceptionResponse("$it ") }
-
         response.status = HttpStatus.UNAUTHORIZED.value()
         response.contentType = MediaType.APPLICATION_JSON_VALUE
         response.writer.write(objectMapper.writeValueAsString(exceptionResponse))
@@ -72,16 +67,15 @@ class JwtAuthenticationFilter(
             val userDetails: UserDetails = userDetailsService.loadUserByUsername(identification)
 
             if (jwtService.validateToken(token, userDetails)) {
-                val usernamePasswordAuthenticationToken =
-                    UsernamePasswordAuthenticationToken(userDetails, null, userDetails.authorities)
-
-                usernamePasswordAuthenticationToken.details = WebAuthenticationDetailsSource().buildDetails(request)
-                SecurityContextHolder.getContext().authentication = usernamePasswordAuthenticationToken
+                val authToken = UsernamePasswordAuthenticationToken(userDetails, null, userDetails.authorities)
+                authToken.details = WebAuthenticationDetailsSource().buildDetails(request)
+                SecurityContextHolder.getContext().authentication = authToken
             }
         }
     }
 
     inner class ExceptionResponse(val message: String) {
+
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm:ss")
         val timestamp: LocalDateTime = LocalDateTime.now()
     }

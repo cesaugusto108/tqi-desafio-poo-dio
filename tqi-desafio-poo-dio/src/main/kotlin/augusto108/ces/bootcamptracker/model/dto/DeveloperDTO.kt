@@ -1,7 +1,7 @@
 package augusto108.ces.bootcamptracker.model.dto
 
-import augusto108.ces.bootcamptracker.model.entities.Bootcamp
 import augusto108.ces.bootcamptracker.model.datatypes.Name
+import augusto108.ces.bootcamptracker.model.entities.Bootcamp
 import java.util.*
 
 class DeveloperDTO(

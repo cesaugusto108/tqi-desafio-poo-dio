@@ -18,10 +18,14 @@ class AuthenticationServiceImpl(
     private val jwtService: JwtService,
     private val authenticationManager: AuthenticationManager
 ) : AuthenticationService {
+
     override fun authenticate(authenticationModel: AuthenticationModel): Token {
         authenticationManager
             .authenticate(
-                UsernamePasswordAuthenticationToken(authenticationModel.username, authenticationModel.password)
+                UsernamePasswordAuthenticationToken(
+                    authenticationModel.username,
+                    authenticationModel.password
+                )
             )
 
         val user: User = userRepository.findByIdentification(authenticationModel.username)

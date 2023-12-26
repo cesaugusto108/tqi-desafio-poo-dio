@@ -27,37 +27,22 @@ class User(
 
     id: Int = 0
 ) : SecBaseEntity(id), UserDetails {
+
     override fun getAuthorities(): Collection<GrantedAuthority> {
         val authorities: MutableList<SimpleGrantedAuthority> = arrayListOf()
-
-        for (role: UserRole in userRoles) {
-            authorities.add(SimpleGrantedAuthority(role.toString()))
-        }
-
+        userRoles.forEach { authorities.add(SimpleGrantedAuthority(it.toString())) }
         return authorities
     }
 
-    override fun getPassword(): String {
-        return pass
-    }
+    override fun getPassword(): String = pass
 
-    override fun getUsername(): String {
-        return identification
-    }
+    override fun getUsername(): String = identification
 
-    override fun isAccountNonExpired(): Boolean {
-        return accountNonExpired
-    }
+    override fun isAccountNonExpired(): Boolean = accountNonExpired
 
-    override fun isAccountNonLocked(): Boolean {
-        return accountNonLocked
-    }
+    override fun isAccountNonLocked(): Boolean = accountNonLocked
 
-    override fun isCredentialsNonExpired(): Boolean {
-        return credentialsNonExpired
-    }
+    override fun isCredentialsNonExpired(): Boolean = credentialsNonExpired
 
-    override fun isEnabled(): Boolean {
-        return enabled
-    }
+    override fun isEnabled(): Boolean = enabled
 }
