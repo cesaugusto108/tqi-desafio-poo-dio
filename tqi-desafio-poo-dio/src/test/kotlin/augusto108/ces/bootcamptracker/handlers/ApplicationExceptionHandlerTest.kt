@@ -22,6 +22,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 @WithMockUser
 @DisplayNameGeneration(DisplayNameGenerator.Simple::class)
 class ApplicationExceptionHandlerTest(@Autowired private val mockMvc: MockMvc) : TestContainersConfig() {
+
     @Test
     fun handleNotAcceptable() {
         mockMvc.perform(get("${API_VERSION}courses").accept(MediaType.APPLICATION_XML))

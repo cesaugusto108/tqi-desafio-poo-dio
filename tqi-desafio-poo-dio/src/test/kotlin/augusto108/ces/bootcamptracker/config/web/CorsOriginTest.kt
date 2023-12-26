@@ -17,15 +17,16 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 @AutoConfigureMockMvc
 @WithMockUser
 class CorsOriginTest(@Autowired private val mockMvc: MockMvc) : TestContainersConfig() {
+
+    private val urlTemplate = "${API_VERSION}courses"
+
     @Test
     fun allowedOriginTest() {
-        mockMvc.perform(get("${API_VERSION}courses").header(HEADER_KEY, HEADER_VALUE))
-            .andExpect(status().isOk)
+        mockMvc.perform(get(urlTemplate).header(HEADER_KEY, HEADER_VALUE)).andExpect(status().isOk)
     }
 
     @Test
     fun forbiddenOriginTest() {
-        mockMvc.perform(get("${API_VERSION}courses").header(HEADER_KEY, HEADER_VALUE_FORBIDDEN))
-            .andExpect(status().isForbidden)
+        mockMvc.perform(get(urlTemplate).header(HEADER_KEY, HEADER_VALUE_FORBIDDEN)).andExpect(status().isForbidden)
     }
 }

@@ -1,9 +1,9 @@
 package augusto108.ces.bootcamptracker.services
 
 import augusto108.ces.bootcamptracker.TestContainersConfig
+import augusto108.ces.bootcamptracker.model.datatypes.Name
 import augusto108.ces.bootcamptracker.model.dto.InstructorDTO
 import augusto108.ces.bootcamptracker.model.entities.Instructor
-import augusto108.ces.bootcamptracker.model.datatypes.Name
 import jakarta.persistence.NoResultException
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -22,6 +22,7 @@ import java.util.*
 @TestPropertySource("classpath:app_params.properties")
 @TestMethodOrder(MethodOrderer.OrderAnnotation::class)
 class InstructorServiceImplTest(@Autowired private val instructorService: InstructorService) : TestContainersConfig() {
+
     @Value("\${page.value}")
     var page: Int = 0
 
@@ -32,22 +33,20 @@ class InstructorServiceImplTest(@Autowired private val instructorService: Instru
     @Order(3)
     fun saveInstructor() {
         var instructors: List<EntityModel<InstructorDTO>> = instructorService.findAllInstructors(page, max).toList()
-
         assertEquals(3, instructors.size)
         assertEquals("Osvaldo Pires (osvaldo@email.com)", instructors[0].content.toString())
         assertEquals(UUID.fromString("4879ee9d-27d3-4b4b-a39c-1360d70d5a00"), instructors[0].content?.id)
-
         val instructor = Instructor(name = Name("João", "Roberto", "Silva"), email = "joao@email.com", age = 37)
-
         instructorService.saveInstructor(instructor)
 
         instructors = instructorService.findAllInstructors(page, max).toList()
-        val persistedInstructor: InstructorDTO? =
-            instructors.stream().filter { it.content?.email == "joao@email.com" }.findFirst().get().content
+        val email = "joao@email.com"
+        val persistedInstructor: InstructorDTO? = instructors
+            .stream()
+            .filter { it.content?.email == email }.findFirst().get().content
 
         assertEquals(4, instructors.size)
         assertEquals("João Roberto Silva (joao@email.com)", persistedInstructor.toString())
-
         instructorService.deleteInstructor(persistedInstructor?.id.toString())
     }
 
@@ -55,7 +54,6 @@ class InstructorServiceImplTest(@Autowired private val instructorService: Instru
     @Order(1)
     fun findAllInstructors() {
         val instructors: List<EntityModel<InstructorDTO>> = instructorService.findAllInstructors(page, max).toList()
-
         assertEquals(3, instructors.size)
         assertEquals("Osvaldo Pires (osvaldo@email.com)", instructors[0].content.toString())
         assertEquals(UUID.fromString("4879ee9d-27d3-4b4b-a39c-1360d70d5a00"), instructors[0].content?.id)
@@ -65,7 +63,6 @@ class InstructorServiceImplTest(@Autowired private val instructorService: Instru
     @Order(2)
     fun findInstructorById() {
         val instructor: InstructorDTO = instructorService.findInstructorById("4879ee9d-27d3-4b4b-a39c-1360d70d5a04")
-
         assertEquals("Maria Souza (maria@email.com)", instructor.toString())
         assertThrows<NoResultException> { instructorService.findInstructorById("4879ee9d-27d3-4b4b-a39c-1360d70d5abb") }
     }
@@ -83,9 +80,7 @@ class InstructorServiceImplTest(@Autowired private val instructorService: Instru
         )
 
         instructorService.updateInstructor(instructor)
-
         val instructors: List<EntityModel<InstructorDTO>> = instructorService.findAllInstructors(page, max).toList()
-
         assertEquals(3, instructors.size)
         assertEquals("Josias Campos Souza (josias@email.com)", instructors[1].content.toString())
         assertEquals("jcsouza", instructors[1].content?.username)
@@ -104,12 +99,8 @@ class InstructorServiceImplTest(@Autowired private val instructorService: Instru
         )
 
         val persistedInstructor: InstructorDTO = instructorService.saveInstructor(instructor)
-
-
         instructorService.deleteInstructor(persistedInstructor.id.toString())
-
         val instructors: List<EntityModel<InstructorDTO>> = instructorService.findAllInstructors(page, max).toList()
-
         assertEquals(3, instructors.size)
     }
 
@@ -117,11 +108,8 @@ class InstructorServiceImplTest(@Autowired private val instructorService: Instru
     @Order(6)
     fun activateInstructor() {
         val instructor: InstructorDTO = instructorService.findInstructorById("4879ee9d-27d3-4b4b-a39c-1360d70d5a04")
-
         instructorService.activateInstructor(instructor.id.toString())
-
         val activeInstructor: InstructorDTO = instructorService.findInstructorById(instructor.id.toString())
-
         assertTrue(activeInstructor.active)
     }
 
@@ -129,11 +117,8 @@ class InstructorServiceImplTest(@Autowired private val instructorService: Instru
     @Order(7)
     fun deactivateInstructor() {
         val instructor: InstructorDTO = instructorService.findInstructorById("e8fd1a04-1c85-45e0-8f35-8ee8520e1800")
-
         instructorService.deactivateInstructor(instructor.id.toString())
-
         val inactiveInstructor: InstructorDTO = instructorService.findInstructorById(instructor.id.toString())
-
         assertTrue(!inactiveInstructor.active)
     }
 }

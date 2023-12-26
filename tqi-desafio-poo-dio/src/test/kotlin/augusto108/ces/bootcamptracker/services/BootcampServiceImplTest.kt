@@ -20,6 +20,7 @@ import java.time.LocalDateTime
 @TestPropertySource("classpath:app_params.properties")
 @TestMethodOrder(MethodOrderer.OrderAnnotation::class)
 class BootcampServiceImplTest(@Autowired private val bootcampService: BootcampService) : TestContainersConfig() {
+
     @Value("\${page.value}")
     var page: Int = 0
 
@@ -30,7 +31,6 @@ class BootcampServiceImplTest(@Autowired private val bootcampService: BootcampSe
     @Order(3)
     fun saveBootcamp() {
         var bootcamps: List<EntityModel<BootcampDTO>> = bootcampService.findAllBootcamps(page, max).toList()
-
         assertEquals(3, bootcamps.size)
         assertEquals("AWS Experience", bootcamps[0].content.toString())
         assertEquals(-3, bootcamps[0].content?.id)
@@ -43,12 +43,9 @@ class BootcampServiceImplTest(@Autowired private val bootcampService: BootcampSe
         )
 
         bootcampService.saveBootcamp(bootcamp)
-
         bootcamps = bootcampService.findAllBootcamps(page, max).toList()
-
         assertEquals(4, bootcamps.size)
         assertEquals("AWS Cloud Computing", bootcamps[3].content.toString())
-
         bootcampService.deleteBootcamp(bootcamps[3].content?.id!!)
     }
 
@@ -56,7 +53,6 @@ class BootcampServiceImplTest(@Autowired private val bootcampService: BootcampSe
     @Order(1)
     fun findAllBootcamps() {
         val bootcamps: List<EntityModel<BootcampDTO>> = bootcampService.findAllBootcamps(page, max).toList()
-
         assertEquals(3, bootcamps.size)
         assertEquals("AWS Experience", bootcamps[0].content.toString())
         assertEquals(-3, bootcamps[0].content?.id)
@@ -66,7 +62,6 @@ class BootcampServiceImplTest(@Autowired private val bootcampService: BootcampSe
     @Order(2)
     fun findBootcampById() {
         val bootcamp: BootcampDTO = bootcampService.findBootcampById(-3)
-
         assertEquals("AWS Experience", bootcamp.toString())
         assertThrows<NoResultException> { bootcampService.findBootcampById(0) }
         assertThrows<NumberFormatException> { bootcampService.findBootcampById("aaa".toInt()) }
@@ -84,9 +79,7 @@ class BootcampServiceImplTest(@Autowired private val bootcampService: BootcampSe
         )
 
         bootcampService.updateBootcamp(bootcamp)
-
         val bootcamps: List<EntityModel<BootcampDTO>> = bootcampService.findAllBootcamps(page, max).toList()
-
         assertEquals(3, bootcamps.size)
         assertEquals("TQI Go Backend", bootcamps[0].content.toString())
         assertEquals(-3, bootcamps[0].content?.id)
@@ -103,13 +96,9 @@ class BootcampServiceImplTest(@Autowired private val bootcampService: BootcampSe
         )
 
         bootcampService.saveBootcamp(bootcamp)
-
         var bootcamps: List<EntityModel<BootcampDTO>> = bootcampService.findAllBootcamps(page, max).toList()
-
         bootcampService.deleteBootcamp(bootcamps[3].content?.id!!)
-
         bootcamps = bootcampService.findAllBootcamps(page, max).toList()
-
         assertEquals(3, bootcamps.size)
     }
 }

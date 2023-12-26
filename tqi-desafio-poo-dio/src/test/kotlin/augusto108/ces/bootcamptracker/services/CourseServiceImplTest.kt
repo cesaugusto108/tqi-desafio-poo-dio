@@ -19,6 +19,7 @@ import org.springframework.test.context.TestPropertySource
 @TestPropertySource("classpath:app_params.properties")
 @TestMethodOrder(MethodOrderer.OrderAnnotation::class)
 class CourseServiceImplTest(@Autowired private val courseService: CourseService) : TestContainersConfig() {
+
     @Value("\${page.value}")
     var page: Int = 0
 
@@ -29,7 +30,6 @@ class CourseServiceImplTest(@Autowired private val courseService: CourseService)
     @Order(3)
     fun saveCourse() {
         var courses: List<EntityModel<CourseDTO>> = courseService.findAllCourses(page, max).toList()
-
         assertEquals(2, courses.size)
         assertEquals("Sintaxe Kotlin (course)", courses[0].content.toString())
         assertEquals(-4, courses[0].content?.id)
@@ -38,12 +38,9 @@ class CourseServiceImplTest(@Autowired private val courseService: CourseService)
             Course(date = null, hours = 300, description = "Django", details = "Python and Django")
 
         courseService.saveCourse(course)
-
         courses = courseService.findAllCourses(page, max).toList()
-
         assertEquals(3, courses.size)
         assertEquals("Django (course)", courses[2].content.toString())
-
         courseService.deleteCourse(courses[2].content?.id!!)
     }
 
@@ -51,7 +48,6 @@ class CourseServiceImplTest(@Autowired private val courseService: CourseService)
     @Order(1)
     fun findAllCourses() {
         val courses: List<EntityModel<CourseDTO>> = courseService.findAllCourses(page, max).toList()
-
         assertEquals(2, courses.size)
         assertEquals("Sintaxe Kotlin (course)", courses[0].content.toString())
         assertEquals(-4, courses[0].content?.id)
@@ -61,7 +57,6 @@ class CourseServiceImplTest(@Autowired private val courseService: CourseService)
     @Order(2)
     fun findCourseById() {
         val course: CourseDTO = courseService.findCourseById(-4)
-
         assertEquals("Sintaxe Kotlin (course)", course.toString())
         assertThrows<NoResultException> { courseService.findCourseById(0) }
         assertThrows<NumberFormatException> { courseService.findCourseById("aaa".toInt()) }
@@ -71,11 +66,8 @@ class CourseServiceImplTest(@Autowired private val courseService: CourseService)
     @Order(4)
     fun updateCourse() {
         val course = Course(date = null, hours = 300, description = "Scrum", details = "Scrum and Agile", -3)
-
         courseService.updateCourse(course)
-
         val courses: List<EntityModel<CourseDTO>> = courseService.findAllCourses(page, max).toList()
-
         assertEquals(2, courses.size)
         assertEquals("Scrum (course)", courses[1].content.toString())
         assertEquals(-3, courses[1].content?.id)
@@ -85,15 +77,10 @@ class CourseServiceImplTest(@Autowired private val courseService: CourseService)
     @Order(5)
     fun deleteCourse() {
         val course = Course(date = null, hours = 300, description = "POO", details = "Programação orientada a objetos")
-
         courseService.saveCourse(course)
-
         var courses: List<EntityModel<CourseDTO>> = courseService.findAllCourses(page, max).toList()
-
         courseService.deleteCourse(courses[2].content?.id!!)
-
         courses = courseService.findAllCourses(page, max).toList()
-
         assertEquals(2, courses.size)
     }
 }

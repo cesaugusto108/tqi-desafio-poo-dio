@@ -31,6 +31,7 @@ class AuthenticationControllerTest(
     @Autowired private val mockMvc: MockMvc,
     @Autowired private val objectMapper: ObjectMapper
 ) : TestContainersConfig() {
+
     @Value("\${security.test.user.password}")
     private val password: String = ""
 

@@ -1,9 +1,9 @@
 package augusto108.ces.bootcamptracker.services
 
 import augusto108.ces.bootcamptracker.TestContainersConfig
+import augusto108.ces.bootcamptracker.model.datatypes.Name
 import augusto108.ces.bootcamptracker.model.dto.DeveloperDTO
 import augusto108.ces.bootcamptracker.model.entities.Developer
-import augusto108.ces.bootcamptracker.model.datatypes.Name
 import jakarta.persistence.NoResultException
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -22,6 +22,7 @@ import java.util.*
 @TestPropertySource("classpath:app_params.properties")
 @TestMethodOrder(MethodOrderer.OrderAnnotation::class)
 class DeveloperServiceImplTest(@Autowired private val developerService: DeveloperService) : TestContainersConfig() {
+
     @Value("\${page.value}")
     var page: Int = 0
 
@@ -32,7 +33,6 @@ class DeveloperServiceImplTest(@Autowired private val developerService: Develope
     @Order(3)
     fun saveDeveloper() {
         var developers: List<EntityModel<DeveloperDTO>> = developerService.findAllDevelopers(page, max).toList()
-
         assertEquals(3, developers.size)
         assertEquals("(9) Fernando Alves (fernando@email.com)", developers[0].content.toString())
         assertEquals(UUID.fromString("96f2c93e-dc1b-4ce1-9aee-989a2cd9f722"), developers[0].content?.id)
@@ -45,15 +45,14 @@ class DeveloperServiceImplTest(@Autowired private val developerService: Develope
         )
 
         developerService.saveDeveloper(developer)
-
         developers = developerService.findAllDevelopers(page, max).toList()
-
-        val persistedDeveloper: DeveloperDTO? =
-            developers.stream().filter { it.content?.email == "daniela@email.com" }.findFirst().get().content
+        val email = "daniela@email.com"
+        val persistedDeveloper: DeveloperDTO? = developers
+            .stream()
+            .filter { it.content?.email == email }.findFirst().get().content
 
         assertEquals(4, developers.size)
         assertEquals("(4) Daniela Pereira Melo (daniela@email.com)", persistedDeveloper.toString())
-
         developerService.deleteDeveloper(persistedDeveloper?.id.toString())
     }
 
@@ -61,7 +60,6 @@ class DeveloperServiceImplTest(@Autowired private val developerService: Develope
     @Order(1)
     fun findAllDevelopers() {
         val developers: List<EntityModel<DeveloperDTO>> = developerService.findAllDevelopers(page, max).toList()
-
         assertEquals(3, developers.size)
         assertEquals("(2) José Carlos Costa (josecc@email.com)", developers[1].content.toString())
         assertEquals(UUID.fromString("96f2c93e-dc1b-4ce1-9aee-989a2cd9f7ad"), developers[1].content?.id)
@@ -71,7 +69,6 @@ class DeveloperServiceImplTest(@Autowired private val developerService: Develope
     @Order(2)
     fun findDeveloperById() {
         val developer: DeveloperDTO = developerService.findDeveloperById("96f2c93e-dc1b-4ce1-9aee-989a2cd9f722")
-
         assertEquals("(9) Fernando Alves (fernando@email.com)", developer.toString())
         assertThrows<NoResultException> { developerService.findDeveloperById("96f2c93e-dc1b-4ce1-9aee-989a2cd9f788") }
     }
@@ -90,9 +87,7 @@ class DeveloperServiceImplTest(@Autowired private val developerService: Develope
         )
 
         developerService.updateDeveloper(developer)
-
         val developers: List<EntityModel<DeveloperDTO>> = developerService.findAllDevelopers(page, max).toList()
-
         assertEquals(3, developers.size)
         assertEquals("(6) Paula Campos Resende (paula@email.com)", developers[2].content.toString())
         assertEquals("pcresende", developers[2].content?.username)
@@ -110,11 +105,8 @@ class DeveloperServiceImplTest(@Autowired private val developerService: Develope
         )
 
         val persistedDeveloper: DeveloperDTO = developerService.saveDeveloper(developer)
-
         developerService.deleteDeveloper(persistedDeveloper.id.toString())
-
         val developers: List<EntityModel<DeveloperDTO>> = developerService.findAllDevelopers(page, max).toList()
-
         assertEquals(3, developers.size)
     }
 
@@ -122,11 +114,8 @@ class DeveloperServiceImplTest(@Autowired private val developerService: Develope
     @Order(6)
     fun activateDeveloper() {
         val developer: DeveloperDTO = developerService.findDeveloperById("96f2c93e-dc1b-4ce1-9aee-989a2cd9f7ad")
-
         developerService.activateDeveloper(developer.id.toString())
-
         val activeDeveloper: DeveloperDTO = developerService.findDeveloperById(developer.id.toString())
-
         assertTrue(activeDeveloper.active)
     }
 
@@ -134,11 +123,8 @@ class DeveloperServiceImplTest(@Autowired private val developerService: Develope
     @Order(7)
     fun deactivateDeveloper() {
         val developer: DeveloperDTO = developerService.findDeveloperById("d8b5e8de-d938-4daa-9699-b9cfcc599e37")
-
         developerService.deactivateDeveloper(developer.id.toString())
-
         val inactiveDeveloper: DeveloperDTO = developerService.findDeveloperById(developer.id.toString())
-
         assertTrue(!inactiveDeveloper.active)
     }
 }
