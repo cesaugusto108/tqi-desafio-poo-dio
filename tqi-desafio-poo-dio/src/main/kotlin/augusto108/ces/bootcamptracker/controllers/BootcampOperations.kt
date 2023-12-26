@@ -18,15 +18,12 @@ interface BootcampOperations {
 
     @ResponseStatus(HttpStatus.CREATED)
     @SaveOperation
-    @PostMapping(
-        consumes = [MediaType.APPLICATION_JSON, MediaType.APPLICATION_YAML],
-        produces = [MediaType.APPLICATION_JSON, MediaType.APPLICATION_YAML]
-    )
+    @PostMapping(consumes = [MediaType.JSON, MediaType.YAML], produces = [MediaType.JSON, MediaType.YAML])
     fun saveBootcamp(@RequestBody bootcamp: Bootcamp): ResponseEntity<BootcampDTO>
 
     @ResponseStatus(HttpStatus.OK)
     @FindAllOperation
-    @GetMapping(produces = [MediaType.APPLICATION_JSON, MediaType.APPLICATION_YAML])
+    @GetMapping(produces = [MediaType.JSON, MediaType.YAML])
     fun findAllBootcamps(
         @RequestParam(defaultValue = "0", required = false) page: Int,
         @RequestParam(defaultValue = "10", required = false) max: Int
@@ -34,15 +31,12 @@ interface BootcampOperations {
 
     @ResponseStatus(HttpStatus.OK)
     @FindByIdOperation
-    @GetMapping("/{id}", produces = [MediaType.APPLICATION_JSON, MediaType.APPLICATION_YAML])
+    @GetMapping("/{id}", produces = [MediaType.JSON, MediaType.YAML])
     fun findBootcampById(@PathVariable("id") id: Int): ResponseEntity<BootcampDTO>
 
     @ResponseStatus(HttpStatus.OK)
     @UpdateOperation
-    @PutMapping(
-        consumes = [MediaType.APPLICATION_JSON, MediaType.APPLICATION_YAML],
-        produces = [MediaType.APPLICATION_JSON, MediaType.APPLICATION_YAML]
-    )
+    @PutMapping(consumes = [MediaType.JSON, MediaType.YAML], produces = [MediaType.JSON, MediaType.YAML])
     fun updateBootcamp(@RequestBody bootcamp: Bootcamp): ResponseEntity<BootcampDTO>
 
     @ResponseStatus(HttpStatus.NO_CONTENT)

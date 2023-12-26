@@ -43,6 +43,7 @@ class DeveloperControllerTest(
     @Autowired private val objectMapper: ObjectMapper,
     @Autowired private val developerService: DeveloperService
 ) : TestContainersConfig() {
+
     @Value("\${page.value}")
     var page: String = ""
 
@@ -60,7 +61,7 @@ class DeveloperControllerTest(
                 age = 39
             )
 
-        mockMvc.perform(
+        val result: MvcResult = mockMvc.perform(
             post("${API_VERSION}developers")
                 .with(csrf())
                 .header(HEADER_KEY, HEADER_VALUE)
@@ -74,13 +75,25 @@ class DeveloperControllerTest(
             .andExpect(jsonPath("$.email", `is`("rosana@email.com")))
             .andExpect(jsonPath("$.level", `is`(3)))
             .andExpect(jsonPath("$._links.all.href", `is`("http://localhost${API_VERSION}developers")))
+            .andReturn()
 
-        val pagedModel: PagedModel<EntityModel<DeveloperDTO>> =
-            developerService.findAllDevelopers(Integer.parseInt(page), Integer.parseInt(max))
-        val persistedDeveloper: DeveloperDTO? =
-            pagedModel.content.stream().filter { it.content?.email == "rosana@email.com" }.findFirst().get().content
+        val locationHeader: String? = result.response.getHeader("Location")
+        val jsonResult: String = result.response.contentAsString
+        val savedDeveloper: Developer = objectMapper.readerFor(Developer::class.java).readValue(jsonResult)
+        val uri = "http://localhost${API_VERSION}developers/${savedDeveloper.id}"
+        assertEquals(locationHeader, uri)
 
+        val pageInt: Int = Integer.parseInt(page)
+        val maxInt: Int = Integer.parseInt(max)
+        var pagedModel: PagedModel<EntityModel<DeveloperDTO>> = developerService.findAllDevelopers(pageInt, maxInt)
+        assertEquals(4, pagedModel.content.size)
+        val persistedDeveloper: DeveloperDTO? = pagedModel.content
+            .stream()
+            .filter { it.content?.email == "rosana@email.com" }
+            .findFirst().get().content
         developerService.deleteDeveloper(persistedDeveloper?.id.toString())
+        pagedModel = developerService.findAllDevelopers(pageInt, maxInt)
+        assertEquals(3, pagedModel.content.size)
     }
 
     @Test
@@ -123,10 +136,10 @@ class DeveloperControllerTest(
                 .param("page", "0")
                 .param("max", "10")
                 .header(HEADER_KEY, HEADER_VALUE)
-                .accept(UtilMediaType.APPLICATION_YAML)
+                .accept(UtilMediaType.YAML)
         )
             .andExpect(status().isOk)
-            .andExpect(content().contentType(UtilMediaType.APPLICATION_YAML))
+            .andExpect(content().contentType(UtilMediaType.YAML))
             .andReturn()
 
         val yamlResponse = "email: \"fernando@email.com\""
@@ -161,10 +174,10 @@ class DeveloperControllerTest(
         val result: MvcResult = mockMvc.perform(
             get("${API_VERSION}developers/{id}", "96f2c93e-dc1b-4ce1-9aee-989a2cd9f7ad")
                 .header(HEADER_KEY, HEADER_VALUE)
-                .accept(UtilMediaType.APPLICATION_YAML)
+                .accept(UtilMediaType.YAML)
         )
             .andExpect(status().isOk)
-            .andExpect(content().contentType(UtilMediaType.APPLICATION_YAML))
+            .andExpect(content().contentType(UtilMediaType.YAML))
             .andReturn()
 
         val yamlResponse = "email: \"josecc@email.com\""

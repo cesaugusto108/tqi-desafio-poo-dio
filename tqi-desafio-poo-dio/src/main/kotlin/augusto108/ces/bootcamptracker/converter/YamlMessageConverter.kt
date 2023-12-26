@@ -8,5 +8,5 @@ import augusto108.ces.bootcamptracker.util.MediaType as UtilMediaType
 
 class YamlMessageConverter : AbstractJackson2HttpMessageConverter(
     YAMLMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL),
-    MediaType.parseMediaType(UtilMediaType.APPLICATION_YAML)
+    MediaType.parseMediaType(UtilMediaType.YAML)
 )

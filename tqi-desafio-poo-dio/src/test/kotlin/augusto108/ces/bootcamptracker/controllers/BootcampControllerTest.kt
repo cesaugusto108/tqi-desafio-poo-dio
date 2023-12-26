@@ -125,10 +125,10 @@ class BootcampControllerTest(
                 .param("page", page)
                 .param("max", max)
                 .header(HEADER_KEY, HEADER_VALUE)
-                .accept(UtilMediaType.APPLICATION_YAML)
+                .accept(UtilMediaType.YAML)
         )
             .andExpect(status().isOk)
-            .andExpect(content().contentType(UtilMediaType.APPLICATION_YAML))
+            .andExpect(content().contentType(UtilMediaType.YAML))
             .andReturn()
 
         val yamlResponse: String = "- id: -3\n" +
@@ -151,10 +151,10 @@ class BootcampControllerTest(
 
         val result: MvcResult = mockMvc.perform(
             get("${API_VERSION}bootcamps/{id}", -1)
-                .accept(MediaType.valueOf(UtilMediaType.APPLICATION_YAML))
+                .accept(MediaType.valueOf(UtilMediaType.YAML))
         )
             .andExpect(status().isOk)
-            .andExpect(content().contentType(UtilMediaType.APPLICATION_YAML))
+            .andExpect(content().contentType(UtilMediaType.YAML))
             .andReturn()
 
         val yamlResponse: String = "---\n" +

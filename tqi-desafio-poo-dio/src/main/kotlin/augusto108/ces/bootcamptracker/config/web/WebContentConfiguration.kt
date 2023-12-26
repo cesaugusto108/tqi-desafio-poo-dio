@@ -25,7 +25,7 @@ class WebContentConfiguration : WebMvcConfigurer {
             .useRegisteredExtensionsOnly(false)
             .defaultContentType(MediaType.APPLICATION_JSON)
             .mediaType("json", MediaType.APPLICATION_JSON)
-            .mediaType("yml", MediaType.valueOf(UtilMediaType.APPLICATION_YAML))
+            .mediaType("yml", MediaType.valueOf(UtilMediaType.YAML))
     }
 
     override fun extendMessageConverters(converters: MutableList<HttpMessageConverter<*>>) {

@@ -41,6 +41,7 @@ class CourseControllerTest(
     @Autowired private val objectMapper: ObjectMapper,
     @Autowired private val courseService: CourseService
 ) : TestContainersConfig() {
+
     @Value("\${page.value}")
     var page: String = ""
 
@@ -53,7 +54,7 @@ class CourseControllerTest(
         val course =
             Course(date = null, hours = 250, description = "POO", details = "Programação orientada a objetos com Java")
 
-        mockMvc.perform(
+        val result: MvcResult = mockMvc.perform(
             post("${API_VERSION}courses")
                 .with(csrf())
                 .header(HEADER_KEY, HEADER_VALUE)
@@ -66,10 +67,21 @@ class CourseControllerTest(
             .andExpect(jsonPath("$.details", `is`("Programação orientada a objetos com Java")))
             .andExpect(jsonPath("$.hours", `is`(250)))
             .andExpect(jsonPath("$._links.all.href", `is`("http://localhost${API_VERSION}courses")))
+            .andReturn()
 
-        val pagedModel: PagedModel<EntityModel<CourseDTO>> =
-            courseService.findAllCourses(Integer.parseInt(page), Integer.parseInt(max))
+        val locationHeader: String? = result.response.getHeader("Location")
+        val jsonResult: String = result.response.contentAsString
+        val savedCourse: Course = objectMapper.readerFor(Course::class.java).readValue(jsonResult)
+        val uri = "http://localhost${API_VERSION}courses/${savedCourse.id}"
+        assertEquals(locationHeader, uri)
+
+        val pageInt: Int = Integer.parseInt(page)
+        val maxInt: Int = Integer.parseInt(max)
+        var pagedModel: PagedModel<EntityModel<CourseDTO>> = courseService.findAllCourses(pageInt, maxInt)
+        assertEquals(3, pagedModel.content.size)
         courseService.deleteCourse(pagedModel.content.toList()[2].content?.id!!)
+        pagedModel = courseService.findAllCourses(pageInt, maxInt)
+        assertEquals(2, pagedModel.content.size)
     }
 
     @Test
@@ -110,10 +122,10 @@ class CourseControllerTest(
                 .param("page", "0")
                 .param("max", "10")
                 .header(HEADER_KEY, HEADER_VALUE)
-                .accept(UtilMediaType.APPLICATION_YAML)
+                .accept(UtilMediaType.YAML)
         )
             .andExpect(status().isOk)
-            .andExpect(content().contentType(UtilMediaType.APPLICATION_YAML))
+            .andExpect(content().contentType(UtilMediaType.YAML))
             .andReturn()
 
         val yamlResponse: String = "links:\n" +
@@ -143,10 +155,10 @@ class CourseControllerTest(
         val result: MvcResult = mockMvc.perform(
             get("${API_VERSION}courses/{id}", -4)
                 .header(HEADER_KEY, HEADER_VALUE)
-                .accept(UtilMediaType.APPLICATION_YAML)
+                .accept(UtilMediaType.YAML)
         )
             .andExpect(status().isOk)
-            .andExpect(content().contentType(UtilMediaType.APPLICATION_YAML))
+            .andExpect(content().contentType(UtilMediaType.YAML))
             .andReturn()
 
         val yamlResponse: String = "id: -4\n" +

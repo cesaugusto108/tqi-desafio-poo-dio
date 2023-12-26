@@ -41,6 +41,7 @@ class MentoringControllerTest(
     @Autowired private val objectMapper: ObjectMapper,
     @Autowired private val mentoringService: MentoringService
 ) : TestContainersConfig() {
+
     @Value("\${page.value}")
     var page: String = ""
 
@@ -53,7 +54,7 @@ class MentoringControllerTest(
         val mentoring =
             Mentoring(date = null, hours = null, description = "REST APIs", details = "REST APIs com Spring e Kotlin")
 
-        mockMvc.perform(
+        val result: MvcResult = mockMvc.perform(
             post("${API_VERSION}mentoring")
                 .with(csrf())
                 .header(HEADER_KEY, HEADER_VALUE)
@@ -65,10 +66,21 @@ class MentoringControllerTest(
             .andExpect(jsonPath("$.description", `is`("REST APIs")))
             .andExpect(jsonPath("$.details", `is`("REST APIs com Spring e Kotlin")))
             .andExpect(jsonPath("$._links.all.href", `is`("http://localhost${API_VERSION}mentoring")))
+            .andReturn()
 
-        val pagedModel: PagedModel<EntityModel<MentoringDTO>> =
-            mentoringService.findAllMentoring(Integer.parseInt(page), Integer.parseInt(max))
+        val locationHeader: String? = result.response.getHeader("Location")
+        val jsonResult: String = result.response.contentAsString
+        val savedMentoring: Mentoring = objectMapper.readerFor(Mentoring::class.java).readValue(jsonResult)
+        val uri = "http://localhost${API_VERSION}mentoring/${savedMentoring.id}"
+        assertEquals(locationHeader, uri)
+
+        val pageInt: Int = Integer.parseInt(page)
+        val maxInt: Int = Integer.parseInt(max)
+        var pagedModel: PagedModel<EntityModel<MentoringDTO>> = mentoringService.findAllMentoring(pageInt, maxInt)
+        assertEquals(3, pagedModel.content.size)
         mentoringService.deleteMentoring(pagedModel.content.toList()[1].content?.id!!)
+        pagedModel = mentoringService.findAllMentoring(pageInt, maxInt)
+        assertEquals(2, pagedModel.content.size)
     }
 
     @Test
@@ -108,10 +120,10 @@ class MentoringControllerTest(
                 .param("page", "0")
                 .param("max", "10")
                 .header(HEADER_KEY, HEADER_VALUE)
-                .accept(UtilMediaType.APPLICATION_YAML)
+                .accept(UtilMediaType.YAML)
         )
             .andExpect(status().isOk)
-            .andExpect(content().contentType(UtilMediaType.APPLICATION_YAML))
+            .andExpect(content().contentType(UtilMediaType.YAML))
             .andReturn()
 
         val yamlResponse: String = "- id: -2"
@@ -133,10 +145,10 @@ class MentoringControllerTest(
         val result: MvcResult = mockMvc.perform(
             get("${API_VERSION}mentoring/{id}", -2)
                 .header(HEADER_KEY, HEADER_VALUE)
-                .accept(UtilMediaType.APPLICATION_YAML)
+                .accept(UtilMediaType.YAML)
         )
             .andExpect(status().isOk)
-            .andExpect(content().contentType(UtilMediaType.APPLICATION_YAML))
+            .andExpect(content().contentType(UtilMediaType.YAML))
             .andReturn()
 
         val yamlResponse: String = "id: -2"

@@ -43,6 +43,7 @@ class InstructorControllerTest(
     @Autowired private val objectMapper: ObjectMapper,
     @Autowired private val instructorService: InstructorService
 ) : TestContainersConfig() {
+
     @Value("\${page.value}")
     var page: String = ""
 
@@ -55,7 +56,7 @@ class InstructorControllerTest(
         val instructor =
             Instructor(name = Name(firstName = "Fabiana", lastName = "Campos"), email = "fabiana@email.com", age = 38)
 
-        mockMvc.perform(
+        val result: MvcResult = mockMvc.perform(
             post("${API_VERSION}instructors")
                 .with(csrf())
                 .header(HEADER_KEY, HEADER_VALUE)
@@ -68,13 +69,25 @@ class InstructorControllerTest(
             .andExpect(jsonPath("$.name.lastName", `is`("Campos")))
             .andExpect(jsonPath("$.email", `is`("fabiana@email.com")))
             .andExpect(jsonPath("$._links.all.href", `is`("http://localhost${API_VERSION}instructors")))
+            .andReturn()
 
-        val pagedModel: PagedModel<EntityModel<InstructorDTO>> =
-            instructorService.findAllInstructors(Integer.parseInt(page), Integer.parseInt(max))
-        val persistedInstructor: InstructorDTO? =
-            pagedModel.content.stream().filter { it.content?.email == "fabiana@email.com" }.findFirst().get().content
+        val locationHeader: String? = result.response.getHeader("Location")
+        val jsonResult: String = result.response.contentAsString
+        val savedInstructor: Instructor = objectMapper.readerFor(Instructor::class.java).readValue(jsonResult)
+        val uri = "http://localhost${API_VERSION}instructors/${savedInstructor.id}"
+        assertEquals(locationHeader, uri)
 
+        val pageInt: Int = Integer.parseInt(page)
+        val maxInt: Int = Integer.parseInt(max)
+        var pagedModel: PagedModel<EntityModel<InstructorDTO>> = instructorService.findAllInstructors(pageInt, maxInt)
+        assertEquals(4, pagedModel.content.size)
+        val persistedInstructor: InstructorDTO? = pagedModel.content
+            .stream()
+            .filter { it.content?.email == "fabiana@email.com" }
+            .findFirst().get().content
         instructorService.deleteInstructor(persistedInstructor?.id.toString())
+        pagedModel = instructorService.findAllInstructors(pageInt, maxInt)
+        assertEquals(3, pagedModel.content.size)
     }
 
     @Test
@@ -116,10 +129,10 @@ class InstructorControllerTest(
                 .param("page", "0")
                 .param("max", "10")
                 .header(HEADER_KEY, HEADER_VALUE)
-                .accept(UtilMediaType.APPLICATION_YAML)
+                .accept(UtilMediaType.YAML)
         )
             .andExpect(status().isOk)
-            .andExpect(content().contentType(UtilMediaType.APPLICATION_YAML))
+            .andExpect(content().contentType(UtilMediaType.YAML))
             .andReturn()
 
         val yamlResponse: String = "email: \"osvaldo@email.com\""
@@ -151,10 +164,10 @@ class InstructorControllerTest(
         val result: MvcResult = mockMvc.perform(
             get("${API_VERSION}instructors/{id}", "4879ee9d-27d3-4b4b-a39c-1360d70d5a00")
                 .header(HEADER_KEY, HEADER_VALUE)
-                .accept(UtilMediaType.APPLICATION_YAML)
+                .accept(UtilMediaType.YAML)
         )
             .andExpect(status().isOk)
-            .andExpect(content().contentType(UtilMediaType.APPLICATION_YAML))
+            .andExpect(content().contentType(UtilMediaType.YAML))
             .andReturn()
 
         val yamlResponse: String = "email: \"osvaldo@email.com\""

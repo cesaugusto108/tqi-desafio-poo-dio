@@ -3,49 +3,54 @@ package augusto108.ces.bootcamptracker.controllers
 import augusto108.ces.bootcamptracker.annotations.instructor.*
 import augusto108.ces.bootcamptracker.model.dto.InstructorDTO
 import augusto108.ces.bootcamptracker.model.entities.Instructor
+import augusto108.ces.bootcamptracker.util.API_VERSION
 import augusto108.ces.bootcamptracker.util.MediaType
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.hateoas.EntityModel
 import org.springframework.hateoas.PagedModel
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @Tag(name = "Instructors", description = "endpoints to manage instructors information")
+@RequestMapping("${API_VERSION}instructors")
 interface InstructorOperations {
-    @PostMapping(
-        consumes = [MediaType.APPLICATION_JSON, MediaType.APPLICATION_YAML],
-        produces = [MediaType.APPLICATION_JSON, MediaType.APPLICATION_YAML]
-    )
+
+    @ResponseStatus(HttpStatus.CREATED)
     @SaveOperation
+    @PostMapping(consumes = [MediaType.JSON, MediaType.YAML], produces = [MediaType.JSON, MediaType.YAML])
     fun saveInstructor(@RequestBody instructor: Instructor): ResponseEntity<InstructorDTO>
 
-    @GetMapping(produces = [MediaType.APPLICATION_JSON, MediaType.APPLICATION_YAML])
+    @ResponseStatus(HttpStatus.OK)
     @FindAllOperation
+    @GetMapping(produces = [MediaType.JSON, MediaType.YAML])
     fun findAllInstructors(
         @RequestParam(defaultValue = "0", required = false) page: Int,
         @RequestParam(defaultValue = "10", required = false) max: Int
     ): ResponseEntity<PagedModel<EntityModel<InstructorDTO>>>
 
-    @GetMapping("/{id}", produces = [MediaType.APPLICATION_JSON, MediaType.APPLICATION_YAML])
+    @ResponseStatus(HttpStatus.OK)
     @FindByIdOperation
+    @GetMapping("/{id}", produces = [MediaType.JSON, MediaType.YAML])
     fun findInstructorById(@PathVariable("id") id: String): ResponseEntity<InstructorDTO>
 
-    @PutMapping(
-        consumes = [MediaType.APPLICATION_JSON, MediaType.APPLICATION_YAML],
-        produces = [MediaType.APPLICATION_JSON, MediaType.APPLICATION_YAML]
-    )
+    @ResponseStatus(HttpStatus.OK)
     @UpdateOperation
+    @PutMapping(consumes = [MediaType.JSON, MediaType.YAML], produces = [MediaType.JSON, MediaType.YAML])
     fun updateInstructor(@RequestBody instructor: Instructor): ResponseEntity<InstructorDTO>
 
-    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteOperation
+    @DeleteMapping("/{id}")
     fun deleteInstructor(@PathVariable("id") id: String): ResponseEntity<Unit>
 
-    @PatchMapping("/active/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @ActivateInstructor
+    @PatchMapping("/active/{id}")
     fun activateInstructor(@PathVariable("id") id: String): ResponseEntity<Unit>
 
-    @PatchMapping("/inactive/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeactivateInstructor
+    @PatchMapping("/inactive/{id}")
     fun deactivateInstructor(@PathVariable("id") id: String): ResponseEntity<Unit>
 }
