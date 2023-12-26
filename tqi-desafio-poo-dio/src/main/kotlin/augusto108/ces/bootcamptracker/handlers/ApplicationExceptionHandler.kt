@@ -8,48 +8,43 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.HttpMediaTypeNotAcceptableException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
+import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.servlet.NoHandlerFoundException
 import java.time.LocalDateTime
 import java.util.logging.Logger
 
 @ControllerAdvice
 class ApplicationExceptionHandler {
-    private val logger: Logger = Logger.getLogger(ApplicationExceptionHandler::class.java.simpleName)
 
+    private val logger: Logger = Logger.getLogger(ApplicationExceptionHandler::class.java.simpleName)
+    private val mediaType: MediaType = MediaType.APPLICATION_PROBLEM_JSON
+
+    @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
     @ExceptionHandler(HttpMediaTypeNotAcceptableException::class)
     fun handleNotAcceptable(e: HttpMediaTypeNotAcceptableException): ResponseEntity<ErrorResponse> {
         logger.info("Exception thrown: ${e.javaClass.name}")
-
-        return ResponseEntity
-            .status(HttpStatus.NOT_ACCEPTABLE)
-            .contentType(MediaType.APPLICATION_PROBLEM_JSON)
-            .body(ErrorResponse(e.message, HttpStatus.NOT_ACCEPTABLE))
+        val errorResponse = ErrorResponse(e.message, HttpStatus.NOT_ACCEPTABLE)
+        return ResponseEntity.status(406).contentType(mediaType).body(errorResponse)
     }
 
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(NoHandlerFoundException::class, NoResultException::class)
     fun handleNotFound(e: Exception): ResponseEntity<ErrorResponse> {
         logger.info("Exception thrown: ${e.javaClass.name}")
-
-        return ResponseEntity
-            .status(HttpStatus.NOT_FOUND)
-            .contentType(MediaType.APPLICATION_PROBLEM_JSON)
-            .body(ErrorResponse(e.message, HttpStatus.NOT_FOUND))
+        val errorResponse = ErrorResponse(e.message, HttpStatus.NOT_FOUND)
+        return ResponseEntity.status(404).contentType(mediaType).body(errorResponse)
     }
 
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(NumberFormatException::class)
     fun handleBadRequest(e: NumberFormatException): ResponseEntity<ErrorResponse> {
         logger.info("Exception thrown: ${e.javaClass.name}")
-
-        return ResponseEntity
-            .status(HttpStatus.BAD_REQUEST)
-            .contentType(MediaType.APPLICATION_PROBLEM_JSON)
-            .body(ErrorResponse(e.message, HttpStatus.BAD_REQUEST))
+        val errorResponse = ErrorResponse(e.message, HttpStatus.BAD_REQUEST)
+        return ResponseEntity.status(400).contentType(mediaType).body(errorResponse)
     }
 
-    inner class ErrorResponse(
-        val message: String?,
-        val status: HttpStatus
-    ) {
+    inner class ErrorResponse(val message: String?, val status: HttpStatus) {
+
         val statusCode = status.value()
 
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm:ss")
