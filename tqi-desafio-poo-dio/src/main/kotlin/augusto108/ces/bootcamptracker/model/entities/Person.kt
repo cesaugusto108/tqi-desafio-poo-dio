@@ -1,5 +1,6 @@
 package augusto108.ces.bootcamptracker.model.entities
 
+import augusto108.ces.bootcamptracker.model.datatypes.Name
 import jakarta.persistence.*
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import java.util.*
@@ -17,6 +18,7 @@ abstract class Person(
     @Column(name = "active", nullable = false) open var active: Boolean = true,
     id: UUID? = null
 ) : PersonBaseEntity(id) {
+
     init {
         this.password = BCryptPasswordEncoder().encode(password)
     }

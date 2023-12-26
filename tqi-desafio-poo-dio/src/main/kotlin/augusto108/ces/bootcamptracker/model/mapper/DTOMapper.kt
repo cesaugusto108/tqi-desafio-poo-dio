@@ -7,6 +7,7 @@ import augusto108.ces.bootcamptracker.model.entities.PersonBaseEntity
 import org.modelmapper.ModelMapper
 
 private object DTOMapper {
+
     val mapper = ModelMapper()
 }
 

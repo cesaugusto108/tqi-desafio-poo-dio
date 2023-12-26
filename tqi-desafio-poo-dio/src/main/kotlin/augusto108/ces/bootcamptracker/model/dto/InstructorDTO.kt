@@ -1,6 +1,6 @@
 package augusto108.ces.bootcamptracker.model.dto
 
-import augusto108.ces.bootcamptracker.model.entities.Name
+import augusto108.ces.bootcamptracker.model.datatypes.Name
 import java.util.*
 
 class InstructorDTO(

@@ -12,6 +12,7 @@ class BootcampDTO(
     var finishDate: LocalDateTime? = null,
     id: Int = 0
 ) : BaseDto(id) {
+
     var activities: MutableSet<Activity> = HashSet()
 
     override fun toString(): String = description

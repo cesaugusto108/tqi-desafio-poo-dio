@@ -17,5 +17,6 @@ abstract class Activity(
 
     id: Int
 ) : BaseEntity(id) {
+
     override fun toString(): String = description
 }

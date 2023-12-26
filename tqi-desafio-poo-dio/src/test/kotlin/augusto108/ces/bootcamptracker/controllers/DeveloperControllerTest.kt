@@ -5,7 +5,7 @@ import augusto108.ces.bootcamptracker.config.web.HEADER_KEY
 import augusto108.ces.bootcamptracker.config.web.HEADER_VALUE
 import augusto108.ces.bootcamptracker.model.dto.DeveloperDTO
 import augusto108.ces.bootcamptracker.model.entities.Developer
-import augusto108.ces.bootcamptracker.model.entities.Name
+import augusto108.ces.bootcamptracker.model.datatypes.Name
 import augusto108.ces.bootcamptracker.services.DeveloperService
 import augusto108.ces.bootcamptracker.util.API_VERSION
 import com.fasterxml.jackson.databind.ObjectMapper

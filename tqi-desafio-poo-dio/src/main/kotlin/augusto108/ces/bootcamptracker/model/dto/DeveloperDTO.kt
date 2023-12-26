@@ -1,7 +1,7 @@
 package augusto108.ces.bootcamptracker.model.dto
 
 import augusto108.ces.bootcamptracker.model.entities.Bootcamp
-import augusto108.ces.bootcamptracker.model.entities.Name
+import augusto108.ces.bootcamptracker.model.datatypes.Name
 import java.util.*
 
 class DeveloperDTO(
@@ -13,6 +13,7 @@ class DeveloperDTO(
     active: Boolean = true,
     id: UUID? = null
 ) : PersonDTO(name, age, email, username, active, id) {
+
     var bootcamps: MutableSet<Bootcamp> = HashSet()
 
     override fun toString(): String = "($level) ${super.toString()}"

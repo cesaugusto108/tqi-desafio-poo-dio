@@ -9,5 +9,6 @@ class CourseDTO(
     details: String = "",
     id: Int = 0
 ) : ActivityDTO(description, details, id) {
+
     override fun toString(): String = "${super.toString()} (course)"
 }

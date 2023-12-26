@@ -1,6 +1,6 @@
 package augusto108.ces.bootcamptracker.model.dto
 
-import augusto108.ces.bootcamptracker.model.entities.Name
+import augusto108.ces.bootcamptracker.model.datatypes.Name
 import com.fasterxml.jackson.annotation.JsonPropertyOrder
 import java.util.*
 
@@ -13,5 +13,6 @@ abstract class PersonDTO(
     var active: Boolean = true,
     id: UUID? = null
 ) : PersonBaseDto(id) {
+
     override fun toString(): String = "$name ($email)"
 }

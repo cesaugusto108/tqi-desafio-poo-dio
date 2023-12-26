@@ -1,5 +1,6 @@
 package augusto108.ces.bootcamptracker.model.entities
 
+import augusto108.ces.bootcamptracker.model.datatypes.Name
 import jakarta.persistence.Column
 import jakarta.persistence.DiscriminatorValue
 import jakarta.persistence.Entity

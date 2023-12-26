@@ -1,5 +1,6 @@
 package augusto108.ces.bootcamptracker.model.entities
 
+import augusto108.ces.bootcamptracker.model.datatypes.Name
 import jakarta.persistence.*
 import java.util.*
 
