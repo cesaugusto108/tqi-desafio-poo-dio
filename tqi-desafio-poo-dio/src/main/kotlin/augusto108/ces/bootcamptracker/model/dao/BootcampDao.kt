@@ -3,6 +3,7 @@ package augusto108.ces.bootcamptracker.model.dao
 import augusto108.ces.bootcamptracker.model.entities.Bootcamp
 
 interface BootcampDao {
+
     fun saveBootcamp(bootcamp: Bootcamp): Bootcamp
 
     fun findAllBootcamps(): List<Bootcamp>

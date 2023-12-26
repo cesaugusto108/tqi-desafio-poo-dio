@@ -7,29 +7,26 @@ import org.springframework.stereotype.Repository
 
 @Repository
 class BootcampDaoImpl(private val entityManager: EntityManager) : BootcampDao {
+
     override fun saveBootcamp(bootcamp: Bootcamp): Bootcamp {
         entityManager.persist(bootcamp)
-
         return bootcamp
     }
 
-    override fun findAllBootcamps(): List<Bootcamp> =
-        entityManager
-            .createQuery("from Bootcamp order by id", Bootcamp::class.java)
-            .resultList
+    override fun findAllBootcamps(): List<Bootcamp> {
+        val query = "from Bootcamp order by id"
+        return entityManager.createQuery(query, Bootcamp::class.java).resultList
+    }
 
-    override fun findBootcampById(id: Int): Bootcamp =
-        entityManager
-            .createQuery("from Bootcamp b where id = :id", Bootcamp::class.java)
-            .setParameter("id", id)
-            .singleResult
+    override fun findBootcampById(id: Int): Bootcamp {
+        val query = "from Bootcamp b where id = :id"
+        return entityManager.createQuery(query, Bootcamp::class.java).setParameter("id", id).singleResult
+    }
 
     override fun updateBootcamp(bootcamp: Bootcamp): Bootcamp {
         val existingBootcamp: Bootcamp = findBootcampById(bootcamp.id)
         val updatedBootcamp: Bootcamp = bootcamp.copyTo(existingBootcamp)
-
         entityManager.persist(updatedBootcamp)
-
         return updatedBootcamp
     }
 

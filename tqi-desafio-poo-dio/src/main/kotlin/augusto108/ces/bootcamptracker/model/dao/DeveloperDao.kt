@@ -4,6 +4,7 @@ import augusto108.ces.bootcamptracker.model.entities.Developer
 import java.util.*
 
 interface DeveloperDao {
+
     fun saveDeveloper(developer: Developer): Developer
 
     fun findAllDevelopers(): List<Developer>

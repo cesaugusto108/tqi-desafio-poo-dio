@@ -7,29 +7,26 @@ import org.springframework.stereotype.Repository
 
 @Repository
 class MentoringDaoImpl(private val entityManager: EntityManager) : MentoringDao {
+
     override fun saveMentoring(mentoring: Mentoring): Mentoring {
         entityManager.persist(mentoring)
-
         return mentoring
     }
 
-    override fun findAllMentoring(): List<Mentoring> =
-        entityManager
-            .createQuery("from Mentoring order by id", Mentoring::class.java)
-            .resultList
+    override fun findAllMentoring(): List<Mentoring> {
+        val query = "from Mentoring order by id"
+        return entityManager.createQuery(query, Mentoring::class.java).resultList
+    }
 
-    override fun findMentoringById(id: Int): Mentoring =
-        entityManager
-            .createQuery("from Mentoring m where id = : id", Mentoring::class.java)
-            .setParameter("id", id)
-            .singleResult
+    override fun findMentoringById(id: Int): Mentoring {
+        val query = "from Mentoring m where id = : id"
+        return entityManager.createQuery(query, Mentoring::class.java).setParameter("id", id).singleResult
+    }
 
     override fun updateMentoring(mentoring: Mentoring): Mentoring {
         val existingMentoring: Mentoring = findMentoringById(mentoring.id)
         val updatedMentoring: Mentoring = mentoring.copyTo(existingMentoring)
-
         entityManager.persist(updatedMentoring)
-
         return updatedMentoring
     }
 

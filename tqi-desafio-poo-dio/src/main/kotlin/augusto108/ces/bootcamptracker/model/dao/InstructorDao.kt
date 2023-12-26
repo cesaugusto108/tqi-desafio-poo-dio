@@ -4,6 +4,7 @@ import augusto108.ces.bootcamptracker.model.entities.Instructor
 import java.util.*
 
 interface InstructorDao {
+
     fun saveInstructor(instructor: Instructor): Instructor
 
     fun findAllInstructors(): List<Instructor>
