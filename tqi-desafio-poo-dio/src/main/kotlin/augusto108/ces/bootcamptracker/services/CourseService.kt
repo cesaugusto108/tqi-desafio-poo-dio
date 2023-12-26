@@ -6,6 +6,7 @@ import org.springframework.hateoas.EntityModel
 import org.springframework.hateoas.PagedModel
 
 interface CourseService {
+
     fun saveCourse(course: Course): CourseDTO
 
     fun findAllCourses(page: Int, max: Int): PagedModel<EntityModel<CourseDTO>>

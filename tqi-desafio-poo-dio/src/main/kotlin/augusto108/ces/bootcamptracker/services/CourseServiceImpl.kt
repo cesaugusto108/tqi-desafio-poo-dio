@@ -19,13 +19,12 @@ class CourseServiceImpl(
     private val courseDao: CourseDao,
     private val pagedResourcesAssembler: PagedResourcesAssembler<CourseDTO>
 ) : CourseService {
+
     override fun saveCourse(course: Course): CourseDTO = courseDao.saveCourse(course).map(CourseDTO::class.java)
 
     override fun findAllCourses(page: Int, max: Int): PagedModel<EntityModel<CourseDTO>> {
         val courseDTOList: MutableList<CourseDTO> = ArrayList()
-
         courseDao.findAllCourses().forEach { courseDTOList.add(it.map(CourseDTO::class.java)) }
-
         return pagedResourcesAssembler.toModel(getPageRequest(page, max, courseDTOList))
     }
 
@@ -40,8 +39,7 @@ class CourseServiceImpl(
             throw NumberFormatException()
         }
 
-    override fun updateCourse(course: Course): CourseDTO =
-        courseDao.updateCourse(course).map(CourseDTO::class.java)
+    override fun updateCourse(course: Course): CourseDTO = courseDao.updateCourse(course).map(CourseDTO::class.java)
 
     override fun deleteCourse(id: Int): Unit = courseDao.deleteCourse(id)
 }

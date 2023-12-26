@@ -6,6 +6,7 @@ import org.springframework.hateoas.EntityModel
 import org.springframework.hateoas.PagedModel
 
 interface BootcampService {
+
     fun saveBootcamp(bootcamp: Bootcamp): BootcampDTO
 
     fun findAllBootcamps(page: Int, max: Int): PagedModel<EntityModel<BootcampDTO>>

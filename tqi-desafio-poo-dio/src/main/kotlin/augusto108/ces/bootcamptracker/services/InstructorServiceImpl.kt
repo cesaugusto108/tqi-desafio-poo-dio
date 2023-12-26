@@ -20,14 +20,13 @@ class InstructorServiceImpl(
     private val instructorDao: InstructorDao,
     private val pagedResourcesAssembler: PagedResourcesAssembler<InstructorDTO>
 ) : InstructorService {
+
     override fun saveInstructor(instructor: Instructor): InstructorDTO =
         instructorDao.saveInstructor(instructor).personMap(InstructorDTO::class.java)
 
     override fun findAllInstructors(page: Int, max: Int): PagedModel<EntityModel<InstructorDTO>> {
         val instructorDTOList: MutableList<InstructorDTO> = ArrayList()
-
         instructorDao.findAllInstructors().forEach { instructorDTOList.add(it.personMap(InstructorDTO::class.java)) }
-
         return pagedResourcesAssembler.toModel(getPersonPageRequest(page, max, instructorDTOList))
     }
 
@@ -40,8 +39,9 @@ class InstructorServiceImpl(
             throw NoResultForQueryException("Id: $id")
         }
 
-    override fun updateInstructor(instructor: Instructor): InstructorDTO =
-        instructorDao.updateInstructor(instructor).personMap(InstructorDTO::class.java)
+    override fun updateInstructor(instructor: Instructor): InstructorDTO {
+        return instructorDao.updateInstructor(instructor).personMap(InstructorDTO::class.java)
+    }
 
     override fun deleteInstructor(id: String): Unit = instructorDao.deleteInstructor(UUID.fromString(id))
 

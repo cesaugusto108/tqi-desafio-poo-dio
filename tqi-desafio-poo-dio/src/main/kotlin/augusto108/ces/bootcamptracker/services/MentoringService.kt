@@ -6,6 +6,7 @@ import org.springframework.hateoas.EntityModel
 import org.springframework.hateoas.PagedModel
 
 interface MentoringService {
+
     fun saveMentoring(mentoring: Mentoring): MentoringDTO
 
     fun findAllMentoring(page: Int, max: Int): PagedModel<EntityModel<MentoringDTO>>

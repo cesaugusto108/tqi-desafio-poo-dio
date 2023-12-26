@@ -6,6 +6,7 @@ import org.springframework.hateoas.EntityModel
 import org.springframework.hateoas.PagedModel
 
 interface DeveloperService {
+
     fun saveDeveloper(developer: Developer): DeveloperDTO
 
     fun findAllDevelopers(page: Int, max: Int): PagedModel<EntityModel<DeveloperDTO>>

@@ -20,14 +20,14 @@ class DeveloperServiceImpl(
     private val developerDao: DeveloperDao,
     private val pagedResourcesAssembler: PagedResourcesAssembler<DeveloperDTO>
 ) : DeveloperService {
-    override fun saveDeveloper(developer: Developer): DeveloperDTO =
-        developerDao.saveDeveloper(developer).personMap(DeveloperDTO::class.java)
+
+    override fun saveDeveloper(developer: Developer): DeveloperDTO {
+        return developerDao.saveDeveloper(developer).personMap(DeveloperDTO::class.java)
+    }
 
     override fun findAllDevelopers(page: Int, max: Int): PagedModel<EntityModel<DeveloperDTO>> {
         val developerDTOList: MutableList<DeveloperDTO> = ArrayList()
-
         developerDao.findAllDevelopers().forEach { developerDTOList.add(it.personMap(DeveloperDTO::class.java)) }
-
         return pagedResourcesAssembler.toModel(getPersonPageRequest(page, max, developerDTOList))
     }
 
@@ -40,8 +40,9 @@ class DeveloperServiceImpl(
             throw NoResultForQueryException("Id: $id")
         }
 
-    override fun updateDeveloper(developer: Developer): DeveloperDTO =
-        developerDao.updateDeveloper(developer).personMap(DeveloperDTO::class.java)
+    override fun updateDeveloper(developer: Developer): DeveloperDTO {
+        return developerDao.updateDeveloper(developer).personMap(DeveloperDTO::class.java)
+    }
 
     override fun deleteDeveloper(id: String): Unit = developerDao.deleteDeveloper(UUID.fromString(id))
 

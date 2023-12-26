@@ -19,14 +19,14 @@ class MentoringServiceImpl(
     private val mentoringDao: MentoringDao,
     private val pagedResourcesAssembler: PagedResourcesAssembler<MentoringDTO>
 ) : MentoringService {
-    override fun saveMentoring(mentoring: Mentoring): MentoringDTO =
-        mentoringDao.saveMentoring(mentoring).map(MentoringDTO::class.java)
+
+    override fun saveMentoring(mentoring: Mentoring): MentoringDTO {
+        return mentoringDao.saveMentoring(mentoring).map(MentoringDTO::class.java)
+    }
 
     override fun findAllMentoring(page: Int, max: Int): PagedModel<EntityModel<MentoringDTO>> {
         val mentoringDTOList: MutableList<MentoringDTO> = ArrayList()
-
         mentoringDao.findAllMentoring().forEach { mentoringDTOList.add(it.map(MentoringDTO::class.java)) }
-
         return pagedResourcesAssembler.toModel(getPageRequest(page, max, mentoringDTOList))
     }
 
@@ -41,8 +41,9 @@ class MentoringServiceImpl(
             throw NumberFormatException()
         }
 
-    override fun updateMentoring(mentoring: Mentoring): MentoringDTO =
-        mentoringDao.updateMentoring(mentoring).map(MentoringDTO::class.java)
+    override fun updateMentoring(mentoring: Mentoring): MentoringDTO {
+        return mentoringDao.updateMentoring(mentoring).map(MentoringDTO::class.java)
+    }
 
     override fun deleteMentoring(id: Int): Unit = mentoringDao.deleteMentoring(id)
 }

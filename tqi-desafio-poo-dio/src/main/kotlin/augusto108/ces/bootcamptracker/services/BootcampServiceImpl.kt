@@ -19,14 +19,14 @@ class BootcampServiceImpl(
     private val bootcampDao: BootcampDao,
     private val pagedResourcesAssembler: PagedResourcesAssembler<BootcampDTO>
 ) : BootcampService {
-    override fun saveBootcamp(bootcamp: Bootcamp): BootcampDTO =
-        bootcampDao.saveBootcamp(bootcamp).map(BootcampDTO::class.java)
+
+    override fun saveBootcamp(bootcamp: Bootcamp): BootcampDTO {
+        return bootcampDao.saveBootcamp(bootcamp).map(BootcampDTO::class.java)
+    }
 
     override fun findAllBootcamps(page: Int, max: Int): PagedModel<EntityModel<BootcampDTO>> {
         val bootcampDTOList: MutableList<BootcampDTO> = ArrayList()
-
         bootcampDao.findAllBootcamps().forEach { bootcampDTOList.add(it.map(BootcampDTO::class.java)) }
-
         return pagedResourcesAssembler.toModel(getPageRequest(page, max, bootcampDTOList))
     }
 
@@ -41,8 +41,9 @@ class BootcampServiceImpl(
             throw NumberFormatException()
         }
 
-    override fun updateBootcamp(bootcamp: Bootcamp): BootcampDTO =
-        bootcampDao.updateBootcamp(bootcamp).map(BootcampDTO::class.java)
+    override fun updateBootcamp(bootcamp: Bootcamp): BootcampDTO {
+        return bootcampDao.updateBootcamp(bootcamp).map(BootcampDTO::class.java)
+    }
 
     override fun deleteBootcamp(id: Int): Unit = bootcampDao.deleteBootcamp(id)
 }
