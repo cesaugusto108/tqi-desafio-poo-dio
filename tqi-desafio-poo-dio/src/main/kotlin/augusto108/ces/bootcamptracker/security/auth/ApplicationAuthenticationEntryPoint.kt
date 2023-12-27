@@ -16,8 +16,10 @@ class ApplicationAuthenticationEntryPoint : AuthenticationEntryPoint {
         response: HttpServletResponse?,
         authException: AuthenticationException?
     ) {
-        response?.status = HttpStatus.UNAUTHORIZED.value()
-        response?.contentType = MediaType.APPLICATION_JSON_VALUE
-        response?.writer?.write("Authentication is necessary to access this endpoint")
+        response?.apply {
+            status = HttpStatus.UNAUTHORIZED.value()
+            contentType = MediaType.APPLICATION_JSON_VALUE
+            writer?.write("Authentication is necessary to access this endpoint")
+        }
     }
 }

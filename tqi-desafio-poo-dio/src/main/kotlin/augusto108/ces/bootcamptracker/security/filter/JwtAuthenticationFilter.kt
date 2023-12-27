@@ -12,7 +12,6 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
-import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource
 import org.springframework.stereotype.Component
@@ -31,45 +30,50 @@ class JwtAuthenticationFilter(
         response: HttpServletResponse,
         filterChain: FilterChain
     ) {
-        val authorizationHeader: String? = request.getHeader("Authorization")
-        val prefix = "Bearer "
-        val identification: String
+        request.getHeader("Authorization").also {
+            val prefix = "Bearer "
+            val identification: String
 
-        if ((authorizationHeader == null) || !authorizationHeader.startsWith(prefix)) {
-            filterChain.doFilter(request, response)
-            return
-        }
-
-        val token: String = authorizationHeader.substring(prefix.length)
-        try {
-            identification = jwtService.extractIdentification(token)
-        } catch (e: Exception) {
-            when (e is ExpiredJwtException || e is MalformedJwtException) {
-                true -> sendExceptionResponse(response, e)
-                else -> throw Exception()
+            if ((it == null) || !it.startsWith(prefix)) {
+                filterChain.doFilter(request, response)
+                return
             }
-            return
-        }
 
-        authenticate(identification, token, request)
-        filterChain.doFilter(request, response)
+            val token: String = it.substring(prefix.length)
+            try {
+                identification = jwtService.extractIdentification(token)
+            } catch (e: Exception) {
+                when (e is ExpiredJwtException || e is MalformedJwtException) {
+                    true -> sendExceptionResponse(response, e)
+                    else -> throw Exception()
+                }
+                return
+            }
+
+            authenticate(identification, token, request)
+            filterChain.doFilter(request, response)
+        }
     }
 
     private fun sendExceptionResponse(response: HttpServletResponse, e: Exception) {
-        val exceptionResponse: JwtAuthenticationFilter.ExceptionResponse? = e.message?.let { ExceptionResponse("$it ") }
-        response.status = HttpStatus.UNAUTHORIZED.value()
-        response.contentType = MediaType.APPLICATION_JSON_VALUE
-        response.writer.write(objectMapper.writeValueAsString(exceptionResponse))
+        e.message?.let { ExceptionResponse("$it ") }.also {
+            response.apply {
+                status = HttpStatus.UNAUTHORIZED.value()
+                contentType = MediaType.APPLICATION_JSON_VALUE
+                writer.write(objectMapper.writeValueAsString(it))
+            }
+        }
     }
 
     private fun authenticate(identification: String, token: String, request: HttpServletRequest) {
         if (SecurityContextHolder.getContext().authentication == null) {
-            val userDetails: UserDetails = userDetailsService.loadUserByUsername(identification)
-
-            if (jwtService.validateToken(token, userDetails)) {
-                val authToken = UsernamePasswordAuthenticationToken(userDetails, null, userDetails.authorities)
-                authToken.details = WebAuthenticationDetailsSource().buildDetails(request)
-                SecurityContextHolder.getContext().authentication = authToken
+            userDetailsService.loadUserByUsername(identification).also {
+                if (jwtService.validateToken(token, it)) {
+                    UsernamePasswordAuthenticationToken(it, null, it.authorities).apply {
+                        details = WebAuthenticationDetailsSource().buildDetails(request)
+                        SecurityContextHolder.getContext().authentication = this
+                    }
+                }
             }
         }
     }

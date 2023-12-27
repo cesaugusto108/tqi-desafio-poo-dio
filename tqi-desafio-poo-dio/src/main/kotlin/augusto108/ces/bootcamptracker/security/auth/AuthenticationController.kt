@@ -10,7 +10,8 @@ import org.springframework.web.bind.annotation.RestController
 class AuthenticationController(private val authenticationService: AuthenticationService) : AuthenticationOperations {
 
     override fun authenticate(authenticationModel: AuthenticationModel): ResponseEntity<Token> {
-        val token: Token = authenticationService.authenticate(authenticationModel)
-        return ResponseEntity.status(200).body(token)
+        authenticationService.authenticate(authenticationModel).also {
+            return ResponseEntity.status(200).body(it)
+        }
     }
 }
