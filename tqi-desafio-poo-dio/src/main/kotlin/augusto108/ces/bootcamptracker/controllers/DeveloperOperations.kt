@@ -36,8 +36,8 @@ interface DeveloperOperations {
 
     @ResponseStatus(HttpStatus.OK)
     @UpdateOperation
-    @PutMapping(consumes = [MediaType.JSON, MediaType.YAML], produces = [MediaType.JSON, MediaType.YAML])
-    fun updateDeveloper(@RequestBody developer: Developer): ResponseEntity<DeveloperDTO>
+    @PutMapping("/{id}", consumes = [MediaType.JSON, MediaType.YAML], produces = [MediaType.JSON, MediaType.YAML])
+    fun updateDeveloper(@PathVariable("id") id: String, @RequestBody developer: Developer): ResponseEntity<DeveloperDTO>
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteOperation

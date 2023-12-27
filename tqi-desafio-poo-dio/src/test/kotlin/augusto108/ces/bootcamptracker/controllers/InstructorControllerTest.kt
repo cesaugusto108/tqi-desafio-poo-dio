@@ -188,7 +188,7 @@ class InstructorControllerTest(
             )
 
         mockMvc.perform(
-            put("${API_VERSION}instructors")
+            put("${API_VERSION}instructors/{id}", "4879ee9d-27d3-4b4b-a39c-1360d70d5a04")
                 .with(csrf())
                 .header(HEADER_KEY, HEADER_VALUE)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -208,6 +208,18 @@ class InstructorControllerTest(
                 )
             )
             .andExpect(jsonPath("$._links.all.href", `is`("http://localhost${API_VERSION}instructors")))
+
+        mockMvc.perform(
+            put("${API_VERSION}instructors/{id}", "4879ee9d-27d3-4b4b-a39c-1360d70d5a05")
+                .with(csrf())
+                .header(HEADER_KEY, HEADER_VALUE)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(instructor))
+        )
+            .andExpect(status().isBadRequest)
+            .andExpect(jsonPath("$.message", `is`("Path id and request body id do not match")))
+            .andExpect(jsonPath("$.status", `is`("BAD_REQUEST")))
+            .andExpect(jsonPath("$.statusCode", `is`(400)))
     }
 
     @Test

@@ -36,8 +36,11 @@ interface InstructorOperations {
 
     @ResponseStatus(HttpStatus.OK)
     @UpdateOperation
-    @PutMapping(consumes = [MediaType.JSON, MediaType.YAML], produces = [MediaType.JSON, MediaType.YAML])
-    fun updateInstructor(@RequestBody instructor: Instructor): ResponseEntity<InstructorDTO>
+    @PutMapping("/{id}", consumes = [MediaType.JSON, MediaType.YAML], produces = [MediaType.JSON, MediaType.YAML])
+    fun updateInstructor(
+        @PathVariable("id") id: String,
+        @RequestBody instructor: Instructor
+    ): ResponseEntity<InstructorDTO>
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteOperation

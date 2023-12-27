@@ -182,7 +182,7 @@ class CourseControllerTest(
             )
 
         mockMvc.perform(
-            put("${API_VERSION}courses")
+            put("${API_VERSION}courses/{id}", -3)
                 .with(csrf())
                 .header(HEADER_KEY, HEADER_VALUE)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -193,6 +193,18 @@ class CourseControllerTest(
             .andExpect(jsonPath("$.id", `is`(-3)))
             .andExpect(jsonPath("$._links.self.href", `is`("http://localhost${API_VERSION}courses/-3")))
             .andExpect(jsonPath("$._links.all.href", `is`("http://localhost${API_VERSION}courses")))
+
+        mockMvc.perform(
+            put("${API_VERSION}courses/{id}", -4)
+                .with(csrf())
+                .header(HEADER_KEY, HEADER_VALUE)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(course))
+        )
+            .andExpect(status().isBadRequest)
+            .andExpect(jsonPath("$.message", `is`("Path id and request body id do not match")))
+            .andExpect(jsonPath("$.status", `is`("BAD_REQUEST")))
+            .andExpect(jsonPath("$.statusCode", `is`(400)))
     }
 
     @Test

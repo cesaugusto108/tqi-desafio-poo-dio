@@ -199,7 +199,7 @@ class DeveloperControllerTest(
             )
 
         mockMvc.perform(
-            put("${API_VERSION}developers")
+            put("${API_VERSION}developers/{id}", "d8b5e8de-d938-4daa-9699-b9cfcc599e37")
                 .with(csrf())
                 .header(HEADER_KEY, HEADER_VALUE)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -220,6 +220,18 @@ class DeveloperControllerTest(
                 )
             )
             .andExpect(jsonPath("$._links.all.href", `is`("http://localhost${API_VERSION}developers")))
+
+        mockMvc.perform(
+            put("${API_VERSION}developers/{id}", "d8b5e8de-d938-4daa-9699-b9cfcc599e30")
+                .with(csrf())
+                .header(HEADER_KEY, HEADER_VALUE)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(developer))
+        )
+            .andExpect(status().isBadRequest)
+            .andExpect(jsonPath("$.message", `is`("Path id and request body id do not match")))
+            .andExpect(jsonPath("$.status", `is`("BAD_REQUEST")))
+            .andExpect(jsonPath("$.statusCode", `is`(400)))
     }
 
     @Test

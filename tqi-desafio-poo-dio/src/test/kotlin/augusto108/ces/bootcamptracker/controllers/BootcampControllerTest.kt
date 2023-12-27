@@ -177,17 +177,30 @@ class BootcampControllerTest(
         )
 
         mockMvc.perform(
-            put("${API_VERSION}bootcamps")
+            put("${API_VERSION}bootcamps/{id}", -1)
                 .with(csrf())
                 .header(HEADER_KEY, HEADER_VALUE)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(bootcamp))
         )
+            .andExpect(status().isOk)
             .andExpect(jsonPath("$.description", `is`("Go backend")))
             .andExpect(jsonPath("$.details", `is`("Go backend development")))
             .andExpect(jsonPath("$.id", `is`(-1)))
             .andExpect(jsonPath("$._links.self.href", `is`("http://localhost${API_VERSION}bootcamps/-1")))
             .andExpect(jsonPath("$._links.all.href", `is`("http://localhost${API_VERSION}bootcamps")))
+
+        mockMvc.perform(
+            put("${API_VERSION}bootcamps/{id}", -2)
+                .with(csrf())
+                .header(HEADER_KEY, HEADER_VALUE)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(bootcamp))
+        )
+            .andExpect(status().isBadRequest)
+            .andExpect(jsonPath("$.message", `is`("Path id and request body id do not match")))
+            .andExpect(jsonPath("$.status", `is`("BAD_REQUEST")))
+            .andExpect(jsonPath("$.statusCode", `is`(400)))
     }
 
     @Test

@@ -36,8 +36,8 @@ interface BootcampOperations {
 
     @ResponseStatus(HttpStatus.OK)
     @UpdateOperation
-    @PutMapping(consumes = [MediaType.JSON, MediaType.YAML], produces = [MediaType.JSON, MediaType.YAML])
-    fun updateBootcamp(@RequestBody bootcamp: Bootcamp): ResponseEntity<BootcampDTO>
+    @PutMapping("/{id}", consumes = [MediaType.JSON, MediaType.YAML], produces = [MediaType.JSON, MediaType.YAML])
+    fun updateBootcamp(@PathVariable("id") id: Int, @RequestBody bootcamp: Bootcamp): ResponseEntity<BootcampDTO>
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteOperation

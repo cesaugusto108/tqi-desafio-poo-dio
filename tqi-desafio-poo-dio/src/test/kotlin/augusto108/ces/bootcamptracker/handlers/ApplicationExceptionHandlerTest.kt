@@ -55,7 +55,12 @@ class ApplicationExceptionHandlerTest(@Autowired private val mockMvc: MockMvc) :
         mockMvc.perform(get("${API_VERSION}courses/{id}", "aaa"))
             .andExpect(status().isBadRequest)
             .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
-            .andExpect(jsonPath("$.message", `is`("For input string: \"aaa\"")))
+            .andExpect(
+                jsonPath(
+                    "$.message",
+                    `is`("Failed to convert value of type 'java.lang.String' to required type 'int'; For input string: \"aaa\"")
+                )
+            )
             .andExpect(jsonPath("$.status", `is`("BAD_REQUEST")))
             .andExpect(jsonPath("$.statusCode", `is`(400)))
     }

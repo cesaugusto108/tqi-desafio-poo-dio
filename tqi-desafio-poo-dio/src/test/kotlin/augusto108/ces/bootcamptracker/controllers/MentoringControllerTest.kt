@@ -169,7 +169,7 @@ class MentoringControllerTest(
             )
 
         mockMvc.perform(
-            put("${API_VERSION}mentoring")
+            put("${API_VERSION}mentoring/{id}", -1)
                 .with(csrf())
                 .header(HEADER_KEY, HEADER_VALUE)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -179,6 +179,18 @@ class MentoringControllerTest(
             .andExpect(jsonPath("$.details", `is`("Kotlin e apps para Android")))
             .andExpect(jsonPath("$._links.self.href", `is`("http://localhost${API_VERSION}mentoring/-1")))
             .andExpect(jsonPath("$._links.all.href", `is`("http://localhost${API_VERSION}mentoring")))
+
+        mockMvc.perform(
+            put("${API_VERSION}mentoring/{id}", -2)
+                .with(csrf())
+                .header(HEADER_KEY, HEADER_VALUE)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(mentoring))
+        )
+            .andExpect(status().isBadRequest)
+            .andExpect(jsonPath("$.message", `is`("Path id and request body id do not match")))
+            .andExpect(jsonPath("$.status", `is`("BAD_REQUEST")))
+            .andExpect(jsonPath("$.statusCode", `is`(400)))
     }
 
     @Test

@@ -1,5 +1,6 @@
 package augusto108.ces.bootcamptracker.controllers
 
+import augusto108.ces.bootcamptracker.exceptions.UnmatchedIdException
 import augusto108.ces.bootcamptracker.model.dto.CourseDTO
 import augusto108.ces.bootcamptracker.model.entities.Course
 import augusto108.ces.bootcamptracker.services.CourseService
@@ -49,12 +50,13 @@ class CourseController(private val courseService: CourseService) : CourseOperati
         }
     }
 
-    override fun updateCourse(course: Course): ResponseEntity<CourseDTO> {
-        courseService.updateCourse(course).also {
+    override fun updateCourse(id: Int, course: Course): ResponseEntity<CourseDTO> {
+        if (id == course.id) courseService.updateCourse(course).also {
             it.add(linkTo(courseControllerClass).slash("/${it.id}").withSelfRel())
             it.add(linkTo(courseControllerClass).withRel("all"))
             return ResponseEntity.status(200).body(it)
         }
+        else throw UnmatchedIdException("Path id and request body id do not match")
     }
 
     override fun deleteCourse(id: Int): ResponseEntity<Unit> {

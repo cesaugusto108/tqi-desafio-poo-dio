@@ -1,5 +1,6 @@
 package augusto108.ces.bootcamptracker.handlers
 
+import augusto108.ces.bootcamptracker.exceptions.UnmatchedIdException
 import com.fasterxml.jackson.annotation.JsonFormat
 import jakarta.persistence.NoResultException
 import org.springframework.http.HttpStatus
@@ -36,8 +37,8 @@ class ApplicationExceptionHandler {
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(NumberFormatException::class)
-    fun handleBadRequest(e: NumberFormatException): ResponseEntity<ErrorResponse> {
+    @ExceptionHandler(NumberFormatException::class, UnmatchedIdException::class)
+    fun handleBadRequest(e: RuntimeException): ResponseEntity<ErrorResponse> {
         logger.info("Exception thrown: ${e.javaClass.name}")
         val errorResponse = ErrorResponse(e.message, HttpStatus.BAD_REQUEST)
         return ResponseEntity.status(400).contentType(mediaType).body(errorResponse)

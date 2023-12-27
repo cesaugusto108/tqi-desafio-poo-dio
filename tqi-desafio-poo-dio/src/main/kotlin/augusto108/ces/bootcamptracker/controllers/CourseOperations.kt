@@ -36,8 +36,8 @@ interface CourseOperations {
 
     @ResponseStatus(HttpStatus.OK)
     @UpdateOperation
-    @PutMapping(consumes = [MediaType.JSON, MediaType.YAML], produces = [MediaType.JSON, MediaType.YAML])
-    fun updateCourse(@RequestBody course: Course): ResponseEntity<CourseDTO>
+    @PutMapping("/{id}", consumes = [MediaType.JSON, MediaType.YAML], produces = [MediaType.JSON, MediaType.YAML])
+    fun updateCourse(@PathVariable("id") id: Int, @RequestBody course: Course): ResponseEntity<CourseDTO>
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteOperation

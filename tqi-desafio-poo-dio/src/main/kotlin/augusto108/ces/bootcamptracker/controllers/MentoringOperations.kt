@@ -36,8 +36,8 @@ interface MentoringOperations {
 
     @ResponseStatus(HttpStatus.OK)
     @UpdateOperation
-    @PutMapping(consumes = [MediaType.JSON, MediaType.YAML], produces = [MediaType.JSON, MediaType.YAML])
-    fun updateMentoring(@RequestBody mentoring: Mentoring): ResponseEntity<MentoringDTO>
+    @PutMapping("/{id}", consumes = [MediaType.JSON, MediaType.YAML], produces = [MediaType.JSON, MediaType.YAML])
+    fun updateMentoring(@PathVariable("id") id: Int, @RequestBody mentoring: Mentoring): ResponseEntity<MentoringDTO>
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteOperation
