@@ -19,46 +19,47 @@ class DeveloperController(private val developerService: DeveloperService) : Deve
     val developerControllerClass: Class<DeveloperController> = DeveloperController::class.java
 
     override fun saveDeveloper(developer: Developer): ResponseEntity<DeveloperDTO> {
-        val savedDeveloper: DeveloperDTO = developerService.saveDeveloper(developer)
-        savedDeveloper.add(linkTo(developerControllerClass).slash("/${savedDeveloper.id}").withSelfRel())
-        savedDeveloper.add(linkTo(developerControllerClass).withRel("all"))
-        val uri: URI = savedDeveloper.getRequiredLink(IanaLinkRelations.SELF).toUri()
-        return ResponseEntity.status(201).location(uri).body(savedDeveloper)
+        developerService.saveDeveloper(developer).also {
+            it.add(linkTo(developerControllerClass).slash("/${it.id}").withSelfRel())
+            it.add(linkTo(developerControllerClass).withRel("all"))
+            val uri: URI = it.getRequiredLink(IanaLinkRelations.SELF).toUri()
+            return ResponseEntity.status(201).location(uri).body(it)
+        }
     }
 
     override fun findAllDevelopers(page: Int, max: Int): ResponseEntity<PagedModel<EntityModel<DeveloperDTO>>> {
-        val pagedModel: PagedModel<EntityModel<DeveloperDTO>> = developerService.findAllDevelopers(page, max)
-        val developerDTOList: MutableList<DeveloperDTO?> = mutableListOf()
-
-        for (entityModel: EntityModel<DeveloperDTO> in pagedModel) developerDTOList.add(entityModel.content)
-
-        for (developer: DeveloperDTO? in developerDTOList) {
-            val selfLink = linkTo(developerControllerClass).withSelfRel()
-            val developerId: UUID? = developer?.id
-            val developerRel = "developer${developer?.id}"
-            val developerLink = linkTo(developerControllerClass).slash(developerId).withRel(developerRel)
-            developer?.add(selfLink)
-            developer?.add(developerLink)
+        developerService.findAllDevelopers(page, max).also {
+            val developerDTOList: MutableList<DeveloperDTO?> = mutableListOf()
+            for (entityModel: EntityModel<DeveloperDTO> in it) developerDTOList.add(entityModel.content)
+            for (developer: DeveloperDTO? in developerDTOList) {
+                val selfLink = linkTo(developerControllerClass).withSelfRel()
+                val developerId: UUID? = developer?.id
+                val developerRel = "developer${developer?.id}"
+                val developerLink = linkTo(developerControllerClass).slash(developerId).withRel(developerRel)
+                developer?.add(selfLink)
+                developer?.add(developerLink)
+            }
+            val headers = HttpHeaders()
+            headers.add("X-Page-Number", it.metadata?.number.toString())
+            headers.add("X-Page-Size", it.metadata?.size.toString())
+            return ResponseEntity.status(200).headers(headers).body(it)
         }
-
-        val headers = HttpHeaders()
-        headers.add("X-Page-Number", pagedModel.metadata?.number.toString())
-        headers.add("X-Page-Size", pagedModel.metadata?.size.toString())
-        return ResponseEntity.status(200).headers(headers).body(pagedModel)
     }
 
     override fun findDeveloperById(id: String): ResponseEntity<DeveloperDTO> {
-        val developer: DeveloperDTO = developerService.findDeveloperById(id)
-        developer.add(linkTo(developerControllerClass).slash("/${developer.id}").withSelfRel())
-        developer.add(linkTo(developerControllerClass).withRel("all"))
-        return ResponseEntity.status(200).body(developer)
+        developerService.findDeveloperById(id).also {
+            it.add(linkTo(developerControllerClass).slash("/${it.id}").withSelfRel())
+            it.add(linkTo(developerControllerClass).withRel("all"))
+            return ResponseEntity.status(200).body(it)
+        }
     }
 
     override fun updateDeveloper(developer: Developer): ResponseEntity<DeveloperDTO> {
-        val updatedDeveloper: DeveloperDTO = developerService.updateDeveloper(developer)
-        updatedDeveloper.add(linkTo(developerControllerClass).slash("/${updatedDeveloper.id}").withSelfRel())
-        updatedDeveloper.add(linkTo(developerControllerClass).withRel("all"))
-        return ResponseEntity.status(200).body(updatedDeveloper)
+        developerService.updateDeveloper(developer).also {
+            it.add(linkTo(developerControllerClass).slash("/${it.id}").withSelfRel())
+            it.add(linkTo(developerControllerClass).withRel("all"))
+            return ResponseEntity.status(200).body(it)
+        }
     }
 
     override fun deleteDeveloper(id: String): ResponseEntity<Unit> {

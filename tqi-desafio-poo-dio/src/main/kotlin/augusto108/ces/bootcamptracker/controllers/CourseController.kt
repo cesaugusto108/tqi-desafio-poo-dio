@@ -18,42 +18,43 @@ class CourseController(private val courseService: CourseService) : CourseOperati
     val courseControllerClass: Class<CourseController> = CourseController::class.java
 
     override fun saveCourse(course: Course): ResponseEntity<CourseDTO> {
-        val savedCourse: CourseDTO = courseService.saveCourse(course)
-        savedCourse.add(linkTo(courseControllerClass).slash("/${savedCourse.id}").withSelfRel())
-        savedCourse.add(linkTo(courseControllerClass).withRel("all"))
-        val uri: URI = savedCourse.getRequiredLink(IanaLinkRelations.SELF).toUri()
-        return ResponseEntity.status(201).location(uri).body(savedCourse)
+        courseService.saveCourse(course).also {
+            it.add(linkTo(courseControllerClass).slash("/${it.id}").withSelfRel())
+            it.add(linkTo(courseControllerClass).withRel("all"))
+            val uri: URI = it.getRequiredLink(IanaLinkRelations.SELF).toUri()
+            return ResponseEntity.status(201).location(uri).body(it)
+        }
     }
 
     override fun findAllCourses(page: Int, max: Int): ResponseEntity<PagedModel<EntityModel<CourseDTO>>> {
-        val pagedModel: PagedModel<EntityModel<CourseDTO>> = courseService.findAllCourses(page, max)
-        val courseDTOList: MutableList<CourseDTO?> = mutableListOf()
-
-        for (entityModel: EntityModel<CourseDTO> in pagedModel) courseDTOList.add(entityModel.content)
-
-        for (course: CourseDTO? in courseDTOList) {
-            course?.add(linkTo(courseControllerClass).withSelfRel())
-            course?.add(linkTo(courseControllerClass).slash("/${course.id}").withRel("course${course.id}"))
+        courseService.findAllCourses(page, max).also {
+            val courseDTOList: MutableList<CourseDTO?> = mutableListOf()
+            for (entityModel: EntityModel<CourseDTO> in it) courseDTOList.add(entityModel.content)
+            for (course: CourseDTO? in courseDTOList) {
+                course?.add(linkTo(courseControllerClass).withSelfRel())
+                course?.add(linkTo(courseControllerClass).slash("/${course.id}").withRel("course${course.id}"))
+            }
+            val headers = HttpHeaders()
+            headers.add("X-Page-Number", it.metadata?.number.toString())
+            headers.add("X-Page-Size", it.metadata?.size.toString())
+            return ResponseEntity.status(200).headers(headers).body(it)
         }
-
-        val headers = HttpHeaders()
-        headers.add("X-Page-Number", pagedModel.metadata?.number.toString())
-        headers.add("X-Page-Size", pagedModel.metadata?.size.toString())
-        return ResponseEntity.status(200).headers(headers).body(pagedModel)
     }
 
     override fun findCourseById(id: Int): ResponseEntity<CourseDTO> {
-        val course: CourseDTO = courseService.findCourseById(id)
-        course.add(linkTo(courseControllerClass).slash("/${course.id}").withSelfRel())
-        course.add(linkTo(courseControllerClass).withRel("all"))
-        return ResponseEntity.status(200).body(course)
+        courseService.findCourseById(id).also {
+            it.add(linkTo(courseControllerClass).slash("/${it.id}").withSelfRel())
+            it.add(linkTo(courseControllerClass).withRel("all"))
+            return ResponseEntity.status(200).body(it)
+        }
     }
 
     override fun updateCourse(course: Course): ResponseEntity<CourseDTO> {
-        val updatedCourse: CourseDTO = courseService.updateCourse(course)
-        updatedCourse.add(linkTo(courseControllerClass).slash("/${updatedCourse.id}").withSelfRel())
-        updatedCourse.add(linkTo(courseControllerClass).withRel("all"))
-        return ResponseEntity.status(200).body(updatedCourse)
+        courseService.updateCourse(course).also {
+            it.add(linkTo(courseControllerClass).slash("/${it.id}").withSelfRel())
+            it.add(linkTo(courseControllerClass).withRel("all"))
+            return ResponseEntity.status(200).body(it)
+        }
     }
 
     override fun deleteCourse(id: Int): ResponseEntity<Unit> {

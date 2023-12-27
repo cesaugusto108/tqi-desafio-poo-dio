@@ -19,46 +19,47 @@ class BootcampController(private val bootcampService: BootcampService) : Bootcam
     val bootcampControllerClass: Class<BootcampController> = BootcampController::class.java
 
     override fun saveBootcamp(bootcamp: Bootcamp): ResponseEntity<BootcampDTO> {
-        val savedBootcamp: BootcampDTO = bootcampService.saveBootcamp(bootcamp)
-        savedBootcamp.add(linkTo(bootcampControllerClass).slash("/${savedBootcamp.id}").withSelfRel())
-        savedBootcamp.add(linkTo(bootcampControllerClass).withRel("all"))
-        val uri: URI = savedBootcamp.getRequiredLink(IanaLinkRelations.SELF).toUri()
-        return ResponseEntity.status(201).location(uri).body(savedBootcamp)
+        bootcampService.saveBootcamp(bootcamp).also {
+            it.add(linkTo(bootcampControllerClass).slash("/${it.id}").withSelfRel())
+            it.add(linkTo(bootcampControllerClass).withRel("all"))
+            val uri: URI = it.getRequiredLink(IanaLinkRelations.SELF).toUri()
+            return ResponseEntity.status(201).location(uri).body(it)
+        }
     }
 
     override fun findAllBootcamps(page: Int, max: Int): ResponseEntity<PagedModel<EntityModel<BootcampDTO>>> {
-        val pagedModel: PagedModel<EntityModel<BootcampDTO>> = bootcampService.findAllBootcamps(page, max)
-        val bootcampDTOList: MutableList<BootcampDTO?> = mutableListOf()
-
-        for (entityModel: EntityModel<BootcampDTO> in pagedModel) bootcampDTOList.add(entityModel.content)
-
-        for (bootcamp: BootcampDTO? in bootcampDTOList) {
-            val selfLink: Link = linkTo(bootcampControllerClass).withSelfRel()
-            val bootcampId: Int? = bootcamp?.id
-            val bootcampRel = "bootcamp${bootcampId}"
-            val bootcampLink: Link = linkTo(bootcampControllerClass).slash(bootcampId).withRel(bootcampRel)
-            bootcamp?.add(selfLink)
-            bootcamp?.add(bootcampLink)
+        bootcampService.findAllBootcamps(page, max).also {
+            val bootcampDTOList: MutableList<BootcampDTO?> = mutableListOf()
+            for (entityModel: EntityModel<BootcampDTO> in it) bootcampDTOList.add(entityModel.content)
+            for (bootcamp: BootcampDTO? in bootcampDTOList) {
+                val selfLink: Link = linkTo(bootcampControllerClass).withSelfRel()
+                val bootcampId: Int? = bootcamp?.id
+                val bootcampRel = "bootcamp${bootcampId}"
+                val bootcampLink: Link = linkTo(bootcampControllerClass).slash(bootcampId).withRel(bootcampRel)
+                bootcamp?.add(selfLink)
+                bootcamp?.add(bootcampLink)
+            }
+            val headers = HttpHeaders()
+            headers.add("X-Page-Number", it.metadata?.number.toString())
+            headers.add("X-Page-Size", it.metadata?.size.toString())
+            return ResponseEntity.status(200).headers(headers).body(it)
         }
-
-        val headers = HttpHeaders()
-        headers.add("X-Page-Number", pagedModel.metadata?.number.toString())
-        headers.add("X-Page-Size", pagedModel.metadata?.size.toString())
-        return ResponseEntity.status(200).headers(headers).body(pagedModel)
     }
 
     override fun findBootcampById(id: Int): ResponseEntity<BootcampDTO> {
-        val bootcamp: BootcampDTO = bootcampService.findBootcampById(id)
-        bootcamp.add(linkTo(bootcampControllerClass).slash("/${bootcamp.id}").withSelfRel())
-        bootcamp.add(linkTo(bootcampControllerClass).withRel("all"))
-        return ResponseEntity.status(200).body(bootcamp)
+        bootcampService.findBootcampById(id).also {
+            it.add(linkTo(bootcampControllerClass).slash("/${it.id}").withSelfRel())
+            it.add(linkTo(bootcampControllerClass).withRel("all"))
+            return ResponseEntity.status(200).body(it)
+        }
     }
 
     override fun updateBootcamp(bootcamp: Bootcamp): ResponseEntity<BootcampDTO> {
-        val updatedBootcamp: BootcampDTO = bootcampService.updateBootcamp(bootcamp)
-        updatedBootcamp.add(linkTo(bootcampControllerClass).slash("/${updatedBootcamp.id}").withSelfRel())
-        updatedBootcamp.add(linkTo(bootcampControllerClass).withRel("all"))
-        return ResponseEntity.status(200).body(updatedBootcamp)
+        bootcampService.updateBootcamp(bootcamp).also {
+            it.add(linkTo(bootcampControllerClass).slash("/${it.id}").withSelfRel())
+            it.add(linkTo(bootcampControllerClass).withRel("all"))
+            return ResponseEntity.status(200).body(it)
+        }
     }
 
     override fun deleteBootcamp(id: Int): ResponseEntity<Unit> {

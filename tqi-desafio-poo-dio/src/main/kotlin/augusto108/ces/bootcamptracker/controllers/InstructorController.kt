@@ -19,46 +19,47 @@ class InstructorController(private val instructorService: InstructorService) : I
     val instructorControllerClass: Class<InstructorController> = InstructorController::class.java
 
     override fun saveInstructor(instructor: Instructor): ResponseEntity<InstructorDTO> {
-        val savedInstructor: InstructorDTO = instructorService.saveInstructor(instructor)
-        savedInstructor.add(linkTo(instructorControllerClass).slash("/${savedInstructor.id}").withSelfRel())
-        savedInstructor.add(linkTo(instructorControllerClass).withRel("all"))
-        val uri: URI = savedInstructor.getRequiredLink(IanaLinkRelations.SELF).toUri()
-        return ResponseEntity.status(201).location(uri).body(savedInstructor)
+        instructorService.saveInstructor(instructor).also {
+            it.add(linkTo(instructorControllerClass).slash("/${it.id}").withSelfRel())
+            it.add(linkTo(instructorControllerClass).withRel("all"))
+            val uri: URI = it.getRequiredLink(IanaLinkRelations.SELF).toUri()
+            return ResponseEntity.status(201).location(uri).body(it)
+        }
     }
 
     override fun findAllInstructors(page: Int, max: Int): ResponseEntity<PagedModel<EntityModel<InstructorDTO>>> {
-        val pagedModel: PagedModel<EntityModel<InstructorDTO>> = instructorService.findAllInstructors(page, max)
-        val instructorDTOList: MutableList<InstructorDTO?> = mutableListOf()
-
-        for (entityModel in pagedModel) instructorDTOList.add(entityModel.content)
-
-        for (instructor: InstructorDTO? in instructorDTOList) {
-            val selfLink: Link = linkTo(instructorControllerClass).withSelfRel()
-            val instructorId = "/${instructor?.id}"
-            val instructorRel = "instructor${instructor?.id}"
-            val developerLink: Link = linkTo(instructorControllerClass).slash(instructorId).withRel(instructorRel)
-            instructor?.add(selfLink)
-            instructor?.add(developerLink)
+        instructorService.findAllInstructors(page, max).also {
+            val instructorDTOList: MutableList<InstructorDTO?> = mutableListOf()
+            for (entityModel in it) instructorDTOList.add(entityModel.content)
+            for (instructor: InstructorDTO? in instructorDTOList) {
+                val selfLink: Link = linkTo(instructorControllerClass).withSelfRel()
+                val instructorId = "/${instructor?.id}"
+                val instructorRel = "instructor${instructor?.id}"
+                val developerLink: Link = linkTo(instructorControllerClass).slash(instructorId).withRel(instructorRel)
+                instructor?.add(selfLink)
+                instructor?.add(developerLink)
+            }
+            val headers = HttpHeaders()
+            headers.add("X-Page-Number", it.metadata?.number.toString())
+            headers.add("X-Page-Size", it.metadata?.size.toString())
+            return ResponseEntity.status(200).headers(headers).body(it)
         }
-
-        val headers = HttpHeaders()
-        headers.add("X-Page-Number", pagedModel.metadata?.number.toString())
-        headers.add("X-Page-Size", pagedModel.metadata?.size.toString())
-        return ResponseEntity.status(200).headers(headers).body(pagedModel)
     }
 
     override fun findInstructorById(id: String): ResponseEntity<InstructorDTO> {
-        val instructor: InstructorDTO = instructorService.findInstructorById(id)
-        instructor.add(linkTo(instructorControllerClass).slash("/${instructor.id}").withSelfRel())
-        instructor.add(linkTo(instructorControllerClass).withRel("all"))
-        return ResponseEntity.status(200).body(instructor)
+        instructorService.findInstructorById(id).also {
+            it.add(linkTo(instructorControllerClass).slash("/${it.id}").withSelfRel())
+            it.add(linkTo(instructorControllerClass).withRel("all"))
+            return ResponseEntity.status(200).body(it)
+        }
     }
 
     override fun updateInstructor(instructor: Instructor): ResponseEntity<InstructorDTO> {
-        val updatedInstructor: InstructorDTO = instructorService.updateInstructor(instructor)
-        updatedInstructor.add(linkTo(instructorControllerClass).slash("/${updatedInstructor.id}").withSelfRel())
-        updatedInstructor.add(linkTo(instructorControllerClass).withRel("all"))
-        return ResponseEntity.status(200).body(updatedInstructor)
+        instructorService.updateInstructor(instructor).also {
+            it.add(linkTo(instructorControllerClass).slash("/${it.id}").withSelfRel())
+            it.add(linkTo(instructorControllerClass).withRel("all"))
+            return ResponseEntity.status(200).body(it)
+        }
     }
 
     override fun deleteInstructor(id: String): ResponseEntity<Unit> {
