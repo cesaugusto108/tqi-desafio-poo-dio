@@ -14,20 +14,21 @@ class CourseDaoImpl(private val entityManager: EntityManager) : CourseDao {
     }
 
     override fun findAllCourses(): List<Course> {
-        val query = "from Course order by id"
-        return entityManager.createQuery(query, Course::class.java).resultList
+        "from Course order by id".apply { return entityManager.createQuery(this, Course::class.java).resultList }
     }
 
     override fun findCourseById(id: Int): Course {
-        val query = "from Course c where id = :id"
-        return entityManager.createQuery(query, Course::class.java).setParameter("id", id).singleResult
+        "from Course c where id = :id".apply {
+            return entityManager.createQuery(this, Course::class.java).setParameter("id", id).singleResult
+        }
     }
 
     override fun updateCourse(course: Course): Course {
         val existingCourse: Course = findCourseById(course.id)
-        val updatedCourse: Course = course.copyTo(existingCourse)
-        entityManager.persist(updatedCourse)
-        return updatedCourse
+        course.copyTo(existingCourse).also {
+            entityManager.persist(it)
+            return it
+        }
     }
 
     override fun deleteCourse(id: Int): Unit = entityManager.remove(findCourseById(id))

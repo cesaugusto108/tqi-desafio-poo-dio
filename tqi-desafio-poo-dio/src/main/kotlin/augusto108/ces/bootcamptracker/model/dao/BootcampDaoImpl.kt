@@ -14,20 +14,21 @@ class BootcampDaoImpl(private val entityManager: EntityManager) : BootcampDao {
     }
 
     override fun findAllBootcamps(): List<Bootcamp> {
-        val query = "from Bootcamp order by id"
-        return entityManager.createQuery(query, Bootcamp::class.java).resultList
+        "from Bootcamp order by id".apply { return entityManager.createQuery(this, Bootcamp::class.java).resultList }
     }
 
     override fun findBootcampById(id: Int): Bootcamp {
-        val query = "from Bootcamp b where id = :id"
-        return entityManager.createQuery(query, Bootcamp::class.java).setParameter("id", id).singleResult
+        "from Bootcamp b where id = :id".apply {
+            return entityManager.createQuery(this, Bootcamp::class.java).setParameter("id", id).singleResult
+        }
     }
 
     override fun updateBootcamp(bootcamp: Bootcamp): Bootcamp {
         val existingBootcamp: Bootcamp = findBootcampById(bootcamp.id)
-        val updatedBootcamp: Bootcamp = bootcamp.copyTo(existingBootcamp)
-        entityManager.persist(updatedBootcamp)
-        return updatedBootcamp
+        bootcamp.copyTo(existingBootcamp).also {
+            entityManager.persist(it)
+            return it
+        }
     }
 
     override fun deleteBootcamp(id: Int): Unit = entityManager.remove(findBootcampById(id))

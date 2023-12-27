@@ -14,20 +14,22 @@ class MentoringDaoImpl(private val entityManager: EntityManager) : MentoringDao 
     }
 
     override fun findAllMentoring(): List<Mentoring> {
-        val query = "from Mentoring order by id"
-        return entityManager.createQuery(query, Mentoring::class.java).resultList
+        "from Mentoring order by id".apply { return entityManager.createQuery(this, Mentoring::class.java).resultList }
+
     }
 
     override fun findMentoringById(id: Int): Mentoring {
-        val query = "from Mentoring m where id = : id"
-        return entityManager.createQuery(query, Mentoring::class.java).setParameter("id", id).singleResult
+        "from Mentoring m where id = : id".apply {
+            return entityManager.createQuery(this, Mentoring::class.java).setParameter("id", id).singleResult
+        }
     }
 
     override fun updateMentoring(mentoring: Mentoring): Mentoring {
         val existingMentoring: Mentoring = findMentoringById(mentoring.id)
-        val updatedMentoring: Mentoring = mentoring.copyTo(existingMentoring)
-        entityManager.persist(updatedMentoring)
-        return updatedMentoring
+        mentoring.copyTo(existingMentoring).also {
+            entityManager.persist(it)
+            return it
+        }
     }
 
     override fun deleteMentoring(id: Int): Unit = entityManager.remove(findMentoringById(id))

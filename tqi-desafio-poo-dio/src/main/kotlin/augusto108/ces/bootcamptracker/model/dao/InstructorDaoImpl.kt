@@ -15,31 +15,36 @@ class InstructorDaoImpl(private val entityManager: EntityManager) : InstructorDa
     }
 
     override fun findAllInstructors(): List<Instructor> {
-        val query = "from Instructor order by id"
-        return entityManager.createQuery(query, Instructor::class.java).resultList
+        "from Instructor order by id".apply {
+            return entityManager.createQuery(this, Instructor::class.java).resultList
+        }
     }
 
     override fun findInstructorById(id: UUID): Instructor {
-        val query = "from Instructor i where id = :id"
-        return entityManager.createQuery(query, Instructor::class.java).setParameter("id", id).singleResult
+        "from Instructor i where id = :id".apply {
+            return entityManager.createQuery(this, Instructor::class.java).setParameter("id", id).singleResult
+        }
     }
 
     override fun updateInstructor(instructor: Instructor): Instructor {
         val existingInstructor: Instructor? = instructor.id?.let { findInstructorById(it) }
-        val updatedInstructor: Instructor = instructor.copyTo(existingInstructor!!)
-        entityManager.persist(updatedInstructor)
-        return updatedInstructor
+        instructor.copyTo(existingInstructor!!).also {
+            entityManager.persist(it)
+            return it
+        }
     }
 
     override fun deleteInstructor(id: UUID): Unit = entityManager.remove(findInstructorById(id))
 
     override fun activateInstructor(id: UUID) {
-        val query = "update `person` set `active` = b'1' where id = :id"
-        entityManager.createNativeQuery(query).setParameter("id", id).executeUpdate()
+        "update `person` set `active` = b'1' where id = :id".apply {
+            entityManager.createNativeQuery(this).setParameter("id", id).executeUpdate()
+        }
     }
 
     override fun deactivateInstructor(id: UUID) {
-        val query = "update `person` set `active` = b'0' where id = :id"
-        entityManager.createNativeQuery(query).setParameter("id", id).executeUpdate()
+        "update `person` set `active` = b'0' where id = :id".apply {
+            entityManager.createNativeQuery(this).setParameter("id", id).executeUpdate()
+        }
     }
 }
