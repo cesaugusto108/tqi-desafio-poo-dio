@@ -22,6 +22,6 @@ object PageRequest {
         val start: Int = pageable.offset.toInt()
         val end: Int = (start + pageable.pageSize).coerceAtMost(list.size)
         val pageContent: List<T> = list.subList(start, end)
-        return PageImpl(pageContent, pageable, (start + pageable.pageSize).toLong())
+        return PageImpl(pageContent, pageable, list.size.toLong())
     }
 }

@@ -111,7 +111,7 @@ class MentoringControllerTest(
                 )
             )
             .andExpect(jsonPath("$.page.size", `is`(10)))
-            .andExpect(jsonPath("$.page.totalElements", `is`(10)))
+            .andExpect(jsonPath("$.page.totalElements", `is`(2)))
             .andExpect(jsonPath("$.page.totalPages", `is`(1)))
             .andExpect(jsonPath("$.page.number", `is`(0)))
 

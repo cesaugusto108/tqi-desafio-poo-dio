@@ -25,8 +25,8 @@ interface MentoringOperations {
     @FindAllOperation
     @GetMapping(produces = [MediaType.JSON, MediaType.YAML])
     fun findAllMentoring(
-        @RequestParam(defaultValue = "0", required = false) page: Int,
-        @RequestParam(defaultValue = "10", required = false) max: Int
+        @RequestParam(defaultValue = "0", required = false, value = "page") page: Int,
+        @RequestParam(defaultValue = "10", required = false, value = "size") max: Int
     ): ResponseEntity<PagedModel<EntityModel<MentoringDTO>>>
 
     @ResponseStatus(HttpStatus.OK)

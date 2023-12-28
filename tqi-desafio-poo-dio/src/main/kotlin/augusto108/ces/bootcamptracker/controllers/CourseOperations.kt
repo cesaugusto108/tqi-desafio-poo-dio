@@ -25,8 +25,8 @@ interface CourseOperations {
     @FindAllOperation
     @GetMapping(produces = [MediaType.JSON, MediaType.YAML])
     fun findAllCourses(
-        @RequestParam(defaultValue = "0", required = false) page: Int,
-        @RequestParam(defaultValue = "10", required = false) max: Int
+        @RequestParam(defaultValue = "0", required = false, value = "page") page: Int,
+        @RequestParam(defaultValue = "10", required = false, value = "size") max: Int
     ): ResponseEntity<PagedModel<EntityModel<CourseDTO>>>
 
     @ResponseStatus(HttpStatus.OK)
