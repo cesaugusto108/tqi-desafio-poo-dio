@@ -1,0 +1,34 @@
+services:
+  db:
+    image: mysql:8.0.33
+    container_name: bootcamptracker-db
+    command: [ "mysqld", "--default-authentication-plugin=mysql_native_password" ]
+    restart: on-failure
+    environment:
+      MYSQL_ROOT_PASSWORD: ${PASSWORD}
+      MYSQL_DATABASE: ${DATABASE}
+      MYSQL_TCP_PORT: 3308
+      MYSQL_USER: ${USER}
+      MYSQL_PASSWORD: ${USERPASSWORD}
+    expose: [ 3308 ]
+    networks: [ bootcamptracker-network ]
+
+  bootcamptracker:
+    image: bootcamptracker
+    container_name: bootcamptracker-app
+    depends_on: [ db ]
+    restart: on-failure
+    build: .
+    environment:
+      SPRING.PROFILES.ACTIVE: ${PROFILES_ACTIVE}
+      SPRING.DATASOURCE.URL: jdbc:mysql://db:3308/${DATABASE}?useTimezone=true&serverTimezone=UTC
+      SPRING.DATASOURCE.USERNAME: root
+      SPRING.DATASOURCE.PASSWORD: ${PASSWORD}
+      SERVER.PORT: 80
+      SECURITY.JWT.TOKEN.SECRET-KEY: ${SECRETKEY}
+    ports: [ 8081:80 ]
+    networks: [ bootcamptracker-network ]
+
+networks:
+  bootcamptracker-network:
+    driver: bridge
