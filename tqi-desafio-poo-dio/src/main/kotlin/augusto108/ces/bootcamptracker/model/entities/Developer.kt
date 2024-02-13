@@ -1,12 +1,13 @@
 package augusto108.ces.bootcamptracker.model.entities
 
 import augusto108.ces.bootcamptracker.model.datatypes.Name
+import com.fasterxml.jackson.annotation.JsonCreator
 import jakarta.persistence.*
 import java.util.*
 
 @Entity
 @DiscriminatorValue(value = "developer")
-class Developer(
+class Developer @JsonCreator(mode = JsonCreator.Mode.PROPERTIES) constructor(
     @Column(name = "developer_level", nullable = true) var level: Int = 0,
     name: Name = Name(),
     age: Int = 0,
