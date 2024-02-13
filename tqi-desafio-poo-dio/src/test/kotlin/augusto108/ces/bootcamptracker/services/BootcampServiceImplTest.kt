@@ -19,7 +19,8 @@ import java.time.LocalDateTime
 @DisplayNameGeneration(DisplayNameGenerator.Simple::class)
 @TestPropertySource("classpath:app_params.properties")
 @TestMethodOrder(MethodOrderer.OrderAnnotation::class)
-class BootcampServiceImplTest(@Autowired private val bootcampService: BootcampService) : TestContainersConfig() {
+class BootcampServiceImplTest @Autowired constructor(private val bootcampService: BootcampService) :
+    TestContainersConfig() {
 
     @Value("\${page.value}")
     var page: Int = 0

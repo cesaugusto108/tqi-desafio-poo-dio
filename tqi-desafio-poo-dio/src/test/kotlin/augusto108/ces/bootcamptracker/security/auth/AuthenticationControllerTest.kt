@@ -27,9 +27,9 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
 @DisplayNameGeneration(DisplayNameGenerator.Simple::class)
-class AuthenticationControllerTest(
-    @Autowired private val mockMvc: MockMvc,
-    @Autowired private val objectMapper: ObjectMapper
+class AuthenticationControllerTest @Autowired constructor(
+    private val mockMvc: MockMvc,
+    private val objectMapper: ObjectMapper
 ) : TestContainersConfig() {
 
     @Value("\${security.test.user.password}")

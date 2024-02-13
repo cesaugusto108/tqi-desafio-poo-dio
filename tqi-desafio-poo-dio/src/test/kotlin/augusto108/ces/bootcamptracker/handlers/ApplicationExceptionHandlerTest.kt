@@ -21,7 +21,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 @AutoConfigureMockMvc
 @WithMockUser
 @DisplayNameGeneration(DisplayNameGenerator.Simple::class)
-class ApplicationExceptionHandlerTest(@Autowired private val mockMvc: MockMvc) : TestContainersConfig() {
+class ApplicationExceptionHandlerTest @Autowired constructor(private val mockMvc: MockMvc) : TestContainersConfig() {
 
     @Test
     fun handleNotAcceptable() {

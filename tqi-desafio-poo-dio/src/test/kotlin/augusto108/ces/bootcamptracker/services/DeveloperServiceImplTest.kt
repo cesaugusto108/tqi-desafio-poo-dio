@@ -21,7 +21,8 @@ import java.util.*
 @DisplayNameGeneration(DisplayNameGenerator.Simple::class)
 @TestPropertySource("classpath:app_params.properties")
 @TestMethodOrder(MethodOrderer.OrderAnnotation::class)
-class DeveloperServiceImplTest(@Autowired private val developerService: DeveloperService) : TestContainersConfig() {
+class DeveloperServiceImplTest @Autowired constructor(private val developerService: DeveloperService) :
+    TestContainersConfig() {
 
     @Value("\${page.value}")
     var page: Int = 0

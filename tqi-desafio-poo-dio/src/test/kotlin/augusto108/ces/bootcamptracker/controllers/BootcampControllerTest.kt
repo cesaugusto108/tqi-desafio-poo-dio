@@ -36,10 +36,10 @@ import augusto108.ces.bootcamptracker.util.MediaType as UtilMediaType
 @DisplayNameGeneration(DisplayNameGenerator.Simple::class)
 @TestPropertySource("classpath:app_params.properties")
 @TestMethodOrder(MethodOrderer.OrderAnnotation::class)
-class BootcampControllerTest(
-    @Autowired private val mockMvc: MockMvc,
-    @Autowired private val objectMapper: ObjectMapper,
-    @Autowired private val bootcampService: BootcampService
+class BootcampControllerTest @Autowired constructor(
+    private val mockMvc: MockMvc,
+    private val objectMapper: ObjectMapper,
+    private val bootcampService: BootcampService
 ) : TestContainersConfig() {
 
     @Value("\${page.value}")

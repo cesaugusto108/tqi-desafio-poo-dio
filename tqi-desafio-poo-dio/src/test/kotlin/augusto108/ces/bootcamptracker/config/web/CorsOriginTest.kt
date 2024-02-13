@@ -16,7 +16,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
 @WithMockUser
-class CorsOriginTest(@Autowired private val mockMvc: MockMvc) : TestContainersConfig() {
+class CorsOriginTest @Autowired constructor(private val mockMvc: MockMvc) : TestContainersConfig() {
 
     private val urlTemplate = "${API_VERSION}courses"
 

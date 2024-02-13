@@ -18,7 +18,8 @@ import org.springframework.test.context.TestPropertySource
 @DisplayNameGeneration(DisplayNameGenerator.Simple::class)
 @TestPropertySource("classpath:app_params.properties")
 @TestMethodOrder(MethodOrderer.OrderAnnotation::class)
-class MentoringServiceImplTest(@Autowired private val mentoringService: MentoringService) : TestContainersConfig() {
+class MentoringServiceImplTest @Autowired constructor(private val mentoringService: MentoringService) :
+    TestContainersConfig() {
 
     @Value("\${page.value}")
     var page: Int = 0

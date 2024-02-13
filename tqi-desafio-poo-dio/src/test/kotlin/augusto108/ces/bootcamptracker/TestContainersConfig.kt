@@ -10,7 +10,9 @@ import org.testcontainers.lifecycle.Startables
 
 @ContextConfiguration(initializers = [TestContainersConfig.Initializer::class])
 abstract class TestContainersConfig {
+
     internal class Initializer : ApplicationContextInitializer<ConfigurableApplicationContext> {
+
         override fun initialize(applicationContext: ConfigurableApplicationContext) {
             startContainer()
 
@@ -22,6 +24,7 @@ abstract class TestContainersConfig {
     }
 
     companion object {
+
         private val mysql: MySQLContainer<*> = MySQLContainer("mysql:8.0.33")
 
         fun startContainer() {
