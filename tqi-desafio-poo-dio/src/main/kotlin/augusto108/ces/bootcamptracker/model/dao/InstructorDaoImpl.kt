@@ -3,11 +3,12 @@ package augusto108.ces.bootcamptracker.model.dao
 import augusto108.ces.bootcamptracker.model.entities.Instructor
 import augusto108.ces.bootcamptracker.model.helpers.PropertyDuplicate.copyTo
 import jakarta.persistence.EntityManager
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
 import java.util.*
 
 @Repository
-class InstructorDaoImpl(private val entityManager: EntityManager) : InstructorDao {
+class InstructorDaoImpl @Autowired constructor(private val entityManager: EntityManager) : InstructorDao {
 
     override fun saveInstructor(instructor: Instructor): Instructor {
         entityManager.persist(instructor)

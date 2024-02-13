@@ -6,6 +6,7 @@ import augusto108.ces.bootcamptracker.model.dto.DeveloperDTO
 import augusto108.ces.bootcamptracker.model.entities.Developer
 import augusto108.ces.bootcamptracker.model.mapper.personMap
 import augusto108.ces.bootcamptracker.services.PageRequest.getPersonPageRequest
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.data.web.PagedResourcesAssembler
 import org.springframework.hateoas.EntityModel
@@ -16,7 +17,7 @@ import java.util.*
 
 @Service
 @Transactional
-class DeveloperServiceImpl(
+class DeveloperServiceImpl @Autowired constructor(
     private val developerDao: DeveloperDao,
     private val pagedResourcesAssembler: PagedResourcesAssembler<DeveloperDTO>
 ) : DeveloperService {

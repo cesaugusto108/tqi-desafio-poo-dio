@@ -4,6 +4,7 @@ import augusto108.ces.bootcamptracker.exceptions.UnmatchedIdException
 import augusto108.ces.bootcamptracker.model.dto.BootcampDTO
 import augusto108.ces.bootcamptracker.model.entities.Bootcamp
 import augusto108.ces.bootcamptracker.services.BootcampService
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.hateoas.EntityModel
 import org.springframework.hateoas.IanaLinkRelations
 import org.springframework.hateoas.Link
@@ -15,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController
 import java.net.URI
 
 @RestController
-class BootcampController(private val bootcampService: BootcampService) : BootcampOperations {
+class BootcampController @Autowired constructor(private val bootcampService: BootcampService) : BootcampOperations {
 
     val bootcampControllerClass: Class<BootcampController> = BootcampController::class.java
 

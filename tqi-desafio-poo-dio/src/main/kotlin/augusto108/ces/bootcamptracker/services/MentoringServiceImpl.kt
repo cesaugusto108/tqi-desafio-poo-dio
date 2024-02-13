@@ -6,6 +6,7 @@ import augusto108.ces.bootcamptracker.model.dto.MentoringDTO
 import augusto108.ces.bootcamptracker.model.entities.Mentoring
 import augusto108.ces.bootcamptracker.model.mapper.map
 import augusto108.ces.bootcamptracker.services.PageRequest.getPageRequest
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.data.web.PagedResourcesAssembler
 import org.springframework.hateoas.EntityModel
@@ -15,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional
 
 @Service
 @Transactional
-class MentoringServiceImpl(
+class MentoringServiceImpl @Autowired constructor(
     private val mentoringDao: MentoringDao,
     private val pagedResourcesAssembler: PagedResourcesAssembler<MentoringDTO>
 ) : MentoringService {

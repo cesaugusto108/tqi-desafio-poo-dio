@@ -6,6 +6,7 @@ import augusto108.ces.bootcamptracker.model.dto.CourseDTO
 import augusto108.ces.bootcamptracker.model.entities.Course
 import augusto108.ces.bootcamptracker.model.mapper.map
 import augusto108.ces.bootcamptracker.services.PageRequest.getPageRequest
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.data.web.PagedResourcesAssembler
 import org.springframework.hateoas.EntityModel
@@ -15,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional
 
 @Service
 @Transactional
-class CourseServiceImpl(
+class CourseServiceImpl @Autowired constructor(
     private val courseDao: CourseDao,
     private val pagedResourcesAssembler: PagedResourcesAssembler<CourseDTO>
 ) : CourseService {

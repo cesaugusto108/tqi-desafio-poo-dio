@@ -3,6 +3,7 @@ package augusto108.ces.bootcamptracker.config.security
 import augusto108.ces.bootcamptracker.security.auth.ApplicationAuthenticationEntryPoint
 import augusto108.ces.bootcamptracker.security.filter.JwtAuthenticationFilter
 import augusto108.ces.bootcamptracker.util.API_VERSION
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.authentication.AuthenticationProvider
@@ -15,7 +16,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
-class SecurityFilterChainConfiguration(
+class SecurityFilterChainConfiguration @Autowired constructor(
     private val jwtAuthenticationFilter: JwtAuthenticationFilter,
     private val authenticationProvider: AuthenticationProvider,
     private val applicationAuthenticationEntryPoint: ApplicationAuthenticationEntryPoint

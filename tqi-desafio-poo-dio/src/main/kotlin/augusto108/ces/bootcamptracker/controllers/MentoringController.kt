@@ -4,6 +4,7 @@ import augusto108.ces.bootcamptracker.exceptions.UnmatchedIdException
 import augusto108.ces.bootcamptracker.model.dto.MentoringDTO
 import augusto108.ces.bootcamptracker.model.entities.Mentoring
 import augusto108.ces.bootcamptracker.services.MentoringService
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.hateoas.EntityModel
 import org.springframework.hateoas.IanaLinkRelations
 import org.springframework.hateoas.Link
@@ -15,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController
 import java.net.URI
 
 @RestController
-class MentoringController(private val mentoringService: MentoringService) : MentoringOperations {
+class MentoringController @Autowired constructor(private val mentoringService: MentoringService) : MentoringOperations {
 
     val mentoringControllerClass: Class<MentoringController> = MentoringController::class.java
 

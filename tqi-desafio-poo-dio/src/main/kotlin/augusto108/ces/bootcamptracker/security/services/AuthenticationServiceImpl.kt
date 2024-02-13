@@ -5,6 +5,7 @@ import augusto108.ces.bootcamptracker.security.model.Token
 import augusto108.ces.bootcamptracker.security.model.User
 import augusto108.ces.bootcamptracker.security.model.repositories.UserRepository
 import io.jsonwebtoken.Claims
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
@@ -13,7 +14,7 @@ import org.springframework.stereotype.Service
 import java.util.*
 
 @Service
-class AuthenticationServiceImpl(
+class AuthenticationServiceImpl @Autowired constructor(
     private val userRepository: UserRepository,
     private val jwtService: JwtService,
     private val authenticationManager: AuthenticationManager

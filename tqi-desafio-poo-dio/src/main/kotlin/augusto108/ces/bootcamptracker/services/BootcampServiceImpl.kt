@@ -6,6 +6,7 @@ import augusto108.ces.bootcamptracker.model.dto.BootcampDTO
 import augusto108.ces.bootcamptracker.model.entities.Bootcamp
 import augusto108.ces.bootcamptracker.model.mapper.map
 import augusto108.ces.bootcamptracker.services.PageRequest.getPageRequest
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.data.web.PagedResourcesAssembler
 import org.springframework.hateoas.EntityModel
@@ -15,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional
 
 @Service
 @Transactional
-class BootcampServiceImpl(
+class BootcampServiceImpl @Autowired constructor(
     private val bootcampDao: BootcampDao,
     private val pagedResourcesAssembler: PagedResourcesAssembler<BootcampDTO>
 ) : BootcampService {

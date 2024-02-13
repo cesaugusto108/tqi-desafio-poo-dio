@@ -3,10 +3,11 @@ package augusto108.ces.bootcamptracker.model.dao
 import augusto108.ces.bootcamptracker.model.entities.Course
 import augusto108.ces.bootcamptracker.model.helpers.PropertyDuplicate.copyTo
 import jakarta.persistence.EntityManager
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
 
 @Repository
-class CourseDaoImpl(private val entityManager: EntityManager) : CourseDao {
+class CourseDaoImpl @Autowired constructor(private val entityManager: EntityManager) : CourseDao {
 
     override fun saveCourse(course: Course): Course {
         entityManager.persist(course)

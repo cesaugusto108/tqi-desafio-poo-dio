@@ -4,6 +4,7 @@ import augusto108.ces.bootcamptracker.exceptions.UnmatchedIdException
 import augusto108.ces.bootcamptracker.model.dto.CourseDTO
 import augusto108.ces.bootcamptracker.model.entities.Course
 import augusto108.ces.bootcamptracker.services.CourseService
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.hateoas.EntityModel
 import org.springframework.hateoas.IanaLinkRelations
 import org.springframework.hateoas.PagedModel
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController
 import java.net.URI
 
 @RestController
-class CourseController(private val courseService: CourseService) : CourseOperations {
+class CourseController @Autowired constructor(private val courseService: CourseService) : CourseOperations {
 
     val courseControllerClass: Class<CourseController> = CourseController::class.java
 

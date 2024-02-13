@@ -3,10 +3,11 @@ package augusto108.ces.bootcamptracker.model.dao
 import augusto108.ces.bootcamptracker.model.entities.Mentoring
 import augusto108.ces.bootcamptracker.model.helpers.PropertyDuplicate.copyTo
 import jakarta.persistence.EntityManager
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
 
 @Repository
-class MentoringDaoImpl(private val entityManager: EntityManager) : MentoringDao {
+class MentoringDaoImpl @Autowired constructor(private val entityManager: EntityManager) : MentoringDao {
 
     override fun saveMentoring(mentoring: Mentoring): Mentoring {
         entityManager.persist(mentoring)

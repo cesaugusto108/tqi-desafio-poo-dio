@@ -4,6 +4,7 @@ import augusto108.ces.bootcamptracker.exceptions.UnmatchedIdException
 import augusto108.ces.bootcamptracker.model.dto.DeveloperDTO
 import augusto108.ces.bootcamptracker.model.entities.Developer
 import augusto108.ces.bootcamptracker.services.DeveloperService
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.hateoas.EntityModel
 import org.springframework.hateoas.IanaLinkRelations
 import org.springframework.hateoas.PagedModel
@@ -15,7 +16,7 @@ import java.net.URI
 import java.util.*
 
 @RestController
-class DeveloperController(private val developerService: DeveloperService) : DeveloperOperations {
+class DeveloperController @Autowired constructor(private val developerService: DeveloperService) : DeveloperOperations {
 
     val developerControllerClass: Class<DeveloperController> = DeveloperController::class.java
 

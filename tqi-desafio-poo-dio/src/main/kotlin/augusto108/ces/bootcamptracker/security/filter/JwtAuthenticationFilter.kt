@@ -8,6 +8,7 @@ import io.jsonwebtoken.MalformedJwtException
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
@@ -19,7 +20,7 @@ import org.springframework.web.filter.OncePerRequestFilter
 import java.time.LocalDateTime
 
 @Component
-class JwtAuthenticationFilter(
+class JwtAuthenticationFilter @Autowired constructor(
     private val userDetailsService: UserDetailsService,
     private val jwtService: JwtService,
     private val objectMapper: ObjectMapper
