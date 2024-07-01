@@ -1,46 +1,206 @@
-# Project Specific
+# Java and Kotlin specific files
+*.class
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
 
-/build/www/**
-/src/test/javascript/coverage/
-/src/test/javascript/PhantomJS*/
-*target/
+# Logs
+*.log
 
+# BlueJ files
+*.ctxt
 
-# Node
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
 
-/node/
-node_tmp/
+# Virtual machine crash logs
+hs_err_pid*
+
+# IntelliJ IDEA
+.idea/
+*.iws
+*.iml
+*.ipr
+
+# User-specific files
+.idea/**/workspace.xml
+.idea/**/tasks.xml
+.idea/dictionaries
+.idea/shelf
+
+# Sensitive or high-churn files
+.idea/**/dataSources/
+.idea/**/dataSources.ids
+.idea/**/dataSources.xml
+.idea/**/dataSources.local.xml
+.idea/**/sqlDataSources.xml
+.idea/**/dynamic.xml
+.idea/**/uiDesigner.xml
+
+# Project-specific cache files
+.idea/**/gradle.xml
+.idea/**/libraries
+.idea/**/tasks.xml
+.idea/**/usage.statistics.xml
+.idea/**/modules.xml
+
+# VS Code
+.vscode/
+
+# Node.js
 node_modules/
-npm-debug.log.*
 
+# Gradle
+.gradle/
+build/
+out/
 
-# SASS
-
-.sass-cache/
-
+# STS (Spring Tool Suite)
+.springBeans
 
 # Eclipse
-
-*.pydevproject
-.project
-.metadata
-tmp/
-tmp/**/*
-*.tmp
+.metadata/
+*.log
 *.bak
 *.swp
-*~.nib
-local.properties
+*.tmp
+*.class
+*.jar
+*.swp
 .classpath
+.project
 .settings/
-.loadpath
-.factorypath
-/src/main/resources/rebel.xml
-*.launch
+bin/
+tmp/
+target/
+.apt_generated/
+.autosave/
+.bundle/
+.componentdatamap/
+.datasource/
+.factorypath/
+.history/
+.jsdtscope/
+.localstate/
+.recommenders/
+.springBeans/
+.tern-project
+.wsdd/
+*~
+
+# Maven
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+
+# Gradle
+.gradle/
+build/
+!gradle-wrapper.jar
+
+# Mac
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Visual Studio
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Android
+.gradle/
+.idea/
+build/
+app/build/
+
+# Kotlin specific
+*.kotlin_metadata/
+*.kotlin_idea_cache/
+*.kotlin_builtins/
+
+# Lombok generated files
+*.lombok.config
+.lombok.jar
+.lombok.eclipse/
+
+# Micronaut specific files
+bootstrap.yml
+bootstrap.properties
+
+# Spring Boot
+*.iws
+.idea/
+.idea/
+*/target/
+*/build/
+*.iml
+*.ipr
+*.iws
+
+# Other files
+*.class
+*.log
+*.bak
+*.swp
+*.tmp
+*.DS_Store
+*.swo
+*.class
+*.class
+*.jar
+*.swp
+.classpath
+.project
+.settings/
+bin/
+tmp/
+target/
+.apt_generated/
+.autosave/
+.bundle/
+.checkstyle/
+.componentdatamap/
+.datasource/
+.factorypath/
+.history/
+.jsdtscope/
+.localstate/
+.recommenders/
+.springBeans/
+.springBeans/
+.springBeans.cache/
+.springBeans.ignore/
+.tern-project
+.wsdd/
+*~
+/*.bak
+/*.log
+*.sql
+*.class
+/*.mso
+
+# SASS
+.sass-cache/
 
 # External tool builders
 .externalToolBuilders/**
-
 
 # CDT-specific
 .cproject
@@ -48,98 +208,14 @@ local.properties
 # PDT-specific
 .buildpath
 
-
-# Intellij
-
-.idea/
-*.iml
-*.iws
-*.ipr
-*.ids
-*.orig
-
-
-# Visual Studio Code
-
-.vscode/
-
-
-# Maven
-
-/log/
-/target/
-.mvn/
-*mvnw*
-
-
-# Gradle
-
-.gradle/
-/build/
-
-
-# Package Files
-
-*.jar
-*.war
-*.ear
-*.db
-
-
-# Windows
-
-Thumbs.db
-Desktop.ini
-
-
-# Mac OSX
-
-.DS_Store
-.svn
-
-# Thumbnails
-._*
-
-# Files
-.Spotlight-V100
-.Trashes
-
-
-# Directories
-
-/bin/
-/deploy/
-
-
-# Logs
-
-*.log
-
-
-# Others
-
-*.class
-*.*~
-*~
-.merge_file*
-
-
-# Gradle Wrapper
-
-!gradle/wrapper/gradle-wrapper.jar
-
-
-# Maven Wrapper
-
-!.mvn/wrapper/maven-wrapper.jar
-
-
 # ESLint
-
 .eslintcache
 
 # Other
-
 HELP.md
 access_log.*
 *.env
+
+# Compiled output of Angular CLI
+/*.ngsw.json
+/ngsw-config.json
