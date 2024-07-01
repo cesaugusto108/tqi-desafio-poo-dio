@@ -58,6 +58,27 @@ node_modules/
 build/
 out/
 
+# Maven
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+
+# Do not ignore Gradle Wrapper files
+!gradlew
+!gradlew.bat
+!.gradle/wrapper/
+
+# Do not ignore Maven Wrapper files
+!mvnw
+!mvnw.cmd
+!.mvn/wrapper/
+
 # STS (Spring Tool Suite)
 .springBeans
 
@@ -90,22 +111,6 @@ target/
 .tern-project
 .wsdd/
 *~
-
-# Maven
-target/
-pom.xml.tag
-pom.xml.releaseBackup
-pom.xml.versionsBackup
-pom.xml.next
-release.properties
-dependency-reduced-pom.xml
-buildNumber.properties
-.mvn/timing.properties
-
-# Gradle
-.gradle/
-build/
-!gradle-wrapper.jar
 
 # Mac
 .DS_Store
