@@ -1,13 +1,7 @@
-# Java and Kotlin specific files
+# Compiled class files
 *.class
-*.jar
-*.war
-*.ear
-*.zip
-*.tar.gz
-*.rar
 
-# Logs
+# Log files
 *.log
 
 # BlueJ files
@@ -16,49 +10,51 @@
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
-# Virtual machine crash logs
+# Package Files #
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+replay_pid*
 
-# IntelliJ IDEA
+# IDE-specific files
 .idea/
-*.iws
 *.iml
-*.ipr
-
-# User-specific files
-.idea/**/workspace.xml
-.idea/**/tasks.xml
-.idea/dictionaries
-.idea/shelf
-
-# Sensitive or high-churn files
-.idea/**/dataSources/
-.idea/**/dataSources.ids
-.idea/**/dataSources.xml
-.idea/**/dataSources.local.xml
-.idea/**/sqlDataSources.xml
-.idea/**/dynamic.xml
-.idea/**/uiDesigner.xml
-
-# Project-specific cache files
-.idea/**/gradle.xml
-.idea/**/libraries
-.idea/**/tasks.xml
-.idea/**/usage.statistics.xml
-.idea/**/modules.xml
-
-# VS Code
+*.iws
 .vscode/
+*.swp
+*~
 
-# Node.js
-node_modules/
+# Build directories
+/build/
+/bin/
+/out/
+/target/
 
-# Gradle
-.gradle/
-build/
-out/
+# Gradle specific
+.gradle
+**/build/
+!src/**/build/
 
-# Maven
+# Ignore Gradle GUI config
+gradle-app.setting
+
+# Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
+!gradle-wrapper.jar
+
+# Avoid ignore Gradle wrappper properties
+!gradle-wrapper.properties
+
+# Cache of project
+.gradletasknamecache
+
+# Maven specific
 target/
 pom.xml.tag
 pom.xml.releaseBackup
@@ -69,158 +65,17 @@ dependency-reduced-pom.xml
 buildNumber.properties
 .mvn/timing.properties
 
-# Do not ignore Gradle Wrapper files
-!gradlew
-!gradlew.bat
-!.gradle/wrapper/
+# Avoid ignoring Maven wrapper jar file (.jar files are usually ignored)
+!/.mvn/wrapper/maven-wrapper.jar
 
-# Do not ignore Maven Wrapper files
-!mvnw
-!mvnw.cmd
-!.mvn/wrapper/
-
-# STS (Spring Tool Suite)
-.springBeans
-
-# Eclipse
-.metadata/
-*.log
-*.bak
-*.swp
-*.tmp
-*.class
-*.jar
-*.swp
+# Eclipse specific
 .classpath
 .project
 .settings/
-bin/
-tmp/
-target/
-.apt_generated/
-.autosave/
-.bundle/
-.componentdatamap/
-.datasource/
-.factorypath/
-.history/
-.jsdtscope/
-.localstate/
-.recommenders/
-.springBeans/
-.tern-project
-.wsdd/
-*~
 
-# Mac
+# OS specific
 .DS_Store
-.AppleDouble
-.LSOverride
-
-# Windows
 Thumbs.db
-ehthumbs.db
-Desktop.ini
-$RECYCLE.BIN/
-
-# Visual Studio
-*.suo
-*.user
-*.userosscache
-*.sln.docstates
-
-# Android
-.gradle/
-.idea/
-build/
-app/build/
-
-# Kotlin specific
-*.kotlin_metadata/
-*.kotlin_idea_cache/
-*.kotlin_builtins/
-
-# Lombok generated files
-*.lombok.config
-.lombok.jar
-.lombok.eclipse/
-
-# Micronaut specific files
-bootstrap.yml
-bootstrap.properties
-
-# Spring Boot
-*.iws
-.idea/
-.idea/
-*/target/
-*/build/
-*.iml
-*.ipr
-*.iws
-
-# Other files
-*.class
-*.log
-*.bak
-*.swp
-*.tmp
-*.DS_Store
-*.swo
-*.class
-*.class
-*.jar
-*.swp
-.classpath
-.project
-.settings/
-bin/
-tmp/
-target/
-.apt_generated/
-.autosave/
-.bundle/
-.checkstyle/
-.componentdatamap/
-.datasource/
-.factorypath/
-.history/
-.jsdtscope/
-.localstate/
-.recommenders/
-.springBeans/
-.springBeans/
-.springBeans.cache/
-.springBeans.ignore/
-.tern-project
-.wsdd/
-*~
-/*.bak
-/*.log
-*.sql
-*.class
-/*.mso
-
-# SASS
-.sass-cache/
-
-# External tool builders
-.externalToolBuilders/**
-
-# CDT-specific
-.cproject
-
-# PDT-specific
-.buildpath
-
-# ESLint
-.eslintcache
 
 # Other
-HELP.md
-access_log.*
-*.env
-
-# Compiled output of Angular CLI
-/*.ngsw.json
-/ngsw-config.json
+.env
